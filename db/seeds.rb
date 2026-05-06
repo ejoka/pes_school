@@ -7,3 +7,52 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+# Create admin user
+admin = User.create!(
+  email: "admin@school.com",
+  password: "password123",
+  password_confirmation: "password123",
+  first_name: "System",
+  last_name: "Admin",
+  title: "Mr.",
+  phone_number: "+1234567890",
+  role: 1
+)
+
+# Create categories
+categories = [
+  { name: "Primary School" },
+  { name: "Middle School" },
+  { name: "High School" }
+]
+
+categories.each do |category|
+  Category.create!(category)
+end
+
+# Create classes
+primary = Category.find_by(name: "Primary School")
+middle = Category.find_by(name: "Middle School")
+high = Category.find_by(name: "High School")
+
+classes = [
+  { name: "Grade 1", pass_mark: 50, category: primary },
+  { name: "Grade 2", pass_mark: 50, category: primary },
+  { name: "Grade 3", pass_mark: 50, category: primary },
+  { name: "Grade 7", pass_mark: 60, category: middle },
+  { name: "Grade 8", pass_mark: 60, category: middle },
+  { name: "Grade 9", pass_mark: 60, category: middle },
+  { name: "Grade 10", pass_mark: 70, category: high }
+]
+
+classes.each do |school_class|
+  SchoolClass.create!(school_class)
+end
+
+# Create subjects
+math = Subject.create!(name: "Mathematics", subject_code: "MATH101", pass_mark: 50, school_class: SchoolClass.first)
+english = Subject.create!(name: "English", subject_code: "ENG101", pass_mark: 50, school_class: SchoolClass.first)
+science = Subject.create!(name: "Science", subject_code: "SCI101", pass_mark: 50, school_class: SchoolClass.first)
+
+puts "Seed data created successfully!"
+puts "Admin login: admin@school.com / password123"
