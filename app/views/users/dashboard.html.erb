@@ -1,0 +1,61 @@
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <h1 class="text-3xl font-bold text-blue-900 mb-6">Welcome, <%= current_user.full_name %>!</h1>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-blue-900 text-white rounded-lg p-6">
+      <h3 class="text-lg font-semibold mb-2">Accessible Categories</h3>
+      <p class="text-3xl font-bold"><%= @accessible_categories.count %></p>
+    </div>
+    <div class="bg-yellow-500 text-blue-900 rounded-lg p-6">
+      <h3 class="text-lg font-semibold mb-2">Accessible Classes</h3>
+      <p class="text-3xl font-bold"><%= @accessible_classes.count %></p>
+    </div>
+    <div class="bg-blue-900 text-white rounded-lg p-6">
+      <h3 class="text-lg font-semibold mb-2">Accessible Subjects</h3>
+      <p class="text-3xl font-bold"><%= @accessible_subjects.count %></p>
+    </div>
+  </div>
+
+  <% if @accessible_categories.any? %>
+    <div class="mb-8">
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Your Categories</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @accessible_categories.each do |category| %>
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h3 class="font-semibold text-blue-900"><%= category.name %></h3>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @accessible_classes.any? %>
+    <div class="mb-8">
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Your Classes</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @accessible_classes.each do |school_class| %>
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h3 class="font-semibold text-blue-900"><%= school_class.name %></h3>
+            <p class="text-sm text-gray-600">Pass Mark: <%= school_class.pass_mark %>%</p>
+            <p class="text-sm text-gray-600">Category: <%= school_class.category.name %></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @accessible_subjects.any? %>
+    <div>
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Your Subjects</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @accessible_subjects.each do |subject| %>
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <h3 class="font-semibold text-blue-900"><%= subject.name %></h3>
+            <p class="text-sm text-gray-600">Code: <%= subject.subject_code %></p>
+            <p class="text-sm text-gray-600">Pass Mark: <%= subject.pass_mark %>%</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

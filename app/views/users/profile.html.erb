@@ -1,0 +1,151 @@
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">My Profile</h1>
+    <%= link_to "Back to Dashboard", dashboard_path, class: "text-blue-600 hover:text-blue-900" %>
+  </div>
+
+  <%= form_with(model: @user, url: profile_path, local: true, class: "space-y-6") do |f| %>
+    <% if @user.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <h3 class="font-bold"><%= pluralize(@user.errors.count, "error") %> prohibited this profile from being saved:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Profile Information -->
+    <div class="border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Personal Information</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= f.label :title, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.select :title, options_for_select([['Mr.', 'Mr.'], ['Mrs.', 'Mrs.'], ['Ms.', 'Ms.'], ['Dr.', 'Dr.'], ['Prof.', 'Prof.']], @user.title), { include_blank: 'Select Title' }, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+
+        <div>
+          <%= f.label :first_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_field :first_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+
+        <div>
+          <%= f.label :middle_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_field :middle_name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+          <p class="mt-1 text-xs text-gray-500">Optional</p>
+        </div>
+
+        <div>
+          <%= f.label :last_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_field :last_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+
+        <div>
+          <%= f.label :email, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.email_field :email, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100", readonly: true %>
+          <p class="mt-1 text-xs text-gray-500">Email cannot be changed. Contact admin for assistance.</p>
+        </div>
+
+        <div>
+          <%= f.label :phone_number, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.telephone_field :phone_number, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "+1234567890" %>
+          <p class="mt-1 text-xs text-gray-500">Include country code for international numbers</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Information -->
+    <div class="border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Account Information</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-sm text-gray-600">Account Type</p>
+          <p class="font-semibold text-blue-900"><%= @user.admin? ? 'Administrator' : 'Regular User' %></p>
+        </div>
+        
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-sm text-gray-600">Member Since</p>
+          <p class="font-semibold text-blue-900"><%= @user.created_at.strftime("%B %d, %Y") %></p>
+        </div>
+        
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-sm text-gray-600">Last Sign In</p>
+          <p class="font-semibold text-blue-900"><%= @user.last_sign_in_at&.strftime("%B %d, %Y at %I:%M %p") || 'Never' %></p>
+        </div>
+        
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-sm text-gray-600">Sign In Count</p>
+          <p class="font-semibold text-blue-900"><%= @user.sign_in_count %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resource Access Summary (for regular users) -->
+    <% unless @user.admin? %>
+      <div class="border border-gray-200 rounded-lg p-6">
+        <h2 class="text-xl font-bold text-blue-900 mb-4">Your Access Rights</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-blue-50 rounded-lg p-4 text-center">
+            <div class="text-2xl font-bold text-blue-900"><%= @user.assigned_categories.count %></div>
+            <div class="text-sm text-gray-600 mt-1">Categories</div>
+            <% if @user.assigned_categories.any? %>
+              <div class="mt-2 text-xs text-gray-500">
+                <%= @user.assigned_categories.limit(2).map(&:name).join(', ') %>
+                <% if @user.assigned_categories.count > 2 %>...<% end %>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="bg-yellow-50 rounded-lg p-4 text-center">
+            <div class="text-2xl font-bold text-blue-900"><%= @user.assigned_classes.count %></div>
+            <div class="text-sm text-gray-600 mt-1">Classes</div>
+            <% if @user.assigned_classes.any? %>
+              <div class="mt-2 text-xs text-gray-500">
+                <%= @user.assigned_classes.limit(2).map(&:name).join(', ') %>
+                <% if @user.assigned_classes.count > 2 %>...<% end %>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="bg-green-50 rounded-lg p-4 text-center">
+            <div class="text-2xl font-bold text-blue-900"><%= @user.assigned_subjects.count %></div>
+            <div class="text-sm text-gray-600 mt-1">Subjects</div>
+            <% if @user.assigned_subjects.any? %>
+              <div class="mt-2 text-xs text-gray-500">
+                <%= @user.assigned_subjects.limit(2).map(&:name).join(', ') %>
+                <% if @user.assigned_subjects.count > 2 %>...<% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Actions -->
+    <div class="flex justify-between items-center pt-4">
+      <div>
+        <%= link_to "Change Password", edit_user_registration_path, class: "text-yellow-600 hover:text-yellow-700 font-semibold" %>
+      </div>
+      <div class="flex space-x-3">
+        <%= link_to "Cancel", dashboard_path, class: "bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition duration-150" %>
+        <%= f.submit "Update Profile", class: "bg-blue-900 text-yellow-500 px-6 py-2 rounded-lg hover:bg-blue-800 transition duration-150 font-semibold" %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Danger Zone -->
+  <div class="mt-8 pt-6 border-t border-red-200">
+    <div class="bg-red-50 rounded-lg p-6">
+      <h3 class="text-lg font-semibold text-red-700 mb-3">Danger Zone</h3>
+      <p class="text-sm text-red-600 mb-4">Once you delete your account, there is no going back. Please be certain.</p>
+      <%= button_to "Delete My Account", registration_path(resource_name), 
+          data: { confirm: "Are you sure you want to delete your account? This action cannot be undone.", turbo_confirm: "Are you sure you want to delete your account?" }, 
+          method: :delete, 
+          class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-150" %>
+    </div>
+  </div>
+</div>

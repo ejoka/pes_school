@@ -1,0 +1,2 @@
+class AddDetailsToUser < ApplicationRecord
+end

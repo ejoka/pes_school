@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+         :trackable
 
   # Attributes
   validates :first_name, :last_name, :email, presence: true
@@ -8,12 +9,14 @@ class User < ApplicationRecord
 
   # Relationships
   has_many :user_resources, dependent: :destroy
+  
+  # Polymorphic associations with proper class names
   has_many :assigned_categories, through: :user_resources, source: :resource, source_type: 'Category'
-  has_many :assigned_classes, through: :user_resources, source: :resource, source_type: 'Class'
+  has_many :assigned_school_classes, through: :user_resources, source: :resource, source_type: 'SchoolClass'
   has_many :assigned_subjects, through: :user_resources, source: :resource, source_type: 'Subject'
 
   # Role management
-  enum role: { user: 0, admin: 1 }
+  enum :role, { user: 0, admin: 1 }
 
   # Callbacks
   after_initialize :set_default_role, if: :new_record?
@@ -25,6 +28,11 @@ class User < ApplicationRecord
   def can_access?(resource)
     return true if admin?
     user_resources.exists?(resource_type: resource.class.name, resource_id: resource.id)
+  end
+
+  # Helper method for backward compatibility
+  def assigned_classes
+    assigned_school_classes
   end
 
   private

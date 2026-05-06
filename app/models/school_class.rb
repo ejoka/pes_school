@@ -1,4 +1,3 @@
-# app/models/school_class.rb
 class SchoolClass < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :category_id }
   validates :pass_mark, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
