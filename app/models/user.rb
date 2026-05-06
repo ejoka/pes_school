@@ -1,6 +1,35 @@
 class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
+  # Attributes
+  validates :first_name, :last_name, :email, presence: true
+  validates :phone_number, format: { with: /\A\+?[\d\s\-\(\)]+\z/, allow_blank: true }
+
+  # Relationships
+  has_many :user_resources, dependent: :destroy
+  has_many :assigned_categories, through: :user_resources, source: :resource, source_type: 'Category'
+  has_many :assigned_classes, through: :user_resources, source: :resource, source_type: 'Class'
+  has_many :assigned_subjects, through: :user_resources, source: :resource, source_type: 'Subject'
+
+  # Role management
+  enum role: { user: 0, admin: 1 }
+
+  # Callbacks
+  after_initialize :set_default_role, if: :new_record?
+
+  def full_name
+    [title, first_name, middle_name, last_name].compact.join(' ')
+  end
+
+  def can_access?(resource)
+    return true if admin?
+    user_resources.exists?(resource_type: resource.class.name, resource_id: resource.id)
+  end
+
+  private
+
+  def set_default_role
+    self.role ||= :user
+  end
 end
