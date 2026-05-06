@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+         :recoverable, :rememberable, :validatable,
          :trackable
 
   # Attributes
@@ -25,14 +25,21 @@ class User < ApplicationRecord
     [title, first_name, middle_name, last_name].compact.join(' ')
   end
 
-  def can_access?(resource)
+  def can_access?(resource, action = :view)
     return true if admin?
-    user_resources.exists?(resource_type: resource.class.name, resource_id: resource.id)
+    
+    user_resource = user_resources.find_by(resource_type: resource.class.name, resource_id: resource.id)
+    user_resource&.can?(action) || false
   end
 
   # Helper method for backward compatibility
   def assigned_classes
     assigned_school_classes
+  end
+
+  # Get permissions for a specific resource
+  def permissions_for(resource)
+    user_resources.find_by(resource_type: resource.class.name, resource_id: resource.id)&.permissions || {}
   end
 
   private
