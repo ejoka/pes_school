@@ -64,3 +64,8 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "role_model", "~> 0.8.2"
+gem "pagy", "~> 43.5"
+gem "cancancan", "~> 3.6"
+gem "devise", "~> 5.0"
