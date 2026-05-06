@@ -1,1 +1,28 @@
 @import "tailwindcss";
+@layer components {
+  .sidebar-transition {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .dropdown-transition-enter {
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+  }
+}
+
+/* Custom scrollbar for sidebar */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: #1e3a8a;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: #eab308;
+  border-radius: 3px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: #fbbf24;
+}
