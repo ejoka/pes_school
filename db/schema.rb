@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_07_061512) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_07_072502) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,6 +20,25 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_061512) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "parent_infos", force: :cascade do |t|
+    t.bigint "student_id", null: false
+    t.string "father_name"
+    t.string "father_occupation"
+    t.string "father_phone"
+    t.string "father_email"
+    t.string "mother_name"
+    t.string "mother_occupation"
+    t.string "mother_phone"
+    t.string "mother_email"
+    t.string "guardian_name"
+    t.string "guardian_occupation"
+    t.string "guardian_phone"
+    t.string "guardian_email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_parent_infos_on_student_id"
+  end
+
   create_table "school_classes", force: :cascade do |t|
     t.string "name"
     t.integer "pass_mark"
@@ -27,6 +46,24 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_061512) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_school_classes_on_category_id"
+  end
+
+  create_table "students", force: :cascade do |t|
+    t.string "first_name"
+    t.string "middle_name"
+    t.string "last_name"
+    t.date "date_of_birth"
+    t.string "gender"
+    t.string "religion"
+    t.string "academic_year"
+    t.date "admission_date"
+    t.text "student_address"
+    t.bigint "school_class_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_class_id"], name: "index_students_on_school_class_id"
+    t.index ["user_id"], name: "index_students_on_user_id"
   end
 
   create_table "subjects", force: :cascade do |t|
@@ -73,7 +110,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_061512) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "parent_infos", "students"
   add_foreign_key "school_classes", "categories"
+  add_foreign_key "students", "school_classes"
+  add_foreign_key "students", "users"
   add_foreign_key "subjects", "school_classes"
   add_foreign_key "user_resources", "users"
 end
