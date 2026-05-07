@@ -6,6 +6,25 @@ class User < ApplicationRecord
   # Attributes
   validates :first_name, :last_name, :email, presence: true
   validates :phone_number, format: { with: /\A\+?[\d\s\-\(\)]+\z/, allow_blank: true }
+  
+  # Professional Type
+  validates :professional_type, presence: true, if: -> { !admin? }
+  
+  # Define professional type options
+  PROFESSIONAL_TYPES = [
+    ['Teacher', 'teacher'],
+    ['Administrator', 'administrator'],
+    ['Librarian', 'librarian'],
+    ['Counselor', 'counselor'],
+    ['Principal', 'principal'],
+    ['Vice Principal', 'vice_principal'],
+    ['Department Head', 'department_head'],
+    ['Accountant', 'accountant'],
+    ['IT Staff', 'it_staff'],
+    ['Security', 'security'],
+    ['Maintenance', 'maintenance'],
+    ['Other', 'other']
+  ].freeze
 
   # Relationships
   has_many :user_resources, dependent: :destroy
@@ -20,6 +39,7 @@ class User < ApplicationRecord
 
   # Callbacks
   after_initialize :set_default_role, if: :new_record?
+  after_initialize :set_default_professional_type, if: :new_record?
 
   def full_name
     [title, first_name, middle_name, last_name].compact.join(' ')
@@ -42,9 +62,18 @@ class User < ApplicationRecord
     user_resources.find_by(resource_type: resource.class.name, resource_id: resource.id)&.permissions || {}
   end
 
+  def professional_type_humanized
+    return 'N/A' if admin?
+    PROFESSIONAL_TYPES.find { |type| type[1] == professional_type }&.first || professional_type&.humanize || 'Not specified'
+  end
+
   private
 
   def set_default_role
     self.role ||= :user
+  end
+
+  def set_default_professional_type
+    self.professional_type ||= 'teacher' unless admin?
   end
 end

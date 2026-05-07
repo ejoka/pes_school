@@ -1,10 +1,16 @@
 class Admin::UsersController < ApplicationController
-  #helper Admin::UsersHelper 
+  #helper Admin::UsersHelper
   before_action :ensure_admin!
-  before_action :set_user, only: [:edit, :update, :destroy, :assign_resources, :save_resource_assignment]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :assign_resources, :save_resource_assignment]
 
   def index
     @users = User.all.order(created_at: :desc)
+  end
+
+  def show
+    @assigned_categories = @user.assigned_categories
+    @assigned_classes = @user.assigned_classes
+    @assigned_subjects = @user.assigned_subjects
   end
 
   def new
@@ -54,7 +60,6 @@ class Admin::UsersController < ApplicationController
   end
 
   def save_resource_assignment
-    # Clear existing assignments
     @user.user_resources.destroy_all
 
     if params[:resources]
@@ -62,7 +67,6 @@ class Admin::UsersController < ApplicationController
         resources_data.each do |resource_id, permissions|
           next if resource_id.blank?
           
-          # Create user resource with permissions
           @user.user_resources.create(
             resource_type: resource_type,
             resource_id: resource_id,
@@ -91,6 +95,6 @@ class Admin::UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :middle_name, :last_name, :title, :phone_number, :email, :role)
+    params.require(:user).permit(:first_name, :middle_name, :last_name, :title, :phone_number, :email, :role, :professional_type)
   end
 end
