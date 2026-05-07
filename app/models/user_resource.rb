@@ -6,7 +6,7 @@ class UserResource < ApplicationRecord
   validates :resource_id, presence: true
   validates :resource_type, presence: true
   validates :user_id, uniqueness: { scope: [:resource_type, :resource_id] }
-  validates :resource_type, inclusion: { in: %w[Category SchoolClass Subject] }
+  validates :resource_type, inclusion: { in: %w[Category SchoolClass Subject StudentManagement] }
 
   # Store permissions as JSON
   store :permissions, accessors: [:can_view, :can_create, :can_edit, :can_delete], coder: JSON

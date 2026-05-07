@@ -85,6 +85,19 @@
                     (<%= subjects_with_edit %> with edit)
                   <% end %>
                 </div>
+                <div class="text-xs">
+                  <span class="font-medium">Student Mgmt:</span> 
+                  <% student_mgmt = StudentManagement.default %>
+                  <% if user.assigned_student_managements.include?(student_mgmt) %>
+                    <% perms = user.permissions_for(student_mgmt) %>
+                    <%= perms['can_view'] ? '👁️' : '⬚' %>
+                    <%= perms['can_create'] ? '➕' : '⬚' %>
+                    <%= perms['can_edit'] ? '✏️' : '⬚' %>
+                    <%= perms['can_delete'] ? '🗑️' : '⬚' %>
+                  <% else %>
+                    No access
+                  <% end %>
+                </div>
               </div>
             </td>
             <td class="px-6 py-4 text-sm font-medium space-x-3">

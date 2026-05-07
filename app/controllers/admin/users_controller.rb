@@ -10,6 +10,13 @@ class Admin::UsersController < ApplicationController
     @assigned_categories = @user.assigned_categories
     @assigned_classes = @user.assigned_classes
     @assigned_subjects = @user.assigned_subjects
+    @student_management = StudentManagement.default
+    @has_student_management = @user.assigned_student_managements.include?(@student_management)
+    @student_management_perms = if @has_student_management
+      @user.permissions_for(@student_management)
+    else
+      {}
+    end
   end
 
   def new
@@ -53,6 +60,7 @@ class Admin::UsersController < ApplicationController
     @categories = Category.all
     @classes = SchoolClass.all
     @subjects = Subject.all
+    @student_management = StudentManagement.default
     @resource_permissions = {}
     
     # Load existing permissions
@@ -67,12 +75,13 @@ class Admin::UsersController < ApplicationController
 
     if params[:resources]
       params[:resources].each do |resource_type, resources_data|
-        resources_data.each do |resource_id, permissions|
-          next if resource_id.blank?
-          
+        if resource_type == 'StudentManagement'
+          # Handle Student Management as a single resource
+          permissions = resources_data
+          student_management = StudentManagement.default
           @user.user_resources.create(
             resource_type: resource_type,
-            resource_id: resource_id,
+            resource_id: student_management.id,
             permissions: {
               can_view: permissions[:can_view] == '1',
               can_create: permissions[:can_create] == '1',
@@ -80,6 +89,22 @@ class Admin::UsersController < ApplicationController
               can_delete: permissions[:can_delete] == '1'
             }
           )
+        else
+          # Handle other resources
+          resources_data.each do |resource_id, permissions|
+            next if resource_id.blank?
+            
+            @user.user_resources.create(
+              resource_type: resource_type,
+              resource_id: resource_id,
+              permissions: {
+                can_view: permissions[:can_view] == '1',
+                can_create: permissions[:can_create] == '1',
+                can_edit: permissions[:can_edit] == '1',
+                can_delete: permissions[:can_delete] == '1'
+              }
+            )
+          end
         end
       end
     end

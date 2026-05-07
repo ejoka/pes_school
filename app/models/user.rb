@@ -7,9 +7,9 @@ class User < ApplicationRecord
   validates :first_name, :last_name, :email, presence: true
   validates :phone_number, format: { with: /\A\+?[\d\s\-\(\)]+\z/, allow_blank: true }
   
-  # Professional Type - allow any string, no predefined list
+  # Professional Type
   validates :professional_type, presence: true, if: -> { !admin? }
-  
+
   # Relationships
   has_many :user_resources, dependent: :destroy
   
@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many :assigned_categories, through: :user_resources, source: :resource, source_type: 'Category'
   has_many :assigned_school_classes, through: :user_resources, source: :resource, source_type: 'SchoolClass'
   has_many :assigned_subjects, through: :user_resources, source: :resource, source_type: 'Subject'
+  has_many :assigned_student_managements, through: :user_resources, source: :resource, source_type: 'StudentManagement'
 
   # Role management
   enum :role, { user: 0, admin: 1 }
@@ -34,6 +35,12 @@ class User < ApplicationRecord
     
     user_resource = user_resources.find_by(resource_type: resource.class.name, resource_id: resource.id)
     user_resource&.can?(action) || false
+  end
+  
+  def can_manage_students?(action = :view)
+    return true if admin?
+    student_management = StudentManagement.default
+    can_access?(student_management, action)
   end
 
   # Helper method for backward compatibility

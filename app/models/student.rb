@@ -1,7 +1,9 @@
 class Student < ApplicationRecord
   belongs_to :school_class
-  belongs_to :user, optional: true # The user who created/updated the student record
+  belongs_to :user, optional: true
   has_one :parent_info, dependent: :destroy
+  has_many :user_resources, as: :resource, dependent: :destroy
+  has_many :users, through: :user_resources
 
   # Validations
   validates :first_name, :last_name, :date_of_birth, :gender, :academic_year, :admission_date, presence: true
@@ -20,6 +22,12 @@ class Student < ApplicationRecord
     return nil unless date_of_birth
     now = Time.now.utc.to_date
     now.year - date_of_birth.year - (date_of_birth.to_date.change(year: now.year) > now ? 1 : 0)
+  end
+
+  # Scope for accessible students based on user permissions
+  def self.accessible_by(user)
+    return all if user.admin?
+    where(id: user.user_resources.where(resource_type: 'Student').pluck(:resource_id))
   end
 
   private
