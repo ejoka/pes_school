@@ -1,0 +1,174 @@
+<% content_for :page_title, "Student Details: #{@student.full_name}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Student Details</h1>
+    <div class="space-x-3">
+      <%= link_to edit_admin_student_path(@student), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150" do %>
+        Edit Student
+      <% end %>
+      <%= link_to "Back to Students", admin_students_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+    </div>
+  </div>
+
+  <!-- Tab Navigation for View -->
+  <div class="border-b border-gray-200">
+    <nav class="flex space-x-8" aria-label="Tabs">
+      <button type="button" onclick="showViewTab('personal')" id="view-tab-personal" class="view-tab-button py-2 px-1 border-b-2 font-medium text-sm border-yellow-500 text-yellow-600">
+        Personal Information
+      </button>
+      <button type="button" onclick="showViewTab('parents')" id="view-tab-parents" class="view-tab-button py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+        Parents & Guardian Information
+      </button>
+    </nav>
+  </div>
+
+  <!-- Tab 1: Personal Information View -->
+  <div id="view-personal-info" class="view-tab-content pt-6">
+    <div class="border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Personal Information</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <p class="text-sm text-gray-600 mb-1">First Name</p>
+          <p class="font-medium text-gray-900"><%= @student.first_name %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Middle Name</p>
+          <p class="font-medium text-gray-900"><%= @student.middle_name.presence || '—' %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Last Name</p>
+          <p class="font-medium text-gray-900"><%= @student.last_name %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Date of Birth</p>
+          <p class="font-medium text-gray-900"><%= @student.date_of_birth.strftime("%B %d, %Y") %> (Age: <%= @student.age %>)</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Gender</p>
+          <p class="font-medium text-gray-900"><%= @student.gender %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Religion</p>
+          <p class="font-medium text-gray-900"><%= @student.religion.presence || '—' %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Academic Year</p>
+          <p class="font-medium text-gray-900"><%= @student.academic_year %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Admission Date</p>
+          <p class="font-medium text-gray-900"><%= @student.admission_date.strftime("%B %d, %Y") %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600 mb-1">Class</p>
+          <p class="font-medium text-gray-900"><%= @student.school_class&.name || 'Not assigned' %></p>
+        </div>
+        <div class="md:col-span-2">
+          <p class="text-sm text-gray-600 mb-1">Address</p>
+          <p class="font-medium text-gray-900"><%= @student.student_address.presence || '—' %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Parents & Guardian Information View -->
+  <div id="view-parents-info" class="view-tab-content pt-6" style="display: none;">
+    <div class="space-y-6">
+      <!-- Father's Information -->
+      <div class="border border-gray-200 rounded-lg p-6">
+        <h2 class="text-xl font-bold text-blue-900 mb-4">Father's Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Father's Name</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.father_name.presence || '—' %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Father's Occupation</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.father_occupation.presence || '—' %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Father's Phone</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.father_phone.presence || '—' %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Father's Email</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.father_email.presence || '—' %></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mother's Information -->
+      <div class="border border-gray-200 rounded-lg p-6">
+        <h2 class="text-xl font-bold text-blue-900 mb-4">Mother's Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Mother's Name</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.mother_name.presence || '—' %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Mother's Occupation</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.mother_occupation.presence || '—' %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Mother's Phone</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.mother_phone.presence || '—' %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Mother's Email</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.mother_email.presence || '—' %></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guardian's Information -->
+      <div class="border border-gray-200 rounded-lg p-6">
+        <h2 class="text-xl font-bold text-blue-900 mb-4">Guardian's Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Guardian's Name</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.guardian_name.presence || '—' %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Guardian's Occupation</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.guardian_occupation.presence || '—' %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Guardian's Phone</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.guardian_phone.presence || '—' %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600 mb-1">Guardian's Email</p>
+            <p class="font-medium text-gray-900"><%= @parent_info.guardian_email.presence || '—' %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showViewTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.view-tab-content').forEach(content => {
+      content.style.display = 'none';
+    });
+    
+    // Show selected tab content
+    if (tabName === 'personal') {
+      document.getElementById('view-personal-info').style.display = 'block';
+    } else if (tabName === 'parents') {
+      document.getElementById('view-parents-info').style.display = 'block';
+    }
+    
+    // Update tab styles
+    document.querySelectorAll('.view-tab-button').forEach(button => {
+      button.classList.remove('border-yellow-500', 'text-yellow-600');
+      button.classList.add('border-transparent', 'text-gray-500');
+    });
+    
+    const activeButton = document.getElementById(`view-tab-${tabName}`);
+    activeButton.classList.remove('border-transparent', 'text-gray-500');
+    activeButton.classList.add('border-yellow-500', 'text-yellow-600');
+  }
+</script>

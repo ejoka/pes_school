@@ -80,6 +80,7 @@ Rails.application.routes.draw do
     resources :categories
     resources :school_classes
     resources :subjects
+    resources :students 
   end
   
   # User profile routes - use a different name to avoid conflict

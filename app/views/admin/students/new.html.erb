@@ -1,0 +1,195 @@
+<% content_for :page_title, "Add New Student" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Add New Student</h1>
+    <%= link_to "Back to Students", admin_students_path, class: "text-blue-600 hover:text-blue-900" %>
+  </div>
+
+  <%= form_with(model: [:admin, @student], local: true, class: "space-y-6") do |f| %>
+    <% if @student.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <h3 class="font-bold"><%= pluralize(@student.errors.count, "error") %> prohibited this student from being saved:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @student.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Tab Navigation -->
+    <div class="border-b border-gray-200">
+      <nav class="flex space-x-8" aria-label="Tabs">
+        <button type="button" onclick="showTab('personal')" id="tab-personal" class="tab-button py-2 px-1 border-b-2 font-medium text-sm border-yellow-500 text-yellow-600">
+          Personal Information
+        </button>
+        <button type="button" onclick="showTab('parents')" id="tab-parents" class="tab-button py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
+          Parents & Guardian Information
+        </button>
+      </nav>
+    </div>
+
+    <!-- Tab 1: Personal Information -->
+    <div id="personal-info-tab" class="tab-content pt-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <%= f.label :first_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_field :first_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+
+        <div>
+          <%= f.label :middle_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_field :middle_name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+
+        <div>
+          <%= f.label :last_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_field :last_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+
+        <div>
+          <%= f.label :date_of_birth, "Date of Birth", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.date_field :date_of_birth, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+
+        <div>
+          <%= f.label :gender, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.select :gender, options_for_select([['Male', 'Male'], ['Female', 'Female'], ['Other', 'Other']]), { include_blank: 'Select Gender' }, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+
+        <div>
+          <%= f.label :religion, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_field :religion, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "e.g., Christian, Muslim, Hindu, etc." %>
+        </div>
+
+        <div>
+          <%= f.label :academic_year, class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_field :academic_year, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "e.g., 2024-2025" %>
+        </div>
+
+        <div>
+          <%= f.label :admission_date, "Admission Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.date_field :admission_date, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+
+        <div class="md:col-span-2">
+          <%= f.label :student_address, "Student Address", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.text_area :student_address, rows: 3, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "Enter full address" %>
+        </div>
+
+        <div>
+          <%= f.label :school_class_id, "Class", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.collection_select :school_class_id, @school_classes, :id, :name, { include_blank: 'Select Class' }, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Parents & Guardian Information -->
+    <div id="parents-info-tab" class="tab-content pt-6" style="display: none;">
+      <%= f.fields_for :parent_info, @student.parent_info || @student.build_parent_info do |p| %>
+        <div class="space-y-6">
+          <!-- Father's Information -->
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-blue-900 mb-4">Father's Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <%= p.label :father_name, "Father's Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.text_field :father_name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+              </div>
+              <div>
+                <%= p.label :father_occupation, "Father's Occupation", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.text_field :father_occupation, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+              </div>
+              <div>
+                <%= p.label :father_phone, "Father's Phone Number", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.telephone_field :father_phone, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "+1234567890" %>
+              </div>
+              <div>
+                <%= p.label :father_email, "Father's Email", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.email_field :father_email, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mother's Information -->
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-blue-900 mb-4">Mother's Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <%= p.label :mother_name, "Mother's Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.text_field :mother_name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+              </div>
+              <div>
+                <%= p.label :mother_occupation, "Mother's Occupation", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.text_field :mother_occupation, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+              </div>
+              <div>
+                <%= p.label :mother_phone, "Mother's Phone Number", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.telephone_field :mother_phone, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "+1234567890" %>
+              </div>
+              <div>
+                <%= p.label :mother_email, "Mother's Email", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.email_field :mother_email, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Guardian's Information -->
+          <div class="border border-gray-200 rounded-lg p-4">
+            <h3 class="text-lg font-semibold text-blue-900 mb-4">Guardian's Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <%= p.label :guardian_name, "Guardian's Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.text_field :guardian_name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+              </div>
+              <div>
+                <%= p.label :guardian_occupation, "Guardian's Occupation", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.text_field :guardian_occupation, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+              </div>
+              <div>
+                <%= p.label :guardian_phone, "Guardian's Phone Number", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.telephone_field :guardian_phone, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "+1234567890" %>
+              </div>
+              <div>
+                <%= p.label :guardian_email, "Guardian's Email", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= p.email_field :guardian_email, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="flex justify-end space-x-3 pt-6">
+      <%= link_to "Cancel", admin_students_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      <%= f.submit "Create Student", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  function showTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.style.display = 'none';
+    });
+    
+    // Show selected tab content
+    if (tabName === 'personal') {
+      document.getElementById('personal-info-tab').style.display = 'block';
+    } else if (tabName === 'parents') {
+      document.getElementById('parents-info-tab').style.display = 'block';
+    }
+    
+    // Update tab styles
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.classList.remove('border-yellow-500', 'text-yellow-600');
+      button.classList.add('border-transparent', 'text-gray-500');
+    });
+    
+    const activeButton = document.getElementById(`tab-${tabName}`);
+    activeButton.classList.remove('border-transparent', 'text-gray-500');
+    activeButton.classList.add('border-yellow-500', 'text-yellow-600');
+  }
+</script>
