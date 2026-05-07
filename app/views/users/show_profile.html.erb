@@ -1,0 +1,205 @@
+<% content_for :page_title, "User Details: #{@user.full_name}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">User Details</h1>
+    <div class="space-x-3">
+      <%= link_to edit_admin_user_path(@user), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150" do %>
+        Edit User
+      <% end %>
+      <%= link_to "Back to Users", admin_users_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+    </div>
+  </div>
+
+  <!-- User Information -->
+  <div class="border border-gray-200 rounded-lg p-6 mb-6">
+    <h2 class="text-xl font-bold text-blue-900 mb-4">Personal Information</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Title</p>
+        <p class="font-medium text-gray-900"><%= @user.title || 'Not specified' %></p>
+      </div>
+      
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Full Name</p>
+        <p class="font-medium text-gray-900"><%= @user.full_name %></p>
+      </div>
+      
+      <div>
+        <p class="text-sm text-gray-600 mb-1">First Name</p>
+        <p class="font-medium text-gray-900"><%= @user.first_name %></p>
+      </div>
+      
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Middle Name</p>
+        <p class="font-medium text-gray-900"><%= @user.middle_name || '—' %></p>
+      </div>
+      
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Last Name</p>
+        <p class="font-medium text-gray-900"><%= @user.last_name %></p>
+      </div>
+      
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Phone Number</p>
+        <p class="font-medium text-gray-900"><%= @user.phone_number || '—' %></p>
+      </div>
+      
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Email Address</p>
+        <p class="font-medium text-gray-900"><%= @user.email %></p>
+      </div>
+      
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Role</p>
+        <p class="font-medium">
+          <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= @user.admin? ? 'bg-blue-900 text-yellow-500' : 'bg-gray-100 text-gray-800' %>">
+            <%= @user.admin? ? 'Administrator' : 'Regular User' %>
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account Information -->
+  <div class="border border-gray-200 rounded-lg p-6 mb-6">
+    <h2 class="text-xl font-bold text-blue-900 mb-4">Account Information</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-gray-50 rounded-lg p-4">
+        <p class="text-sm text-gray-600">Member Since</p>
+        <p class="font-semibold text-blue-900"><%= @user.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+      </div>
+      
+      <div class="bg-gray-50 rounded-lg p-4">
+        <p class="text-sm text-gray-600">Last Sign In</p>
+        <p class="font-semibold text-blue-900">
+          <% if @user.last_sign_in_at %>
+            <%= @user.last_sign_in_at.strftime("%B %d, %Y at %I:%M %p") %>
+          <% else %>
+            <span class="text-gray-500">Never signed in</span>
+          <% end %>
+        </p>
+      </div>
+      
+      <div class="bg-gray-50 rounded-lg p-4">
+        <p class="text-sm text-gray-600">Sign In Count</p>
+        <p class="font-semibold text-blue-900"><%= @user.sign_in_count || 0 %></p>
+      </div>
+      
+      <div class="bg-gray-50 rounded-lg p-4">
+        <p class="text-sm text-gray-600">User ID</p>
+        <p class="font-semibold text-blue-900 font-mono"><%= @user.id %></p>
+      </div>
+      
+      <% if @user.last_sign_in_ip %>
+        <div class="bg-gray-50 rounded-lg p-4">
+          <p class="text-sm text-gray-600">Last IP Address</p>
+          <p class="font-semibold text-blue-900 font-mono"><%= @user.last_sign_in_ip %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Assigned Resources -->
+  <div class="border border-gray-200 rounded-lg p-6">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold text-blue-900">Assigned Resources</h2>
+      <%= link_to "Manage Permissions", assign_resources_admin_user_path(@user), class: "text-yellow-600 hover:text-yellow-700 text-sm font-semibold" %>
+    </div>
+    
+    <!-- Categories -->
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-blue-800 mb-3">Categories</h3>
+      <% if @assigned_categories.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <% @assigned_categories.each do |category| %>
+            <div class="bg-gray-50 rounded-lg p-3 flex justify-between items-center">
+              <div>
+                <p class="font-medium text-gray-900"><%= category.name %></p>
+                <p class="text-xs text-gray-500">
+                  Permissions: 
+                  <% perms = @user.permissions_for(category) %>
+                  <%= perms['can_view'] ? '👁️' : '' %>
+                  <%= perms['can_create'] ? '➕' : '' %>
+                  <%= perms['can_edit'] ? '✏️' : '' %>
+                  <%= perms['can_delete'] ? '🗑️' : '' %>
+                </p>
+              </div>
+              <%= link_to "View", admin_category_path(category), class: "text-blue-600 hover:text-blue-800 text-sm" %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-500 italic">No categories assigned.</p>
+      <% end %>
+    </div>
+
+    <!-- Classes -->
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-blue-800 mb-3">Classes</h3>
+      <% if @assigned_classes.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <% @assigned_classes.each do |school_class| %>
+            <div class="bg-gray-50 rounded-lg p-3 flex justify-between items-center">
+              <div>
+                <p class="font-medium text-gray-900"><%= school_class.name %></p>
+                <p class="text-xs text-gray-500">
+                  Permissions: 
+                  <% perms = @user.permissions_for(school_class) %>
+                  <%= perms['can_view'] ? '👁️' : '' %>
+                  <%= perms['can_create'] ? '➕' : '' %>
+                  <%= perms['can_edit'] ? '✏️' : '' %>
+                  <%= perms['can_delete'] ? '🗑️' : '' %>
+                </p>
+              </div>
+              <%= link_to "View", admin_school_class_path(school_class), class: "text-blue-600 hover:text-blue-800 text-sm" %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-500 italic">No classes assigned.</p>
+      <% end %>
+    </div>
+
+    <!-- Subjects -->
+    <div>
+      <h3 class="text-lg font-semibold text-blue-800 mb-3">Subjects</h3>
+      <% if @assigned_subjects.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <% @assigned_subjects.each do |subject| %>
+            <div class="bg-gray-50 rounded-lg p-3 flex justify-between items-center">
+              <div>
+                <p class="font-medium text-gray-900"><%= subject.name %></p>
+                <p class="text-xs text-gray-500">
+                  Code: <%= subject.subject_code %> | 
+                  Permissions: 
+                  <% perms = @user.permissions_for(subject) %>
+                  <%= perms['can_view'] ? '👁️' : '' %>
+                  <%= perms['can_create'] ? '➕' : '' %>
+                  <%= perms['can_edit'] ? '✏️' : '' %>
+                  <%= perms['can_delete'] ? '🗑️' : '' %>
+                </p>
+              </div>
+              <%= link_to "View", admin_subject_path(subject), class: "text-blue-600 hover:text-blue-800 text-sm" %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-500 italic">No subjects assigned.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Danger Zone (for non-admin users) -->
+  <% unless @user.admin? %>
+    <div class="mt-6 pt-6 border-t border-red-200">
+      <div class="bg-red-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-red-700 mb-3">Danger Zone</h3>
+        <p class="text-sm text-red-600 mb-4">This action cannot be undone. This will permanently delete the user account.</p>
+        <%= link_to "Delete User", admin_user_path(@user), method: :delete, data: { confirm: "Are you sure you want to delete #{@user.full_name}? This action cannot be undone." }, class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-150" %>
+      </div>
+    </div>
+  <% end %>
+</div>

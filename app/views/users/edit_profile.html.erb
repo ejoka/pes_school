@@ -1,0 +1,65 @@
+<% content_for :page_title, "Edit Profile" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Edit Profile</h1>
+    <div class="space-x-3">
+      <%= link_to user_profile_path, class: "text-blue-600 hover:text-blue-900" do %>
+        Back to Profile
+      <% end %>
+    </div>
+  </div>
+
+  <%= form_with(model: @user, url: user_profile_path, method: :patch, local: true, class: "space-y-6") do |f| %>
+    <% if @user.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <h3 class="font-bold"><%= pluralize(@user.errors.count, "error") %> prohibited this profile from being saved:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= f.label :title, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.select :title, options_for_select([['Mr.', 'Mr.'], ['Mrs.', 'Mrs.'], ['Ms.', 'Ms.'], ['Dr.', 'Dr.'], ['Prof.', 'Prof.']], @user.title), { include_blank: 'Select Title' }, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div>
+        <%= f.label :first_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_field :first_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div>
+        <%= f.label :middle_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_field :middle_name, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        <p class="mt-1 text-xs text-gray-500">Optional</p>
+      </div>
+
+      <div>
+        <%= f.label :last_name, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_field :last_name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div>
+        <%= f.label :email, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.email_field :email, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100", readonly: true %>
+        <p class="mt-1 text-xs text-gray-500">Email cannot be changed</p>
+      </div>
+
+      <div>
+        <%= f.label :phone_number, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.telephone_field :phone_number, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "+1234567890" %>
+        <p class="mt-1 text-xs text-gray-500">Include country code for international numbers</p>
+      </div>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+      <%= link_to "Cancel", user_profile_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      <%= f.submit "Update Profile", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
+    </div>
+  <% end %>
+</div>

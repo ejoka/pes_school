@@ -1,0 +1,75 @@
+<% content_for :page_title, "Class: #{@school_class&.name || 'Not Found'}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <% if @school_class %>
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-blue-900"><%= @school_class.name %></h1>
+      <div class="space-x-3">
+        <% if current_user.can_access?(@school_class, :edit) %>
+          <%= link_to edit_admin_school_class_path(@school_class), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150" do %>
+            Edit Class
+          <% end %>
+        <% end %>
+        <%= link_to "Back to Classes", admin_school_classes_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      </div>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Class Details</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <p class="text-sm text-gray-600">Name</p>
+          <p class="font-medium text-gray-900"><%= @school_class.name %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Category</p>
+          <p class="font-medium text-gray-900">
+            <% if @school_class.category %>
+              <%= link_to @school_class.category.name, admin_category_path(@school_class.category), class: "text-blue-600 hover:text-blue-800" %>
+            <% else %>
+              <span class="text-gray-500">No category assigned</span>
+            <% end %>
+          </p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Pass Mark</p>
+          <p class="font-medium text-gray-900"><%= @school_class.pass_mark %>%</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Created At</p>
+          <p class="font-medium text-gray-900"><%= @school_class.created_at.strftime("%B %d, %Y") %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Total Subjects</p>
+          <p class="font-medium text-gray-900"><%= @school_class.subjects.count %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Subjects in this Class</h2>
+      <% if @school_class.subjects.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <% @school_class.subjects.each do |subject| %>
+            <div class="bg-gray-50 rounded-lg p-4 hover:shadow-md transition">
+              <%= link_to admin_subject_path(subject), class: "block" do %>
+                <h3 class="font-semibold text-blue-900"><%= subject.name %></h3>
+                <p class="text-sm text-gray-600 mt-1">Code: <span class="font-mono"><%= subject.subject_code %></span></p>
+                <p class="text-sm text-gray-600">Pass Mark: <%= subject.pass_mark %>%</p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-500 italic">No subjects found in this class.</p>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <div class="text-6xl mb-4">🔍</div>
+      <h1 class="text-2xl font-bold text-gray-700 mb-2">Class Not Found</h1>
+      <p class="text-gray-500 mb-6">The class you're looking for doesn't exist or you don't have access to it.</p>
+      <%= link_to "Back to Classes", admin_school_classes_path, class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150" %>
+    </div>
+  <% end %>
+</div>

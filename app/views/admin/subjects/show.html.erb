@@ -1,0 +1,87 @@
+<% content_for :page_title, "Subject: #{@subject&.name || 'Not Found'}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <% if @subject %>
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-blue-900"><%= @subject.name %></h1>
+      <div class="space-x-3">
+        <% if current_user.can_access?(@subject, :edit) %>
+          <%= link_to edit_admin_subject_path(@subject), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150" do %>
+            Edit Subject
+          <% end %>
+        <% end %>
+        <%= link_to "Back to Subjects", admin_subjects_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      </div>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Subject Details</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <p class="text-sm text-gray-600">Name</p>
+          <p class="font-medium text-gray-900"><%= @subject.name %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Subject Code</p>
+          <p class="font-medium text-gray-900 font-mono"><%= @subject.subject_code %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Class</p>
+          <p class="font-medium text-gray-900">
+            <% if @subject.school_class %>
+              <%= link_to @subject.school_class.name, admin_school_class_path(@subject.school_class), class: "text-blue-600 hover:text-blue-800" %>
+            <% else %>
+              <span class="text-gray-500">No class assigned</span>
+            <% end %>
+          </p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Pass Mark</p>
+          <p class="font-medium text-gray-900"><%= @subject.pass_mark %>%</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Created At</p>
+          <p class="font-medium text-gray-900"><%= @subject.created_at.strftime("%B %d, %Y") %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Last Updated</p>
+          <p class="font-medium text-gray-900"><%= @subject.updated_at.strftime("%B %d, %Y") %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Information -->
+    <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <h3 class="font-semibold text-blue-900 mb-2">Additional Information</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <p class="text-sm text-blue-800">Category</p>
+          <p class="text-sm text-gray-700">
+            <% if @subject.school_class&.category %>
+              <%= link_to @subject.school_class.category.name, admin_category_path(@subject.school_class.category), class: "text-blue-600 hover:text-blue-800" %>
+            <% else %>
+              N/A
+            <% end %>
+          </p>
+        </div>
+        <div>
+          <p class="text-sm text-blue-800">Status</p>
+          <p class="text-sm text-gray-700">
+            <% if @subject.pass_mark >= 50 %>
+              <span class="text-green-600 font-semibold">Standard Pass Mark</span>
+            <% else %>
+              <span class="text-yellow-600 font-semibold">Low Pass Mark</span>
+            <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <div class="text-6xl mb-4">🔍</div>
+      <h1 class="text-2xl font-bold text-gray-700 mb-2">Subject Not Found</h1>
+      <p class="text-gray-500 mb-6">The subject you're looking for doesn't exist or you don't have access to it.</p>
+      <%= link_to "Back to Subjects", admin_subjects_path, class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150" %>
+    </div>
+  <% end %>
+</div>

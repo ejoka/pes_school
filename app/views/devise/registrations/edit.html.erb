@@ -1,7 +1,7 @@
 <div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-blue-900">Change Password</h1>
-    <%= link_to "Back to Profile", profile_path, class: "text-blue-600 hover:text-blue-900" %>
+    <%= link_to "Back to Profile", user_profile_path, class: "text-blue-600 hover:text-blue-900" %>
   </div>
 
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
@@ -37,7 +37,7 @@
     </div>
 
     <div class="flex justify-end space-x-3">
-      <%= link_to "Cancel", profile_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      <%= link_to "Cancel", user_profile_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
       <%= f.submit "Update Password", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
     </div>
   <% end %>

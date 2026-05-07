@@ -1,0 +1,61 @@
+<% content_for :page_title, "Category: #{@category&.name || 'Not Found'}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <% if @category %>
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-blue-900"><%= @category.name %></h1>
+      <div class="space-x-3">
+        <% if current_user.can_access?(@category, :edit) %>
+          <%= link_to edit_admin_category_path(@category), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150" do %>
+            Edit Category
+          <% end %>
+        <% end %>
+        <%= link_to "Back to Categories", admin_categories_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      </div>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Category Details</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <p class="text-sm text-gray-600">Name</p>
+          <p class="font-medium text-gray-900"><%= @category.name %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Created At</p>
+          <p class="font-medium text-gray-900"><%= @category.created_at.strftime("%B %d, %Y") %></p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Total Classes</p>
+          <p class="font-medium text-gray-900"><%= @category.school_classes.count %></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 border border-gray-200 rounded-lg p-6">
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Classes in this Category</h2>
+      <% if @category.school_classes.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <% @category.school_classes.each do |school_class| %>
+            <div class="bg-gray-50 rounded-lg p-4 hover:shadow-md transition">
+              <%= link_to admin_school_class_path(school_class), class: "block" do %>
+                <h3 class="font-semibold text-blue-900"><%= school_class.name %></h3>
+                <p class="text-sm text-gray-600 mt-1">Pass Mark: <%= school_class.pass_mark %>%</p>
+                <p class="text-xs text-gray-500 mt-1"><%= school_class.subjects.count %> subjects</p>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-gray-500 italic">No classes found in this category.</p>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <div class="text-6xl mb-4">🔍</div>
+      <h1 class="text-2xl font-bold text-gray-700 mb-2">Category Not Found</h1>
+      <p class="text-gray-500 mb-6">The category you're looking for doesn't exist or you don't have access to it.</p>
+      <%= link_to "Back to Categories", admin_categories_path, class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150" %>
+    </div>
+  <% end %>
+</div>
