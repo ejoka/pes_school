@@ -7,25 +7,9 @@ class User < ApplicationRecord
   validates :first_name, :last_name, :email, presence: true
   validates :phone_number, format: { with: /\A\+?[\d\s\-\(\)]+\z/, allow_blank: true }
   
-  # Professional Type
+  # Professional Type - allow any string, no predefined list
   validates :professional_type, presence: true, if: -> { !admin? }
   
-  # Define professional type options
-  PROFESSIONAL_TYPES = [
-    ['Teacher', 'teacher'],
-    ['Administrator', 'administrator'],
-    ['Librarian', 'librarian'],
-    ['Counselor', 'counselor'],
-    ['Principal', 'principal'],
-    ['Vice Principal', 'vice_principal'],
-    ['Department Head', 'department_head'],
-    ['Accountant', 'accountant'],
-    ['IT Staff', 'it_staff'],
-    ['Security', 'security'],
-    ['Maintenance', 'maintenance'],
-    ['Other', 'other']
-  ].freeze
-
   # Relationships
   has_many :user_resources, dependent: :destroy
   
@@ -64,7 +48,12 @@ class User < ApplicationRecord
 
   def professional_type_humanized
     return 'N/A' if admin?
-    PROFESSIONAL_TYPES.find { |type| type[1] == professional_type }&.first || professional_type&.humanize || 'Not specified'
+    professional_type.present? ? professional_type.titleize : 'Not specified'
+  end
+
+  # Get all unique professional types from existing users (for dropdown options)
+  def self.unique_professional_types
+    where.not(professional_type: nil).distinct.pluck(:professional_type).sort
   end
 
   private
@@ -74,6 +63,6 @@ class User < ApplicationRecord
   end
 
   def set_default_professional_type
-    self.professional_type ||= 'teacher' unless admin?
+    self.professional_type ||= 'Teacher' unless admin?
   end
 end

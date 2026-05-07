@@ -1,5 +1,4 @@
 class Admin::UsersController < ApplicationController
-  #helper Admin::UsersHelper
   before_action :ensure_admin!
   before_action :set_user, only: [:show, :edit, :update, :destroy, :assign_resources, :save_resource_assignment]
 
@@ -15,6 +14,7 @@ class Admin::UsersController < ApplicationController
 
   def new
     @user = User.new
+    @professional_types = User.unique_professional_types
   end
 
   def create
@@ -26,17 +26,20 @@ class Admin::UsersController < ApplicationController
     if @user.save
       redirect_to admin_users_path, notice: "User #{@user.email} was successfully created. Temporary password: #{random_password}"
     else
+      @professional_types = User.unique_professional_types
       render :new
     end
   end
 
   def edit
+    @professional_types = User.unique_professional_types
   end
 
   def update
     if @user.update(user_params)
       redirect_to admin_users_path, notice: 'User was successfully updated.'
     else
+      @professional_types = User.unique_professional_types
       render :edit
     end
   end

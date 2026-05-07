@@ -1,4 +1,5 @@
 <% content_for :page_title, "Edit User" %>
+
 <div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-blue-900">Edit User</h1>
@@ -49,48 +50,38 @@
       </div>
 
       <div>
+        <%= f.label :professional_type, "Professional Type", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <div class="flex space-x-2">
+          <div class="flex-1">
+            <%= f.select :professional_type, 
+                options_for_select(@professional_types.map { |type| [type.titleize, type] }, @user.professional_type), 
+                { include_blank: 'Select existing or add new' }, 
+                class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500",
+                id: "professional_type_select" %>
+          </div>
+          <button type="button" onclick="showNewProfessionalTypeInput()" class="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600 transition duration-150">
+            Add New
+          </button>
+        </div>
+        <div id="new_professional_type_container" style="display: none;" class="mt-2">
+          <div class="flex space-x-2">
+            <%= text_field_tag :new_professional_type, nil, 
+                placeholder: "Enter new professional type", 
+                class: "flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500",
+                id: "new_professional_type_input" %>
+            <button type="button" onclick="addNewProfessionalType()" class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 transition duration-150">
+              Add
+            </button>
+            <button type="button" onclick="hideNewProfessionalTypeInput()" class="bg-gray-500 text-white px-3 py-2 rounded hover:bg-gray-600 transition duration-150">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div>
         <%= f.label :role, class: "block text-sm font-medium text-gray-700 mb-2" %>
         <%= f.select :role, options_for_select([['User', 'user'], ['Admin', 'admin']], @user.role), {}, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
-      </div>
-    </div>
-
-    <!-- Resource Summary Section -->
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-      <h3 class="font-semibold text-blue-900 mb-2">Assigned Resources</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-        <div>
-          <span class="text-gray-600">Categories:</span>
-          <span class="font-semibold text-blue-900 ml-2"><%= @user.assigned_categories.count %></span>
-          <% if @user.assigned_categories.any? %>
-            <div class="text-xs text-gray-500 mt-1">
-              <%= @user.assigned_categories.limit(3).map(&:name).join(', ') %>
-              <% if @user.assigned_categories.count > 3 %>...<% end %>
-            </div>
-          <% end %>
-        </div>
-        <div>
-          <span class="text-gray-600">Classes:</span>
-          <span class="font-semibold text-blue-900 ml-2"><%= @user.assigned_classes.count %></span>
-          <% if @user.assigned_classes.any? %>
-            <div class="text-xs text-gray-500 mt-1">
-              <%= @user.assigned_classes.limit(3).map(&:name).join(', ') %>
-              <% if @user.assigned_classes.count > 3 %>...<% end %>
-            </div>
-          <% end %>
-        </div>
-        <div>
-          <span class="text-gray-600">Subjects:</span>
-          <span class="font-semibold text-blue-900 ml-2"><%= @user.assigned_subjects.count %></span>
-          <% if @user.assigned_subjects.any? %>
-            <div class="text-xs text-gray-500 mt-1">
-              <%= @user.assigned_subjects.limit(3).map(&:name).join(', ') %>
-              <% if @user.assigned_subjects.count > 3 %>...<% end %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-      <div class="mt-3">
-        <%= link_to "Manage Resources", assign_resources_admin_user_path(@user), class: "text-sm text-yellow-600 hover:text-yellow-700 font-semibold" %>
       </div>
     </div>
 
@@ -106,3 +97,31 @@
     </div>
   <% end %>
 </div>
+
+<script>
+  function showNewProfessionalTypeInput() {
+    document.getElementById('new_professional_type_container').style.display = 'block';
+    document.getElementById('professional_type_select').disabled = true;
+  }
+  
+  function hideNewProfessionalTypeInput() {
+    document.getElementById('new_professional_type_container').style.display = 'none';
+    document.getElementById('professional_type_select').disabled = false;
+    document.getElementById('new_professional_type_input').value = '';
+  }
+  
+  function addNewProfessionalType() {
+    const newType = document.getElementById('new_professional_type_input').value.trim();
+    if (newType) {
+      const select = document.getElementById('professional_type_select');
+      const option = document.createElement('option');
+      option.value = newType.toLowerCase().replace(/\s+/g, '_');
+      option.text = newType;
+      select.add(option);
+      select.value = option.value;
+      hideNewProfessionalTypeInput();
+    } else {
+      alert('Please enter a professional type');
+    }
+  }
+</script>
