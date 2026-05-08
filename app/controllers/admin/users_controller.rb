@@ -61,6 +61,7 @@ class Admin::UsersController < ApplicationController
     @classes = SchoolClass.all
     @subjects = Subject.all
     @student_management = StudentManagement.default
+    @fee_management = FeeManagement.default
     @resource_permissions = {}
     
     # Load existing permissions
@@ -89,6 +90,19 @@ class Admin::UsersController < ApplicationController
               can_delete: permissions[:can_delete] == '1'
             }
           )
+          elsif resource_type == 'FeeManagement'
+        permissions = resources_data
+        fee_management = FeeManagement.default
+        @user.user_resources.create(
+          resource_type: resource_type,
+          resource_id: fee_management.id,
+          permissions: {
+            can_view: permissions[:can_view] == '1',
+            can_create: permissions[:can_create] == '1',
+            can_edit: permissions[:can_edit] == '1',
+            can_delete: permissions[:can_delete] == '1'
+          }
+        )
         else
           # Handle other resources
           resources_data.each do |resource_id, permissions|

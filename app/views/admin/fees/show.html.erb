@@ -1,0 +1,95 @@
+<% content_for :page_title, "Fee Details" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Fee Details</h1>
+    <div class="space-x-3">
+      <%= link_to "Record Payment", record_payment_admin_fee_path(@fee), class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-150" %>
+      <%= link_to "Edit Fee", edit_admin_fee_path(@fee), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150" %>
+      <%= link_to "Back to Fees", admin_fees_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+    </div>
+  </div>
+
+  <!-- Fee Information -->
+  <div class="border border-gray-200 rounded-lg p-6 mb-6">
+    <h2 class="text-xl font-bold text-blue-900 mb-4">Fee Information</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Student</p>
+        <p class="font-medium text-gray-900"><%= link_to @fee.student.full_name, admin_student_path(@fee.student), class: "text-blue-600 hover:text-blue-800" %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Fee Type</p>
+        <p class="font-medium text-gray-900"><%= @fee.fee_type.name %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Amount to Pay</p>
+        <p class="font-medium text-gray-900">$<%= number_with_delimiter(@fee.amount_to_pay.to_i) %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Amount Paid</p>
+        <p class="font-medium text-green-600">$<%= number_with_delimiter(@fee.amount_paid.to_i) %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Remaining Balance</p>
+        <p class="font-medium text-red-600">$<%= number_with_delimiter(@fee.remaining_balance.to_i) %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Status</p>
+        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= @fee.status_color %>">
+          <%= @fee.status.humanize %>
+        </span>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Due Date</p>
+        <p class="font-medium text-gray-900"><%= @fee.due_date.strftime("%B %d, %Y") if @fee.due_date %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Percentage Paid</p>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+          <div class="bg-green-600 h-2.5 rounded-full" style="width: <%= @fee.percentage_paid %>%"></div>
+        </div>
+        <p class="text-sm text-gray-600 mt-1"><%= @fee.percentage_paid %>% complete</p>
+      </div>
+      <% if @fee.notes.present? %>
+        <div class="md:col-span-2">
+          <p class="text-sm text-gray-600 mb-1">Notes</p>
+          <p class="font-medium text-gray-900"><%= @fee.notes %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Payment History -->
+  <div class="border border-gray-200 rounded-lg p-6">
+    <h2 class="text-xl font-bold text-blue-900 mb-4">Payment History</h2>
+    <% if @payments.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
+             </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @payments.each do |payment| %>
+              <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= payment.payment_date.strftime("%b %d, %Y") %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">$<%= number_with_delimiter(payment.amount.to_i) %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900"><%= payment.payment_method %></td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= payment.reference_number || '—' %></td>
+                <td class="px-6 py-4 text-sm text-gray-500"><%= payment.notes || '—' %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-gray-500 italic">No payments recorded yet.</p>
+    <% end %>
+  </div>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_07_201944) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_08_013205) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,6 +18,36 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_201944) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "fee_managements", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "fee_types", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "fees", force: :cascade do |t|
+    t.bigint "student_id", null: false
+    t.bigint "fee_type_id", null: false
+    t.decimal "amount_to_pay"
+    t.decimal "amount_paid"
+    t.decimal "remaining_balance"
+    t.string "status"
+    t.date "due_date"
+    t.date "payment_date"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fee_type_id"], name: "index_fees_on_fee_type_id"
+    t.index ["student_id"], name: "index_fees_on_student_id"
   end
 
   create_table "parent_infos", force: :cascade do |t|
@@ -37,6 +67,20 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_201944) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_id"], name: "index_parent_infos_on_student_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.bigint "student_id", null: false
+    t.bigint "fee_id", null: false
+    t.decimal "amount"
+    t.date "payment_date"
+    t.string "payment_method"
+    t.string "reference_number"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fee_id"], name: "index_payments_on_fee_id"
+    t.index ["student_id"], name: "index_payments_on_student_id"
   end
 
   create_table "school_classes", force: :cascade do |t|
@@ -117,7 +161,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_07_201944) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "fees", "fee_types"
+  add_foreign_key "fees", "students"
   add_foreign_key "parent_infos", "students"
+  add_foreign_key "payments", "fees"
+  add_foreign_key "payments", "students"
   add_foreign_key "school_classes", "categories"
   add_foreign_key "students", "school_classes"
   add_foreign_key "students", "users"

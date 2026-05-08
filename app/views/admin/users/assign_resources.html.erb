@@ -188,101 +188,198 @@
     </div>
 
     <!-- Student Management Section -->
-<div class="border border-gray-200 rounded-lg overflow-hidden">
-  <div class="bg-blue-900 text-white px-6 py-3">
-    <h2 class="text-xl font-bold">Student Management</h2>
-  </div>
-  
-  <div class="overflow-x-auto">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
-          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-            <button type="button" onclick="toggleAllStudentPermissions(true)" class="text-green-600 hover:text-green-800">Select All</button>
-          </th>
-          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-            <button type="button" onclick="toggleAllStudentPermissions(false)" class="text-red-600 hover:text-red-800">Clear All</button>
-          </th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <% key = "StudentManagement_#{@student_management.id}" %>
-        <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
-        <tr class="hover:bg-gray-50">
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm font-medium text-gray-900"><%= @student_management.name %></div>
-            <div class="text-xs text-gray-500"><%= @student_management.description %></div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-center">
-            <div class="flex justify-center space-x-4">
-              <label class="inline-flex items-center">
-                <input type="checkbox" onclick="togglePermission('view')" id="view_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                <span class="ml-2 text-xs text-gray-600">View All</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="checkbox" onclick="togglePermission('create')" id="create_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                <span class="ml-2 text-xs text-gray-600">Create All</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="checkbox" onclick="togglePermission('edit')" id="edit_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                <span class="ml-2 text-xs text-gray-600">Edit All</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="checkbox" onclick="togglePermission('delete')" id="delete_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                <span class="ml-2 text-xs text-gray-600">Delete All</span>
-              </label>
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-center">
-            <div class="flex justify-center space-x-4">
-              <button type="button" onclick="setAllPermissions(true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Grant All</button>
-              <button type="button" onclick="setAllPermissions(false)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Revoke All</button>
-            </div>
-          </td>
-        <tr>
-        <tr>
-          <td colspan="3" class="px-6 py-3 bg-gray-50">
-            <div class="flex justify-center space-x-6">
-              <label class="inline-flex items-center">
-                <input type="hidden" name="resources[StudentManagement][can_view]" value="0" id="view_hidden">
-                <%= check_box_tag "resources[StudentManagement][can_view]", "1", existing_perms['can_view'], 
-                    class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                    id: "view_checkbox",
-                    data: { action: "view" } %>
-                <span class="ml-2 text-sm text-gray-700">View Students</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="hidden" name="resources[StudentManagement][can_create]" value="0" id="create_hidden">
-                <%= check_box_tag "resources[StudentManagement][can_create]", "1", existing_perms['can_create'], 
-                    class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                    id: "create_checkbox",
-                    data: { action: "create" } %>
-                <span class="ml-2 text-sm text-gray-700">Create Students</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="hidden" name="resources[StudentManagement][can_edit]" value="0" id="edit_hidden">
-                <%= check_box_tag "resources[StudentManagement][can_edit]", "1", existing_perms['can_edit'], 
-                    class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                    id: "edit_checkbox",
-                    data: { action: "edit" } %>
-                <span class="ml-2 text-sm text-gray-700">Edit Students</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="hidden" name="resources[StudentManagement][can_delete]" value="0" id="delete_hidden">
-                <%= check_box_tag "resources[StudentManagement][can_delete]", "1", existing_perms['can_delete'], 
-                    class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                    id: "delete_checkbox",
-                    data: { action: "delete" } %>
-                <span class="ml-2 text-sm text-gray-700">Delete Students</span>
-              </label>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+    <div class="border border-gray-200 rounded-lg overflow-hidden">
+      <div class="bg-blue-900 text-white px-6 py-3">
+        <h2 class="text-xl font-bold">Student Management</h2>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <button type="button" onclick="toggleAllStudentPermissions(true)" class="text-green-600 hover:text-green-800">Select All</button>
+              </th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <button type="button" onclick="toggleAllStudentPermissions(false)" class="text-red-600 hover:text-red-800">Clear All</button>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% key = "StudentManagement_#{@student_management.id}" %>
+            <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900"><%= @student_management.name %></div>
+                <div class="text-xs text-gray-500"><%= @student_management.description %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex justify-center space-x-4">
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="togglePermission('view')" id="view_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">View All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="togglePermission('create')" id="create_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Create All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="togglePermission('edit')" id="edit_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Edit All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="togglePermission('delete')" id="delete_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Delete All</span>
+                  </label>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex justify-center space-x-4">
+                  <button type="button" onclick="setAllPermissions(true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Grant All</button>
+                  <button type="button" onclick="setAllPermissions(false)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Revoke All</button>
+                </div>
+              </td>
+            <tr>
+            <tr>
+              <td colspan="3" class="px-6 py-3 bg-gray-50">
+                <div class="flex justify-center space-x-6">
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[StudentManagement][can_view]" value="0" id="view_hidden">
+                    <%= check_box_tag "resources[StudentManagement][can_view]", "1", existing_perms['can_view'], 
+                        class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "view_checkbox",
+                        data: { action: "view" } %>
+                    <span class="ml-2 text-sm text-gray-700">View Students</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[StudentManagement][can_create]" value="0" id="create_hidden">
+                    <%= check_box_tag "resources[StudentManagement][can_create]", "1", existing_perms['can_create'], 
+                        class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "create_checkbox",
+                        data: { action: "create" } %>
+                    <span class="ml-2 text-sm text-gray-700">Create Students</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[StudentManagement][can_edit]" value="0" id="edit_hidden">
+                    <%= check_box_tag "resources[StudentManagement][can_edit]", "1", existing_perms['can_edit'], 
+                        class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "edit_checkbox",
+                        data: { action: "edit" } %>
+                    <span class="ml-2 text-sm text-gray-700">Edit Students</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[StudentManagement][can_delete]" value="0" id="delete_hidden">
+                    <%= check_box_tag "resources[StudentManagement][can_delete]", "1", existing_perms['can_delete'], 
+                        class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "delete_checkbox",
+                        data: { action: "delete" } %>
+                    <span class="ml-2 text-sm text-gray-700">Delete Students</span>
+                  </label>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Fee Management Section -->
+    <div class="border border-gray-200 rounded-lg overflow-hidden">
+      <div class="bg-blue-900 text-white px-6 py-3">
+        <h2 class="text-xl font-bold">Fee Management</h2>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <button type="button" onclick="toggleAllFeePermissions(true)" class="text-green-600 hover:text-green-800">Select All</button>
+              </th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <button type="button" onclick="toggleAllFeePermissions(false)" class="text-red-600 hover:text-red-800">Clear All</button>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% key = "FeeManagement_#{@fee_management.id}" %>
+            <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900"><%= @fee_management.name %></div>
+                <div class="text-xs text-gray-500"><%= @fee_management.description %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex justify-center space-x-4">
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleFeePermission('view')" id="fee_view_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">View All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleFeePermission('create')" id="fee_create_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Create All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleFeePermission('edit')" id="fee_edit_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Edit All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleFeePermission('delete')" id="fee_delete_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Delete All</span>
+                  </label>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex justify-center space-x-4">
+                  <button type="button" onclick="setAllFeePermissions(true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Grant All</button>
+                  <button type="button" onclick="setAllFeePermissions(false)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Revoke All</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3" class="px-6 py-3 bg-gray-50">
+                <div class="flex justify-center space-x-6">
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[FeeManagement][can_view]" value="0" id="fee_view_hidden">
+                    <%= check_box_tag "resources[FeeManagement][can_view]", "1", existing_perms['can_view'], 
+                        class: "fee-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "fee_view_checkbox",
+                        data: { action: "view" } %>
+                    <span class="ml-2 text-sm text-gray-700">View Fees</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[FeeManagement][can_create]" value="0" id="fee_create_hidden">
+                    <%= check_box_tag "resources[FeeManagement][can_create]", "1", existing_perms['can_create'], 
+                        class: "fee-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "fee_create_checkbox",
+                        data: { action: "create" } %>
+                    <span class="ml-2 text-sm text-gray-700">Create Fees</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[FeeManagement][can_edit]" value="0" id="fee_edit_hidden">
+                    <%= check_box_tag "resources[FeeManagement][can_edit]", "1", existing_perms['can_edit'], 
+                        class: "fee-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "fee_edit_checkbox",
+                        data: { action: "edit" } %>
+                    <span class="ml-2 text-sm text-gray-700">Edit Fees</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[FeeManagement][can_delete]" value="0" id="fee_delete_hidden">
+                    <%= check_box_tag "resources[FeeManagement][can_delete]", "1", existing_perms['can_delete'], 
+                        class: "fee-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "fee_delete_checkbox",
+                        data: { action: "delete" } %>
+                    <span class="ml-2 text-sm text-gray-700">Delete Fees</span>
+                  </label>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
     <!-- Permission Summary -->
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -352,5 +449,42 @@
   document.querySelectorAll('.permission-checkbox').forEach(checkbox => {
     const action = checkbox.dataset.action;
     checkbox.addEventListener('change', () => updateCheckboxState(action));
+  });
+
+    // Fee management permission functions
+  function toggleFeePermission(action) {
+    const checkbox = document.getElementById(`fee_${action}_checkbox`);
+    checkbox.checked = !checkbox.checked;
+    updateFeeCheckboxState(action);
+  }
+  
+  function updateFeeCheckboxState(action) {
+    const checkbox = document.getElementById(`fee_${action}_checkbox`);
+    const hidden = document.getElementById(`fee_${action}_hidden`);
+    hidden.value = checkbox.checked ? '1' : '0';
+  }
+  
+  function setAllFeePermissions(grant) {
+    const actions = ['view', 'create', 'edit', 'delete'];
+    actions.forEach(action => {
+      const checkbox = document.getElementById(`fee_${action}_checkbox`);
+      checkbox.checked = grant;
+      updateFeeCheckboxState(action);
+    });
+  }
+  
+  function toggleAllFeePermissions(select) {
+    const actions = ['view', 'create', 'edit', 'delete'];
+    actions.forEach(action => {
+      const checkbox = document.getElementById(`fee_${action}_checkbox`);
+      checkbox.checked = select;
+      updateFeeCheckboxState(action);
+    });
+  }
+  
+  // Initialize fee checkboxes
+  document.querySelectorAll('.fee-permission-checkbox').forEach(checkbox => {
+    const action = checkbox.dataset.action;
+    checkbox.addEventListener('change', () => updateFeeCheckboxState(action));
   });
 </script>

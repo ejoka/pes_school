@@ -18,7 +18,8 @@ class User < ApplicationRecord
   has_many :assigned_school_classes, through: :user_resources, source: :resource, source_type: 'SchoolClass'
   has_many :assigned_subjects, through: :user_resources, source: :resource, source_type: 'Subject'
   has_many :assigned_student_managements, through: :user_resources, source: :resource, source_type: 'StudentManagement'
-
+  has_many :assigned_fee_managements, through: :user_resources, source: :resource, source_type: 'FeeManagement'
+  
   # Role management
   enum :role, { user: 0, admin: 1 }
 
@@ -41,6 +42,12 @@ class User < ApplicationRecord
     return true if admin?
     student_management = StudentManagement.default
     can_access?(student_management, action)
+  end
+
+  def can_manage_fees?(action = :view)
+    return true if admin?
+    fee_management = FeeManagement.default
+    can_access?(fee_management, action)
   end
 
   # Helper method for backward compatibility
