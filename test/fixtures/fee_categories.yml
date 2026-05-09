@@ -2,8 +2,10 @@
 
 one:
   name: MyString
-  description: MyText
+  description: MyString
+  is_recurring: false
 
 two:
   name: MyString
-  description: MyText
+  description: MyString
+  is_recurring: false

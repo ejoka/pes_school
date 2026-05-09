@@ -2,18 +2,16 @@
 
 one:
   student: one
-  fee: one
   amount: 9.99
-  payment_date: 2026-05-08
+  payment_date: 2026-05-09
   payment_method: MyString
-  reference_number: MyString
+  reference: MyString
   notes: MyText
 
 two:
   student: two
-  fee: two
   amount: 9.99
-  payment_date: 2026-05-08
+  payment_date: 2026-05-09
   payment_method: MyString
-  reference_number: MyString
+  reference: MyString
   notes: MyText

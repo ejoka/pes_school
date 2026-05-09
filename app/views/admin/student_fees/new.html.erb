@@ -1,0 +1,51 @@
+<% content_for :page_title, "Add Fee for #{@student.full_name}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Add New Fee</h1>
+    <%= link_to "Back to Fees", admin_student_student_fees_path(@student), class: "text-blue-600 hover:text-blue-900" %>
+  </div>
+
+  <p class="text-gray-600 mb-6">Student: <span class="font-semibold"><%= @student.full_name %></span> | Class: <span class="font-semibold"><%= @student.school_class&.name %></span></p>
+
+  <%= form_with(model: [:admin, @student, @student_fee], local: true, class: "space-y-6") do |f| %>
+    <% if @student_fee.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <h3 class="font-bold"><%= pluralize(@student_fee.errors.count, "error") %> prohibited this fee from being saved:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @student_fee.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 gap-6">
+      <div>
+        <%= f.label :fee_category_id, "Fee Category", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <% if @fee_categories.present? %>
+          <%= f.collection_select :fee_category_id, @fee_categories, :id, :name, { include_blank: 'Select Fee Category' }, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        <% else %>
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <p class="text-yellow-800">No fee categories found. Please run <code class="bg-yellow-100 px-2 py-1 rounded">rails db:seed</code> to create fee categories.</p>
+          </div>
+        <% end %>
+      </div>
+
+      <div>
+        <%= f.label :amount, "Amount ($)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.number_field :amount, required: true, step: 0.01, min: 0, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "0.00" %>
+      </div>
+
+      <div>
+        <%= f.label :due_date, "Due Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.date_field :due_date, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+      <%= link_to "Cancel", admin_student_student_fees_path(@student), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      <%= f.submit "Add Fee", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
+    </div>
+  <% end %>
+</div>

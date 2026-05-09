@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_08_013205) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_09_124543) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -20,34 +20,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_08_013205) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "fee_categories", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.boolean "is_recurring", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "fee_managements", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "fee_types", force: :cascade do |t|
-    t.string "name"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "fees", force: :cascade do |t|
-    t.bigint "student_id", null: false
-    t.bigint "fee_type_id", null: false
-    t.decimal "amount_to_pay"
-    t.decimal "amount_paid"
-    t.decimal "remaining_balance"
-    t.string "status"
-    t.date "due_date"
-    t.date "payment_date"
-    t.text "notes"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["fee_type_id"], name: "index_fees_on_fee_type_id"
-    t.index ["student_id"], name: "index_fees_on_student_id"
   end
 
   create_table "parent_infos", force: :cascade do |t|
@@ -71,15 +56,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_08_013205) do
 
   create_table "payments", force: :cascade do |t|
     t.bigint "student_id", null: false
-    t.bigint "fee_id", null: false
     t.decimal "amount"
     t.date "payment_date"
     t.string "payment_method"
-    t.string "reference_number"
+    t.string "reference"
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["fee_id"], name: "index_payments_on_fee_id"
+    t.integer "created_by_id"
     t.index ["student_id"], name: "index_payments_on_student_id"
   end
 
@@ -90,6 +74,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_08_013205) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_school_classes_on_category_id"
+  end
+
+  create_table "student_fees", force: :cascade do |t|
+    t.bigint "student_id", null: false
+    t.bigint "fee_category_id", null: false
+    t.decimal "amount"
+    t.date "due_date"
+    t.boolean "is_paid", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fee_category_id"], name: "index_student_fees_on_fee_category_id"
+    t.index ["student_id"], name: "index_student_fees_on_student_id"
   end
 
   create_table "student_managements", force: :cascade do |t|
@@ -161,12 +157,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_08_013205) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "fees", "fee_types"
-  add_foreign_key "fees", "students"
   add_foreign_key "parent_infos", "students"
-  add_foreign_key "payments", "fees"
   add_foreign_key "payments", "students"
   add_foreign_key "school_classes", "categories"
+  add_foreign_key "student_fees", "fee_categories"
+  add_foreign_key "student_fees", "students"
   add_foreign_key "students", "school_classes"
   add_foreign_key "students", "users"
   add_foreign_key "subjects", "school_classes"

@@ -80,19 +80,29 @@ Rails.application.routes.draw do
     resources :categories
     resources :school_classes
     resources :subjects
-    resources :students 
-    resources :fee_types
-    resources :fees do
-      member do
-        get 'record_payment'
+    resources :students do
+      resources :student_fees do
+        collection do
+          get 'bulk_add'
+          post 'bulk_add'
+          get 'generate_invoice'
+        end
       end
-      collection do
-        post 'save_payment'
-        get 'bulk_fees'
-        post 'bulk_fees'
-        post 'create_fee_type'
-      end
+      resources :payments
     end
+    # resources :fee_types
+    # resources :fees do
+    #   member do
+    #     get 'record_payment'
+    #   end
+    #   collection do
+    #     post 'save_payment'
+    #     get 'bulk_fees'
+    #     post 'bulk_fees'
+    #     post 'create_fee_type'
+    #   end
+    # end
+      get 'all_students_fees', to: 'student_fees#all_students', as: :all_students_fees
   end
   
   # User profile routes - use a different name to avoid conflict

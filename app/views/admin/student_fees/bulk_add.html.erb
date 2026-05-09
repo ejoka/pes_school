@@ -1,0 +1,87 @@
+<% content_for :page_title, "Bulk Add Fees for #{@student.full_name}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Bulk Add Fees</h1>
+    <%= link_to "Back to Fees", admin_student_student_fees_path(@student), class: "text-blue-600 hover:text-blue-900" %>
+  </div>
+
+  <p class="text-gray-600 mb-6">Student: <span class="font-semibold"><%= @student.full_name %></span> | Class: <span class="font-semibold"><%= @student.school_class&.name %></span></p>
+
+  <%= form_tag(bulk_add_admin_student_student_fees_path(@student), method: :post, class: "space-y-6") do %>
+    <div class="grid grid-cols-1 gap-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Select Fee Categories</label>
+        <div class="border border-gray-200 rounded-lg p-4 max-h-96 overflow-y-auto">
+          <% if @fee_categories.present? %>
+            <div class="space-y-3">
+              <% @fee_categories.each do |category| %>
+                <div class="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded">
+                  <input type="checkbox" 
+                         name="fee_category_ids[]" 
+                         value="<%= category.id %>" 
+                         id="category_<%= category.id %>"
+                         class="form-checkbox h-4 w-4 text-yellow-500 rounded focus:ring-yellow-500">
+                  <label for="category_<%= category.id %>" class="flex-1">
+                    <span class="font-medium text-gray-900"><%= category.name %></span>
+                    <span class="text-xs text-gray-500 ml-2">(<%= category.is_recurring ? 'Recurring' : 'One-time' %>)</span>
+                  </label>
+                  <div class="w-48">
+                    <input type="number" 
+                           name="amount_<%= category.id %>" 
+                           placeholder="Amount ($)" 
+                           step="0.01" 
+                           min="0"
+                           class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 text-sm">
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <p class="text-yellow-800">No fee categories found. Please run <code class="bg-yellow-100 px-2 py-1 rounded">rails db:seed</code> to create fee categories.</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div>
+        <label for="due_date" class="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
+        <input type="date" 
+               name="due_date" 
+               id="due_date" 
+               required 
+               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
+      </div>
+    </div>
+
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <p class="text-sm text-blue-800">
+        <strong>Note:</strong> Check the fee categories you want to add, enter the amount for each, and set a due date.
+      </p>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+      <%= link_to "Cancel", admin_student_student_fees_path(@student), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      <%= submit_tag "Add Selected Fees", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  // Enable/disable amount fields based on checkbox
+  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const amountField = this.closest('.flex').querySelector('input[type="number"]');
+      if (amountField) {
+        amountField.disabled = !this.checked;
+        if (!this.checked) {
+          amountField.value = '';
+        }
+      }
+    });
+    
+    // Trigger change event to set initial state
+    checkbox.dispatchEvent(new Event('change'));
+  });
+</script>

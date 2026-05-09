@@ -50,6 +50,21 @@ class User < ApplicationRecord
     can_access?(fee_management, action)
   end
 
+    def can_generate_invoice?
+    return true if admin?
+    can_manage_fees?(:view) || can_manage_fees?(:edit)
+  end
+  
+  def accessible_students
+    if admin?
+      Student.all
+    elsif can_manage_fees?(:view)
+      Student.all
+    else
+      Student.none
+    end
+  end
+
   # Helper method for backward compatibility
   def assigned_classes
     assigned_school_classes
