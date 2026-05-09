@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_09_124543) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_09_131617) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -64,6 +64,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_09_124543) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "created_by_id"
+    t.string "payable_type"
+    t.integer "payable_id"
     t.index ["student_id"], name: "index_payments_on_student_id"
   end
 

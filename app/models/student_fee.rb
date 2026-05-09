@@ -15,6 +15,7 @@ class StudentFee < ApplicationRecord
   
   def update_payment_status
     self.is_paid = payments.sum(:amount) >= amount
+    true
   end
   
   def amount_paid

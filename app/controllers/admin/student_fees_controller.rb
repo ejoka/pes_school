@@ -21,7 +21,6 @@ class Admin::StudentFeesController < ApplicationController
     @student_fee = @student.student_fees.new
     @fee_categories = FeeCategory.all.order(:name)
     
-    # Debug: Check if fee categories exist
     if @fee_categories.empty?
       flash[:warning] = 'No fee categories found. Please run rails db:seed to create fee categories.'
     end
@@ -29,7 +28,7 @@ class Admin::StudentFeesController < ApplicationController
 
   def create
     unless current_user.can_manage_fees?(:create)
-      redirect_to admin_student_student_fees_path(@student), alert: 'You do not permission to add fees.'
+      redirect_to admin_student_student_fees_path(@student), alert: 'You do not have permission to add fees.'
       return
     end
     
@@ -132,7 +131,7 @@ class Admin::StudentFeesController < ApplicationController
     
     # Statistics by fee category
     @category_stats = FeeCategory.left_joins(:student_fees)
-                                 .group('fee_categories.name')
+                                 .group('fee_categories.name', 'fee_categories.id')
                                  .sum('student_fees.amount')
   end
 

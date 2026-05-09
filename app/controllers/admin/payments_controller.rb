@@ -30,7 +30,7 @@ class Admin::PaymentsController < ApplicationController
     @payment = @student.payments.new(payment_params)
     @payment.created_by = current_user
     
-    if params[:apply_to_fee].present?
+    if params[:apply_to_fee].present? && params[:fee_id].present?
       @payment.payable_type = 'StudentFee'
       @payment.payable_id = params[:fee_id]
     end

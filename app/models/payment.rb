@@ -11,14 +11,17 @@ class Payment < ApplicationRecord
   
   after_create :update_associated_fee
   after_create :update_student_balance
+  after_destroy :update_associated_fee
+  after_destroy :update_student_balance
   
   def update_associated_fee
-    if payable_type == 'StudentFee'
-      payable&.update_payment_status
+    if payable_type == 'StudentFee' && payable_id.present?
+      fee = StudentFee.find_by(id: payable_id)
+      fee&.update_payment_status
     end
   end
   
   def update_student_balance
-    student.update_total_balance
+    student&.update_total_balance
   end
 end

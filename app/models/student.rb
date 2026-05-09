@@ -2,11 +2,9 @@ class Student < ApplicationRecord
   belongs_to :school_class
   belongs_to :user, optional: true
   has_one :parent_info, dependent: :destroy
-  has_many :student_fees, dependent: :destroy  # Changed from has_one :student_fee
+  has_many :student_fees, dependent: :destroy
   has_many :fee_categories, through: :student_fees
   has_many :payments, dependent: :destroy
-  has_many :user_resources, as: :resource, dependent: :destroy
-  has_many :users, through: :user_resources
 
   # Validations
   validates :first_name, :last_name, :date_of_birth, :gender, :academic_year, :admission_date, presence: true
@@ -41,8 +39,9 @@ class Student < ApplicationRecord
   end
   
   def update_total_balance
-    # This will be called after payments
-    # Update any cached balance if needed
+    # This method can be used to update any cached balance
+    # For now, we just recalculate
+    current_balance
   end
   
   def generate_invoice
