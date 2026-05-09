@@ -1,0 +1,124 @@
+<% content_for :page_title, "Record Payment for #{@student.full_name}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Record Payment</h1>
+    <%= link_to "Back to Payments", admin_student_payments_path(@student), class: "text-blue-600 hover:text-blue-900" %>
+  </div>
+
+  <div class="bg-gray-50 rounded-lg p-4 mb-6">
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <p class="text-sm text-gray-600">Student</p>
+        <p class="font-semibold"><%= @student.full_name %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600">Class</p>
+        <p class="font-semibold"><%= @student.school_class&.name || 'Not assigned' %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600">Total Fees Due</p>
+        <p class="font-semibold text-red-600">$<%= number_with_delimiter(@student.total_fees_due.to_i) %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600">Total Paid</p>
+        <p class="font-semibold text-green-600">$<%= number_with_delimiter(@student.total_paid.to_i) %></p>
+      </div>
+    </div>
+  </div>
+
+  <% if @unpaid_fees.any? %>
+    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+      <p class="text-sm text-yellow-800 mb-2">
+        <strong>Unpaid/Partial Fees:</strong> You can apply this payment to a specific fee or leave it as a general payment.
+      </p>
+      <div class="text-sm">
+        <% @unpaid_fees.each do |fee| %>
+          <div class="flex justify-between items-center mt-1">
+            <span><%= fee.fee_category.name %></span>
+            <span>Due: $<%= number_with_delimiter(fee.remaining_balance.to_i) %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= form_with(model: [:admin, @student, @payment], local: true, class: "space-y-6") do |f| %>
+    <% if @payment.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <h3 class="font-bold"><%= pluralize(@payment.errors.count, "error") %> prohibited this payment from being saved:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @payment.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= f.label :amount, "Amount ($)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.number_field :amount, required: true, step: 0.01, min: 0.01, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "0.00" %>
+      </div>
+
+      <div>
+        <%= f.label :payment_date, "Payment Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.date_field :payment_date, required: true, value: Date.today, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div>
+        <%= f.label :payment_method, "Payment Method", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.select :payment_method, options_for_select(Payment::PAYMENT_METHODS), { include_blank: 'Select Payment Method' }, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div>
+        <%= f.label :reference, "Reference Number (Optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_field :reference, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "Check #, Transaction ID, etc." %>
+      </div>
+
+      <% if @unpaid_fees.any? %>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Apply to Specific Fee (Optional)</label>
+          <div class="space-y-2">
+            <label class="flex items-center">
+              <input type="radio" name="apply_to_fee" value="" checked class="form-radio h-4 w-4 text-yellow-500">
+              <span class="ml-2 text-sm text-gray-600">General Payment (not applied to specific fee)</span>
+            </label>
+            <% @unpaid_fees.each do |fee| %>
+              <label class="flex items-center">
+                <input type="radio" name="apply_to_fee" value="<%= fee.id %>" class="form-radio h-4 w-4 text-yellow-500">
+                <span class="ml-2 text-sm text-gray-600">
+                  <%= fee.fee_category.name %> - 
+                  Remaining Balance: $<%= number_with_delimiter(fee.remaining_balance.to_i) %>
+                </span>
+              </label>
+            <% end %>
+          </div>
+          <input type="hidden" name="fee_id" id="fee_id" value="">
+        </div>
+      <% end %>
+
+      <div class="md:col-span-2">
+        <%= f.label :notes, "Notes (Optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_area :notes, rows: 3, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "Additional notes about this payment..." %>
+      </div>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+      <%= link_to "Cancel", admin_student_payments_path(@student), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      <%= f.submit "Record Payment", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  // Update hidden fee_id field when radio button is selected
+  document.querySelectorAll('input[name="apply_to_fee"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const feeIdField = document.getElementById('fee_id');
+      if (feeIdField) {
+        feeIdField.value = this.value;
+      }
+    });
+  });
+</script>

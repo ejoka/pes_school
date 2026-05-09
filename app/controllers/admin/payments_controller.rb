@@ -30,9 +30,9 @@ class Admin::PaymentsController < ApplicationController
     @payment = @student.payments.new(payment_params)
     @payment.created_by = current_user
     
-    if params[:apply_to_fee].present? && params[:fee_id].present?
+    if params[:apply_to_fee].present? && params[:apply_to_fee] != ''
       @payment.payable_type = 'StudentFee'
-      @payment.payable_id = params[:fee_id]
+      @payment.payable_id = params[:apply_to_fee]
     end
     
     if @payment.save
@@ -63,6 +63,8 @@ class Admin::PaymentsController < ApplicationController
 
   def set_student
     @student = Student.find(params[:student_id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admin_all_students_fees_path, alert: 'Student not found.'
   end
 
   def set_payment
