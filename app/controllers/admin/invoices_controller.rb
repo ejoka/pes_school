@@ -5,8 +5,6 @@ class Admin::InvoicesController < ApplicationController
   before_action :set_student, only: [:new, :create, :student_invoices]
 
   def index
-    # For admin - show all invoices
-    # For non-admin - show invoices they created or invoices for students they have access to
     if current_user.admin?
       @invoices = Invoice.all.includes(:student, :created_by).order(created_at: :desc)
     else
@@ -35,32 +33,50 @@ class Admin::InvoicesController < ApplicationController
   end
 
   def create
-    @invoice = Invoice.new(invoice_params)
+    unless @student
+      redirect_to admin_all_students_fees_path, alert: 'Student not found.'
+      return
+    end
+    
+    if params[:fee_ids].blank? || params[:fee_ids].reject(&:blank?).empty?
+      @unpaid_fees = @student.student_fees.where(is_paid: false)
+      flash.now[:alert] = 'Please select at least one fee to invoice.'
+      render :new
+      return
+    end
+    
+    selected_fee_ids = params[:fee_ids].reject(&:blank?)
+    selected_fees = StudentFee.where(id: selected_fee_ids)
+    
+    if selected_fees.empty?
+      @unpaid_fees = @student.student_fees.where(is_paid: false)
+      flash.now[:alert] = 'Selected fees are invalid or already paid.'
+      render :new
+      return
+    end
+    
+    # Calculate totals - iterate through selected fees to get amounts
+    total_amount = 0
+    selected_fees.each do |fee|
+      total_amount += fee.amount - fee.amount_paid
+    end
+    
+    @invoice = Invoice.new
     @invoice.student = @student
     @invoice.created_by_id = current_user.id
     @invoice.generated_date = Date.today
+    @invoice.due_date = params[:invoice][:due_date] if params[:invoice].present?
+    @invoice.due_date ||= Date.today + 30.days
+    @invoice.total_amount = total_amount
+    @invoice.paid_amount = 0
+    @invoice.status = 'sent'
+    @invoice.invoice_number = generate_invoice_number
     
-    if params[:fee_ids].present?
-      selected_fees = StudentFee.where(id: params[:fee_ids])
-      
-      # Calculate totals
-      total_amount = selected_fees.sum(:amount) - selected_fees.sum(:paid)
-      
-      @invoice.total_amount = total_amount
-      @invoice.paid_amount = 0
-      @invoice.status = 'sent'
-      
-      if @invoice.save
-        # Associate fees with invoice
-        selected_fees.update_all(invoice_id: @invoice.id)
-        redirect_to admin_student_invoice_path(@student, @invoice), notice: 'Invoice was successfully created.'
-      else
-        @unpaid_fees = @student.student_fees.where(is_paid: false)
-        render :new
-      end
+    if @invoice.save
+      selected_fees.update_all(invoice_id: @invoice.id)
+      redirect_to admin_student_invoice_path(@student, @invoice), notice: 'Invoice was successfully created.'
     else
       @unpaid_fees = @student.student_fees.where(is_paid: false)
-      flash.now[:alert] = 'Please select at least one fee to invoice.'
       render :new
     end
   end
@@ -82,10 +98,9 @@ class Admin::InvoicesController < ApplicationController
 
   def destroy
     @student = @invoice.student
-    # Remove invoice association from fees before destroying
     @invoice.student_fees.update_all(invoice_id: nil)
     @invoice.destroy
-    redirect_to admin_student_invoices_path(@student), notice: 'Invoice was successfully deleted.'
+    redirect_to student_invoices_admin_student_invoices_path(@student), notice: 'Invoice was successfully deleted.'
   end
 
   def send_invoice
@@ -94,7 +109,6 @@ class Admin::InvoicesController < ApplicationController
   end
 
   def download_pdf
-    # Here you would implement PDF generation
     redirect_to admin_student_invoice_path(@student, @invoice), notice: 'PDF download feature coming soon.'
   end
 
@@ -117,9 +131,18 @@ class Admin::InvoicesController < ApplicationController
 
   def set_student
     @student = Student.find(params[:student_id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admin_all_students_fees_path, alert: 'Student not found.'
   end
 
   def invoice_params
     params.require(:invoice).permit(:due_date, :notes)
+  end
+  
+  def generate_invoice_number
+    year = Time.now.strftime('%Y')
+    month = Time.now.strftime('%m')
+    count = Invoice.where("invoice_number LIKE ?", "INV-#{year}#{month}-%").count + 1
+    "INV-#{year}#{month}-#{count.to_s.rjust(4, '0')}"
   end
 end

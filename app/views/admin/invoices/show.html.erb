@@ -47,7 +47,7 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <% @invoice.student.student_fees.where(invoice_id: @invoice.id).each do |fee| %>
+        <% @student_fees.each do |fee| %>
           <tr>
             <td class="px-4 py-2 text-sm text-gray-900"><%= fee.fee_category.name %></td>
             <td class="px-4 py-2 text-sm text-gray-900 text-right">$<%= number_with_delimiter(fee.amount.to_i) %></td>
@@ -111,12 +111,14 @@
   <button onclick="window.print()" class="bg-blue-900 text-yellow-500 px-6 py-2 rounded hover:bg-blue-800 transition duration-150">
     Print Invoice
   </button>
-  <%= link_to "Back to Invoices", admin_invoices_path, class: "bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition duration-150" %>
-  <%= link_to "Record Payment", new_admin_student_payment_path(@invoice.student), class: "bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition duration-150" %>
+  <%= link_to "Back to Student Invoices", student_invoices_admin_student_invoices_path(@student), class: "bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+  <%= link_to "Back to All Invoices", admin_all_invoices_path, class: "bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-150" %>
+  <%= link_to "Record Payment", new_admin_student_payment_path(@student), class: "bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition duration-150" %>
+  <%= link_to "Edit Invoice", edit_admin_student_invoice_path(@student, @invoice), class: "bg-yellow-500 text-blue-900 px-6 py-2 rounded hover:bg-yellow-600 transition duration-150" %>
 </div>
 
 <style media="print">
   .bg-white { background: white !important; }
-  .no-print, button, .bg-gray-500, .bg-blue-900, .bg-green-600 { display: none !important; }
+  .no-print, button, .bg-gray-500, .bg-blue-900, .bg-green-600, .bg-blue-600, .bg-yellow-500 { display: none !important; }
   #invoice { margin: 0; padding: 0; }
 </style>

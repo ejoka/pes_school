@@ -7,7 +7,7 @@ class Admin::StudentFeesController < ApplicationController
   def index
     @student_fees = @student.student_fees.includes(:fee_category).order(:due_date)
     @total_due = @student.student_fees.sum(:amount)
-    @total_paid = @student.payments.sum(:amount)
+    @total_paid = @student.payments.sum(:amount)  # Fixed: use payments.sum
     @balance = @total_due - @total_paid
     @can_edit = current_user.can_manage_fees?(:edit)
     @can_delete = current_user.can_manage_fees?(:delete)
@@ -20,10 +20,6 @@ class Admin::StudentFeesController < ApplicationController
     end
     @student_fee = @student.student_fees.new
     @fee_categories = FeeCategory.all.order(:name)
-    
-    if @fee_categories.empty?
-      flash[:warning] = 'No fee categories found. Please run rails db:seed to create fee categories.'
-    end
   end
 
   def create
@@ -129,7 +125,6 @@ class Admin::StudentFeesController < ApplicationController
     @total_paid = Payment.sum(:amount)
     @outstanding = @total_fees - @total_paid
     
-    # Statistics by fee category
     @category_stats = FeeCategory.left_joins(:student_fees)
                                  .group('fee_categories.name', 'fee_categories.id')
                                  .sum('student_fees.amount')

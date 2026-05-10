@@ -1,0 +1,116 @@
+<% content_for :page_title, "Edit Invoice #{@invoice.invoice_number}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Edit Invoice</h1>
+    <div class="space-x-3">
+      <%= link_to "Cancel", admin_student_invoice_path(@student, @invoice), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      <%= link_to "Back to Invoices", student_invoices_admin_student_invoices_path(@student), class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-150" %>
+    </div>
+  </div>
+
+  <div class="bg-gray-50 rounded-lg p-4 mb-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div>
+        <p class="text-sm text-gray-600">Invoice #</p>
+        <p class="font-semibold font-mono"><%= @invoice.invoice_number %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600">Student</p>
+        <p class="font-semibold"><%= @invoice.student.full_name %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600">Total Amount</p>
+        <p class="font-semibold">$<%= number_with_delimiter(@invoice.total_amount.to_i) %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600">Amount Paid</p>
+        <p class="font-semibold text-green-600">$<%= number_with_delimiter(@invoice.paid_amount.to_i) %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Associated Fees -->
+  <div class="border border-gray-200 rounded-lg p-6 mb-6">
+    <h2 class="text-lg font-semibold text-blue-900 mb-4">Fees on this Invoice</h2>
+    
+    <% if @invoice.student_fees.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fee Category</th>
+              <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Amount</th>
+              <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Paid</th>
+              <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase">Balance</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Due Date</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @invoice.student_fees.each do |fee| %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-2 text-sm text-gray-900"><%= fee.fee_category.name %></td>
+                <td class="px-4 py-2 text-sm text-gray-900 text-right">$<%= number_with_delimiter(fee.amount.to_i) %></td>
+                <td class="px-4 py-2 text-sm text-green-600 text-right">$<%= number_with_delimiter(fee.amount_paid.to_i) %></td>
+                <td class="px-4 py-2 text-sm text-red-600 text-right">$<%= number_with_delimiter(fee.remaining_balance.to_i) %></td>
+                <td class="px-4 py-2 text-sm text-gray-500"><%= fee.due_date.strftime("%b %d, %Y") %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-gray-500 italic">No fees associated with this invoice.</p>
+    <% end %>
+  </div>
+
+  <!-- Edit Form -->
+  <%= form_with(model: [:admin, @student, @invoice], local: true, class: "space-y-6") do |f| %>
+    <% if @invoice.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <h3 class="font-bold"><%= pluralize(@invoice.errors.count, "error") %> prohibited this invoice from being saved:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @invoice.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= f.label :due_date, "Due Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.date_field :due_date, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div>
+        <%= f.label :status, "Status", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.select :status, options_for_select(Invoice::STATUSES.map { |k, v| [v, k] }, @invoice.status), {}, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+    </div>
+
+    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+      <p class="text-sm text-yellow-800">
+        <strong>Note:</strong> Changing the invoice status or due date will update the invoice accordingly.
+        To add or remove fees from this invoice, please manage fees from the student's fee page.
+      </p>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+      <%= link_to "Cancel", admin_student_invoice_path(@student, @invoice), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      <%= f.submit "Update Invoice", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
+    </div>
+  <% end %>
+
+  <!-- Danger Zone -->
+  <div class="mt-8 pt-6 border-t border-red-200">
+    <div class="bg-red-50 rounded-lg p-6">
+      <h3 class="text-lg font-semibold text-red-700 mb-3">Danger Zone</h3>
+      <p class="text-sm text-red-600 mb-4">This action cannot be undone. This will permanently delete the invoice.</p>
+      <%= button_to "Delete Invoice", admin_student_invoice_path(@student, @invoice), 
+          method: :delete, 
+          data: { confirm: "Are you sure you want to delete this invoice? The fees will remain but will no longer be associated with this invoice." },
+          class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-150" %>
+    </div>
+  </div>
+</div>
