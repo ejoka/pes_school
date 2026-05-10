@@ -1,0 +1,95 @@
+<% content_for :page_title, "All Payments" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">All Payments</h1>
+    <div class="space-x-3">
+      <%= link_to "Back to Invoices", admin_all_invoices_path, class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-150" %>
+      <%= link_to "All Students Fees", admin_all_students_fees_path, class: "bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition duration-150" %>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-blue-900 text-white rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Total Payments</h3>
+      <p class="text-2xl font-bold">$<%= number_with_delimiter(@total_payments.to_i) %></p>
+    </div>
+    <div class="bg-green-600 text-white rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Total Transactions</h3>
+      <p class="text-2xl font-bold"><%= @payments.count %></p>
+    </div>
+    <div class="bg-yellow-500 text-blue-900 rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Average Payment</h3>
+      <p class="text-2xl font-bold">$<%= number_with_delimiter(@payments.average(:amount).to_i) %></p>
+    </div>
+  </div>
+
+  <!-- Payment Methods Breakdown -->
+  <div class="mb-8">
+    <h2 class="text-lg font-semibold text-blue-900 mb-3">Payment Methods Breakdown</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <% @payment_methods.each do |method, amount| %>
+        <div class="bg-gray-50 rounded-lg p-3 text-center hover:shadow-md transition">
+          <p class="text-xs text-gray-600"><%= method %></p>
+          <p class="text-lg font-bold text-blue-900">$<%= number_with_delimiter(amount.to_i) %></p>
+          <p class="text-xs text-gray-500"><%= ((amount / @total_payments) * 100).round(1) %>%</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Payments Table -->
+  <div class="overflow-x-auto">
+    <h2 class="text-lg font-semibold text-blue-900 mb-3">Transaction History</h2>
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recorded By</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @payments.each do |payment| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <%= payment.payment_date.strftime("%b %d, %Y") %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+              <%= link_to payment.student.full_name, admin_student_path(payment.student), class: "text-blue-600 hover:text-blue-900" %>
+              <div class="text-xs text-gray-500"><%= payment.student.school_class&.name %></div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">
+              $<%= number_with_delimiter(payment.amount.to_i) %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <span class="px-2 py-1 bg-gray-100 rounded-full text-xs"><%= payment.payment_method %></span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= payment.reference.presence || '—' %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= payment.created_by&.full_name || 'System' %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+              <%= link_to "View Student", admin_student_path(payment.student), class: "text-blue-600 hover:text-blue-900" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @payments.empty? %>
+    <div class="text-center py-12">
+      <div class="text-6xl mb-4">💰</div>
+      <p class="text-gray-500">No payments recorded yet.</p>
+      <p class="text-sm text-gray-400 mt-2">Record payments from student fee management pages.</p>
+    </div>
+  <% end %>
+</div>

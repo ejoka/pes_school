@@ -1,6 +1,7 @@
 class StudentFee < ApplicationRecord
   belongs_to :student
   belongs_to :fee_category
+  belongs_to :invoice, optional: true
   
   has_many :payments, as: :payable, dependent: :destroy
   
@@ -11,11 +12,30 @@ class StudentFee < ApplicationRecord
   scope :unpaid, -> { where(is_paid: false) }
   scope :overdue, -> { where('due_date < ? AND is_paid = ?', Date.today, false) }
   
-  before_save :update_payment_status
+  # Remove before_save callback that might cause recursion
+  # Use after_save instead with update_column to avoid recursion
+  after_save :update_payment_status, if: :saved_change_to_amount?
+  after_save :update_invoice_totals, if: :saved_change_to_amount?
   
   def update_payment_status
-    self.is_paid = payments.sum(:amount) >= amount
-    true
+    total_paid = payments.sum(:amount)
+    new_status = total_paid >= amount
+    update_column(:is_paid, new_status) if is_paid != new_status
+  end
+  
+  def update_invoice_totals
+    return unless invoice_id.present?
+    
+    # Update invoice totals without triggering callbacks
+    invoice = Invoice.find_by(id: invoice_id)
+    if invoice
+      total_amount = invoice.student_fees.sum(:amount)
+      total_paid = invoice.student_fees.sum(:amount_paid)
+      invoice.update_columns(
+        total_amount: total_amount,
+        paid_amount: total_paid
+      )
+    end
   end
   
   def amount_paid

@@ -5,6 +5,7 @@ class Student < ApplicationRecord
   has_many :student_fees, dependent: :destroy
   has_many :fee_categories, through: :student_fees
   has_many :payments, dependent: :destroy
+  has_many :invoices, dependent: :destroy
 
   # Validations
   validates :first_name, :last_name, :date_of_birth, :gender, :academic_year, :admission_date, presence: true
@@ -25,7 +26,7 @@ class Student < ApplicationRecord
     now.year - date_of_birth.year - (date_of_birth.to_date.change(year: now.year) > now ? 1 : 0)
   end
   
-  # Fee management methods
+  # Fee management methods - use direct SQL to avoid recursion
   def total_fees_due
     student_fees.sum(:amount)
   end
@@ -36,12 +37,6 @@ class Student < ApplicationRecord
   
   def current_balance
     total_fees_due - total_paid
-  end
-  
-  def update_total_balance
-    # This method can be used to update any cached balance
-    # For now, we just recalculate
-    current_balance
   end
   
   def generate_invoice

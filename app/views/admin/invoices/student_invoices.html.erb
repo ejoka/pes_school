@@ -1,0 +1,84 @@
+<% content_for :page_title, "Invoices for #{@student.full_name}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-blue-900">Student Invoices</h1>
+      <p class="text-gray-600 mt-1">Student: <%= link_to @student.full_name, admin_student_path(@student), class: "text-blue-600 hover:text-blue-800" %></p>
+    </div>
+    <div class="space-x-3">
+      <%= link_to "Generate New Invoice", new_admin_student_invoice_path(@student), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150" %>
+      <%= link_to "Back to Student", admin_student_path(@student), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+    </div>
+  </div>
+
+  <!-- Financial Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-blue-900 text-white rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Total Invoiced</h3>
+      <p class="text-2xl font-bold">$<%= number_with_delimiter(@invoices.sum(:total_amount).to_i) %></p>
+    </div>
+    <div class="bg-green-600 text-white rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Total Paid</h3>
+      <p class="text-2xl font-bold">$<%= number_with_delimiter(@invoices.sum(:paid_amount).to_i) %></p>
+    </div>
+    <div class="bg-yellow-500 text-blue-900 rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Outstanding</h3>
+      <p class="text-2xl font-bold">$<%= number_with_delimiter(@invoices.sum(:total_amount) - @invoices.sum(:paid_amount)) %></p>
+    </div>
+  </div>
+
+  <!-- Invoices Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice #</th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Paid</th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Balance</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @invoices.each do |invoice| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-medium text-blue-600">
+              <%= link_to invoice.invoice_number, admin_invoice_path(invoice) %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
+              $<%= number_with_delimiter(invoice.total_amount.to_i) %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 text-right">
+              $<%= number_with_delimiter(invoice.paid_amount.to_i) %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold text-right">
+              $<%= number_with_delimiter(invoice.remaining_balance.to_i) %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= invoice.due_date.strftime("%b %d, %Y") %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= invoice.status_color %>">
+                <%= invoice.status.humanize %>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+              <%= link_to "View", admin_invoice_path(invoice), class: "text-blue-600 hover:text-blue-900" %>
+              <%= link_to "PDF", download_pdf_admin_invoice_path(invoice), class: "text-red-600 hover:text-red-900" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @invoices.empty? %>
+    <div class="text-center py-12">
+      <p class="text-gray-500">No invoices generated for this student yet.</p>
+      <%= link_to "Generate First Invoice", new_admin_student_invoice_path(@student), class: "mt-2 inline-block text-blue-600 hover:text-blue-800" %>
+    </div>
+  <% end %>
+</div>

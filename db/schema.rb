@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_09_131617) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_09_181913) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -33,6 +33,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_09_131617) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.bigint "student_id", null: false
+    t.string "invoice_number"
+    t.decimal "total_amount", precision: 10, scale: 2, default: "0.0"
+    t.decimal "paid_amount", precision: 10, scale: 2, default: "0.0"
+    t.string "status"
+    t.date "due_date"
+    t.date "generated_date"
+    t.text "pdf_data"
+    t.integer "created_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_invoices_on_student_id"
   end
 
   create_table "parent_infos", force: :cascade do |t|
@@ -86,6 +101,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_09_131617) do
     t.boolean "is_paid", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "invoice_id"
     t.index ["fee_category_id"], name: "index_student_fees_on_fee_category_id"
     t.index ["student_id"], name: "index_student_fees_on_student_id"
   end
@@ -159,6 +175,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_09_131617) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "invoices", "students"
   add_foreign_key "parent_infos", "students"
   add_foreign_key "payments", "students"
   add_foreign_key "school_classes", "categories"

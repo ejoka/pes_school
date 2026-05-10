@@ -89,20 +89,24 @@ Rails.application.routes.draw do
         end
       end
       resources :payments
+      resources :invoices, only: [:index, :show, :new, :create, :edit, :update, :destroy] do
+        collection do
+          get 'student_invoices'
+        end
+        member do
+          post 'send_invoice'
+          get 'download_pdf'
+        end
+      end
     end
-    # resources :fee_types
-    # resources :fees do
-    #   member do
-    #     get 'record_payment'
-    #   end
-    #   collection do
-    #     post 'save_payment'
-    #     get 'bulk_fees'
-    #     post 'bulk_fees'
-    #     post 'create_fee_type'
-    #   end
-    # end
-      get 'all_students_fees', to: 'student_fees#all_students', as: :all_students_fees
+    
+        # Collection routes (non-nested)
+    get 'all_invoices', to: 'invoices#index', as: :all_invoices
+    get 'all_payments', to: 'all_payments#index', as: :all_payments
+    get 'all_students_fees', to: 'student_fees#all_students', as: :all_students_fees
+    
+    resources :fee_types
+    resources :invoices, only: [] 
   end
   
   # User profile routes - use a different name to avoid conflict
