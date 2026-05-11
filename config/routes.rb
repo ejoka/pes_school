@@ -86,6 +86,7 @@ Rails.application.routes.draw do
           get 'bulk_add'
           post 'bulk_add'
           get 'generate_invoice'
+          post 'sync_invoices'
         end
       end
       resources :payments
@@ -96,6 +97,7 @@ Rails.application.routes.draw do
         member do
           post 'send_invoice'
           get 'download_pdf'
+          post 'refresh'
         end
       end
     end

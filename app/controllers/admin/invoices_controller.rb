@@ -116,6 +116,15 @@ class Admin::InvoicesController < ApplicationController
     @invoices = @student.invoices.order(created_at: :desc)
   end
 
+  def refresh
+    if @invoice
+      @invoice.update_totals_from_fees
+      redirect_to admin_student_invoice_path(@student, @invoice), notice: 'Invoice totals have been refreshed.'
+    else
+      redirect_to admin_all_invoices_path, alert: 'Invoice not found.'
+    end
+  end
+
   private
 
   def ensure_invoice_permission!

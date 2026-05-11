@@ -130,6 +130,14 @@ class Admin::StudentFeesController < ApplicationController
                                  .sum('student_fees.amount')
   end
 
+  def sync_invoices
+    # Sync all invoices for this student
+    @student.invoices.each do |invoice|
+      invoice.update_totals_from_fees
+    end
+    redirect_to admin_student_student_fees_path(@student), notice: 'All invoices have been synchronized.'
+  end
+
   private
 
   def ensure_fee_permission!

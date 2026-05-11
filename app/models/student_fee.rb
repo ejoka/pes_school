@@ -12,8 +12,18 @@ class StudentFee < ApplicationRecord
   scope :unpaid, -> { where(is_paid: false) }
   scope :overdue, -> { where('due_date < ? AND is_paid = ?', Date.today, false) }
   
-  after_save :update_payment_status, if: :saved_change_to_amount?
-  after_save :update_invoice_totals, if: :saved_change_to_amount?
+  # Simple callback to update invoice
+  after_save :sync_invoice
+  after_destroy :sync_invoice
+  
+  def sync_invoice
+    return unless invoice_id.present?
+    
+    invoice = Invoice.find_by(id: invoice_id)
+    if invoice
+      invoice.update_totals_from_fees
+    end
+  end
   
   def update_payment_status
     total_paid = payments.sum(:amount)
@@ -21,31 +31,17 @@ class StudentFee < ApplicationRecord
     update_column(:is_paid, new_status) if is_paid != new_status
   end
   
-  def update_invoice_totals
-    return unless invoice_id.present?
-    
-    invoice = Invoice.find_by(id: invoice_id)
-    if invoice
-      total_amount = invoice.student_fees.sum(:amount)
-      total_paid = invoice.student_fees.sum { |fee| fee.payments.sum(:amount) }
-      invoice.update_columns(
-        total_amount: total_amount,
-        paid_amount: total_paid
-      )
-    end
-  end
-  
   def amount_paid
-    payments.sum(:amount)
+    payments.sum(:amount).to_f
   end
   
   def remaining_balance
-    amount - amount_paid
+    amount.to_f - amount_paid
   end
   
   def percentage_paid
-    return 0 if amount == 0
-    (amount_paid / amount * 100).round(2)
+    return 0 if amount.to_f == 0
+    (amount_paid / amount.to_f * 100).round(2)
   end
   
   def status

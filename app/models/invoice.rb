@@ -30,7 +30,28 @@ class Invoice < ApplicationRecord
     else
       self.status = 'sent' if status.blank? || status == 'draft'
     end
-    true # Return true to avoid rollback
+    true
+  end
+  
+  def update_totals_from_fees
+    # Direct SQL update to avoid callback issues
+    new_total = student_fees.sum(:amount).to_f
+    new_paid = student_fees.joins(:payments).sum('payments.amount').to_f
+    
+    # Update using SQL directly
+    self.class.where(id: id).update_all(
+      total_amount: new_total,
+      paid_amount: new_paid
+    )
+    
+    # Reload the record to get updated values
+    reload
+    
+    # Update status
+    update_status
+    save
+    
+    new_total
   end
   
   def remaining_balance
@@ -55,11 +76,8 @@ class Invoice < ApplicationRecord
     end
   end
   
-  def calculate_totals_from_fees
-    # Use update_columns to avoid callbacks
-    new_total = student_fees.sum(:amount)
-    new_paid = student_fees.sum(:amount_paid)
-    update_columns(total_amount: new_total, paid_amount: new_paid)
+  def refresh!
+    update_totals_from_fees
   end
   
   private
@@ -68,7 +86,7 @@ class Invoice < ApplicationRecord
     return if invoice_number.present?
     year = Time.now.strftime('%Y')
     month = Time.now.strftime('%m')
-    sequence = (Invoice.where("invoice_number LIKE ?", "INV-#{year}#{month}-%").count + 1).to_s.rjust(4, '0')
-    self.invoice_number = "INV-#{year}#{month}-#{sequence}"
+    count = Invoice.where("invoice_number LIKE ?", "INV-#{year}#{month}-%").count + 1
+    self.invoice_number = "INV-#{year}#{month}-#{count.to_s.rjust(4, '0')}"
   end
 end
