@@ -68,6 +68,14 @@ Rails.application.routes.draw do
   namespace :admin do
     get 'dashboard', to: 'dashboard#index'
     
+    # Settings routes
+    get 'settings', to: 'settings#index'
+    get 'school_settings', to: 'settings#school_settings'
+    post 'update_school_settings', to: 'settings#update_school_settings'
+    get 'color_settings', to: 'settings#color_settings'
+    post 'update_color_settings', to: 'settings#update_color_settings'
+    resources :settings, only: [:index, :edit, :update]
+    
     # Admin profile routes
     resource :profile, only: [:show, :edit, :update], controller: 'profiles', as: :admin_profile
     
