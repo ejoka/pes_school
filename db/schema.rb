@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_12_211240) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_12_213347) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,10 +42,36 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_211240) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "bus_route_assignments", force: :cascade do |t|
+    t.bigint "school_bus_id", null: false
+    t.bigint "route_id", null: false
+    t.text "description"
+    t.date "assigned_date"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["route_id"], name: "index_bus_route_assignments_on_route_id"
+    t.index ["school_bus_id"], name: "index_bus_route_assignments_on_school_bus_id"
+  end
+
   create_table "categories", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "driver_assignments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "school_bus_id", null: false
+    t.string "id_type"
+    t.string "id_number"
+    t.text "description"
+    t.date "assigned_date"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_bus_id"], name: "index_driver_assignments_on_school_bus_id"
+    t.index ["user_id"], name: "index_driver_assignments_on_user_id"
   end
 
   create_table "enter_marks", force: :cascade do |t|
@@ -314,6 +340,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_211240) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "bus_route_assignments", "routes"
+  add_foreign_key "bus_route_assignments", "school_buses"
+  add_foreign_key "driver_assignments", "school_buses"
+  add_foreign_key "driver_assignments", "users"
   add_foreign_key "enter_marks", "exam_attendances"
   add_foreign_key "enter_marks", "school_classes"
   add_foreign_key "enter_marks", "students"
