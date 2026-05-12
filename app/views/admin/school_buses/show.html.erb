@@ -1,0 +1,90 @@
+<% content_for :page_title, "Bus Details: #{@school_bus.bus_number}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <h1 class="text-2xl sm:text-3xl font-bold text-blue-900">Bus Details</h1>
+    <div class="flex space-x-3">
+      <%= link_to edit_admin_school_bus_path(@school_bus), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150 inline-flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        </svg>
+        Edit Bus
+      <% end %>
+      <%= link_to admin_school_buses_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150 inline-flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Buses
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Main Information -->
+    <div class="bg-gradient-to-r from-blue-50 to-white rounded-lg p-6">
+      <div class="space-y-4">
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Bus Number</p>
+          <p class="text-lg font-semibold text-gray-900"><%= @school_bus.bus_number %></p>
+        </div>
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Bus Model</p>
+          <p class="text-base text-gray-700"><%= @school_bus.bus_model %></p>
+        </div>
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Capacity</p>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+            <%= @school_bus.capacity %> seats
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Information -->
+    <div class="bg-gradient-to-r from-green-50 to-white rounded-lg p-6">
+      <div class="space-y-4">
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Status</p>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= @school_bus.status_color %>">
+            <%= @school_bus.status_badge %>
+          </span>
+        </div>
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Created On</p>
+          <p class="text-base text-gray-700"><%= @school_bus.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+        </div>
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Last Updated</p>
+          <p class="text-base text-gray-700"><%= @school_bus.updated_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <% if @school_bus.description.present? %>
+    <div class="mt-6 bg-gray-50 rounded-lg p-6">
+      <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Description</p>
+      <p class="text-gray-700"><%= @school_bus.description %></p>
+    </div>
+  <% end %>
+
+  <!-- Additional Info -->
+  <div class="mt-6 bg-yellow-50 rounded-lg p-6">
+    <div class="flex items-start">
+      <svg class="w-5 h-5 text-yellow-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <div>
+        <p class="text-sm text-yellow-800">
+          This bus can transport up to <strong><%= @school_bus.capacity %></strong> students.
+        </p>
+        <% if @school_bus.status == 'maintenance' %>
+          <p class="text-sm text-yellow-700 mt-1">⚠️ This bus is currently under maintenance.</p>
+        <% elsif @school_bus.status == 'retired' %>
+          <p class="text-sm text-red-700 mt-1">This bus has been retired from service.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

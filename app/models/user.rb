@@ -27,7 +27,8 @@ class User < ApplicationRecord
   has_many :assigned_enter_marks, through: :user_resources, source: :resource, source_type: 'EnterMark'
   has_many :assigned_routes, through: :user_resources, source: :resource, source_type: 'Route'
   has_many :assigned_transport_managements, through: :user_resources, source: :resource, source_type: 'TransportManagement'
-
+  has_many :assigned_school_buses, through: :user_resources, source: :resource, source_type: 'SchoolBus'
+  
   # Role management
   enum :role, { user: 0, admin: 1 }
 

@@ -97,6 +97,7 @@ Rails.application.routes.draw do
 
     # Transport routes
     resources :routes
+    resources :school_buses
     
     # Admin profile routes
     resource :profile, only: [:show, :edit, :update], controller: 'profiles', as: :admin_profile
