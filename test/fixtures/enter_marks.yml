@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  student: one
+  school_class: one
+  subject: one
+  exam_attendance: one
+  marks_obtained: 9.99
+  total_marks: 9.99
+  percentage: 9.99
+  grade: MyString
+  remarks: MyText
+  entered_by: one
+
+two:
+  student: two
+  school_class: two
+  subject: two
+  exam_attendance: two
+  marks_obtained: 9.99
+  total_marks: 9.99
+  percentage: 9.99
+  grade: MyString
+  remarks: MyText
+  entered_by: two

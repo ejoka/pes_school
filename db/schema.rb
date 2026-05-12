@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_12_180216) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_12_192343) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -46,6 +46,25 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_180216) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "enter_marks", force: :cascade do |t|
+    t.bigint "student_id", null: false
+    t.bigint "school_class_id", null: false
+    t.bigint "subject_id", null: false
+    t.bigint "exam_attendance_id", null: false
+    t.decimal "marks_obtained"
+    t.decimal "total_marks"
+    t.decimal "percentage"
+    t.string "grade"
+    t.text "remarks"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exam_attendance_id"], name: "index_enter_marks_on_exam_attendance_id"
+    t.index ["school_class_id"], name: "index_enter_marks_on_school_class_id"
+    t.index ["student_id"], name: "index_enter_marks_on_student_id"
+    t.index ["subject_id"], name: "index_enter_marks_on_subject_id"
   end
 
   create_table "exam_attendances", force: :cascade do |t|
@@ -270,6 +289,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_180216) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "enter_marks", "exam_attendances"
+  add_foreign_key "enter_marks", "school_classes"
+  add_foreign_key "enter_marks", "students"
+  add_foreign_key "enter_marks", "subjects"
   add_foreign_key "exam_attendances", "exam_schedules"
   add_foreign_key "exam_attendances", "school_classes"
   add_foreign_key "exam_attendances", "students"

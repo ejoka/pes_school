@@ -405,6 +405,12 @@
                     </svg>
                     Exam Attendance
                   <% end %>
+                  <%= link_to admin_enter_marks_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out #{current_page?(admin_enter_marks_path) ? 'bg-yellow-500 text-blue-900' : 'text-blue-200 hover:text-white hover:bg-blue-800'}" do %>
+                    <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    Enter Marks
+                  <% end %>
                 </div>
               </div>
             <% end %>

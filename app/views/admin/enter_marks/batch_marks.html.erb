@@ -1,0 +1,106 @@
+<% content_for :page_title, "Batch Marks Entry - #{@exam_attendance.subject&.name} (#{@exam_attendance.exam_schedule&.exam_type&.name})" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-blue-900">Batch Marks Entry</h1>
+      <p class="text-gray-600 mt-1">
+        <%= @exam_attendance.subject&.name %> - <%= @exam_attendance.exam_schedule&.exam_type&.name %>
+        <br>Date: <%= @exam_attendance.exam_schedule&.start_time&.strftime("%B %d, %Y at %I:%M %p") %>
+        <br>Class: <%= @exam_attendance.school_class&.name %>
+      </p>
+    </div>
+    <div class="space-x-3">
+      <%= link_to admin_enter_marks_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" do %>
+        Back to Marks
+      <% end %>
+    </div>
+  </div>
+
+  <% if @students.any? %>
+    <%= form_tag batch_marks_admin_enter_marks_path, method: :post, class: "space-y-6" do %>
+      <%= hidden_field_tag :exam_attendance_id, @exam_attendance.id %>
+      
+      <div class="bg-blue-50 p-4 rounded-lg mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Total Marks for this Exam</label>
+        <input type="number" name="total_marks" value="<%= @total_marks_possible %>" step="0.01" required class="w-48 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
+        <p class="text-xs text-gray-500 mt-1">This will be applied to all students in this batch</p>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Marks Obtained</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Remarks</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Previous Grade</th>
+            </td>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% @students.each do |student| %>
+              <% existing = @existing_marks[student.id] %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-medium text-gray-900"><%= student.full_name %></div>
+                  <div class="text-xs text-gray-500">ID: <%= student.id %></div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center">
+                  <input type="number" name="marks[<%= student.id %>][marks_obtained]" 
+                         value="<%= existing&.marks_obtained %>" 
+                         step="0.01" min="0" 
+                         class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 text-center"
+                         placeholder="0">
+                </td>
+                <td class="px-6 py-4">
+                  <input type="text" name="marks[<%= student.id %>][remarks]" 
+                         value="<%= existing&.remarks %>" 
+                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 text-sm"
+                         placeholder="Optional remarks...">
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <% if existing&.grade %>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= existing.grade_color %>">
+                      <%= existing.grade %>
+                    </span>
+                    <div class="text-xs text-gray-500 mt-1"><%= existing.percentage %>%</div>
+                  <% else %>
+                    <span class="text-gray-400 text-sm">Not entered</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-between items-center pt-4">
+        <div class="flex space-x-4">
+          <button type="button" onclick="clearAllMarks()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150">
+            Clear All Marks
+          </button>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to "Cancel", admin_enter_marks_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+          <%= submit_tag "Save Marks", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="text-center py-12">
+      <div class="text-6xl mb-4">📝</div>
+      <p class="text-gray-500 text-lg">No students found in this class.</p>
+      <p class="text-gray-400 text-sm mt-2">Please add students to the class first.</p>
+      <%= link_to "Add Students", admin_students_path, class: "mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" %>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  function clearAllMarks() {
+    const inputs = document.querySelectorAll('input[type="number"][name*="marks_obtained"]');
+    inputs.forEach(input => {
+      input.value = '';
+    });
+  }
+</script>

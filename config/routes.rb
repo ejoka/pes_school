@@ -87,6 +87,13 @@ Rails.application.routes.draw do
         get 'by_exam'
       end
     end
+    resources :enter_marks do
+      collection do
+        get 'batch_marks'
+        post 'batch_marks'
+        get 'by_exam'
+      end
+    end
     
     # Admin profile routes
     resource :profile, only: [:show, :edit, :update], controller: 'profiles', as: :admin_profile

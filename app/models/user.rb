@@ -23,6 +23,8 @@ class User < ApplicationRecord
   has_many :assigned_exam_managements, through: :user_resources, source: :resource, source_type: 'ExamManagement'
   has_many :assigned_exam_types, through: :user_resources, source: :resource, source_type: 'ExamType'
   has_many :assigned_exam_attendances, through: :user_resources, source: :resource, source_type: 'ExamAttendance'
+  has_many :entered_marks, class_name: 'EnterMark', foreign_key: 'user_id', dependent: :nullify
+  has_many :assigned_enter_marks, through: :user_resources, source: :resource, source_type: 'EnterMark'
   
   # Role management
   enum :role, { user: 0, admin: 1 }
