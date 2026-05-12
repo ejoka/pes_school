@@ -79,6 +79,7 @@ Rails.application.routes.draw do
     # Examination
     resources :exam_grades
     resources :exam_types
+    resources :exam_schedules
     
     # Admin profile routes
     resource :profile, only: [:show, :edit, :update], controller: 'profiles', as: :admin_profile

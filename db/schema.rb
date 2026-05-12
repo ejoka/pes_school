@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_12_162858) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_12_171918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,6 +62,23 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_162858) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "exam_schedules", force: :cascade do |t|
+    t.bigint "subject_id", null: false
+    t.bigint "school_class_id", null: false
+    t.bigint "exam_type_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.string "venue"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exam_type_id"], name: "index_exam_schedules_on_exam_type_id"
+    t.index ["school_class_id"], name: "index_exam_schedules_on_school_class_id"
+    t.index ["subject_id"], name: "index_exam_schedules_on_subject_id"
+    t.index ["user_id"], name: "index_exam_schedules_on_user_id"
   end
 
   create_table "exam_types", force: :cascade do |t|
@@ -238,6 +255,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_162858) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "exam_schedules", "exam_types"
+  add_foreign_key "exam_schedules", "school_classes"
+  add_foreign_key "exam_schedules", "subjects"
+  add_foreign_key "exam_schedules", "users"
   add_foreign_key "invoices", "students"
   add_foreign_key "parent_infos", "students"
   add_foreign_key "payments", "students"
