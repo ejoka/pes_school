@@ -409,103 +409,202 @@
     </div>
 
     <!-- Exam Management Section -->
-<div class="border border-gray-200 rounded-lg overflow-hidden">
-  <div class="bg-blue-900 text-white px-6 py-3">
-    <h2 class="text-xl font-bold">Exam Management</h2>
-    <p class="text-sm text-blue-200 mt-1">Control access to exam grades and examination settings</p>
-  </div>
-  
-  <div class="overflow-x-auto">
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
-          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-            <button type="button" onclick="toggleAllExamPermissions(true)" class="text-green-600 hover:text-green-800">Select All</button>
-          </th>
-          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-            <button type="button" onclick="toggleAllExamPermissions(false)" class="text-red-600 hover:text-red-800">Clear All</button>
-          </th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <% exam_management = ExamManagement.default %>
-        <% key = "ExamManagement_#{exam_management.id}" %>
-        <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
-        <tr class="hover:bg-gray-50">
-          <td class="px-6 py-4 whitespace-nowrap">
-            <div class="text-sm font-medium text-gray-900"><%= exam_management.name %></div>
-            <div class="text-xs text-gray-500"><%= exam_management.description %></div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-center">
-            <div class="flex justify-center space-x-4">
-              <label class="inline-flex items-center">
-                <input type="checkbox" onclick="toggleExamPermission('view')" id="exam_view_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                <span class="ml-2 text-xs text-gray-600">View All</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="checkbox" onclick="toggleExamPermission('create')" id="exam_create_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                <span class="ml-2 text-xs text-gray-600">Create All</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="checkbox" onclick="toggleExamPermission('edit')" id="exam_edit_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                <span class="ml-2 text-xs text-gray-600">Edit All</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="checkbox" onclick="toggleExamPermission('delete')" id="exam_delete_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                <span class="ml-2 text-xs text-gray-600">Delete All</span>
-              </label>
-            </div>
-          </td>
-          <td class="px-6 py-4 whitespace-nowrap text-center">
-            <div class="flex justify-center space-x-4">
-              <button type="button" onclick="setAllExamPermissions(true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Grant All</button>
-              <button type="button" onclick="setAllExamPermissions(false)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Revoke All</button>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="3" class="px-6 py-3 bg-gray-50">
-            <div class="flex justify-center space-x-6">
-              <label class="inline-flex items-center">
-                <input type="hidden" name="resources[ExamManagement][can_view]" value="0" id="exam_view_hidden">
-                <%= check_box_tag "resources[ExamManagement][can_view]", "1", existing_perms['can_view'], 
-                    class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                    id: "exam_view_checkbox",
-                    data: { action: "view" } %>
-                <span class="ml-2 text-sm text-gray-700">View Exam Grades</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="hidden" name="resources[ExamManagement][can_create]" value="0" id="exam_create_hidden">
-                <%= check_box_tag "resources[ExamManagement][can_create]", "1", existing_perms['can_create'], 
-                    class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                    id: "exam_create_checkbox",
-                    data: { action: "create" } %>
-                <span class="ml-2 text-sm text-gray-700">Create Exam Grades</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="hidden" name="resources[ExamManagement][can_edit]" value="0" id="exam_edit_hidden">
-                <%= check_box_tag "resources[ExamManagement][can_edit]", "1", existing_perms['can_edit'], 
-                    class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                    id: "exam_edit_checkbox",
-                    data: { action: "edit" } %>
-                <span class="ml-2 text-sm text-gray-700">Edit Exam Grades</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input type="hidden" name="resources[ExamManagement][can_delete]" value="0" id="exam_delete_hidden">
-                <%= check_box_tag "resources[ExamManagement][can_delete]", "1", existing_perms['can_delete'], 
-                    class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                    id: "exam_delete_checkbox",
-                    data: { action: "delete" } %>
-                <span class="ml-2 text-sm text-gray-700">Delete Exam Grades</span>
-              </label>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+    <div class="border border-gray-200 rounded-lg overflow-hidden">
+      <div class="bg-blue-900 text-white px-6 py-3">
+        <h2 class="text-xl font-bold">Exam Management</h2>
+        <p class="text-sm text-blue-200 mt-1">Control access to exam grades and examination settings</p>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <button type="button" onclick="toggleAllExamPermissions(true)" class="text-green-600 hover:text-green-800">Select All</button>
+              </th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <button type="button" onclick="toggleAllExamPermissions(false)" class="text-red-600 hover:text-red-800">Clear All</button>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% exam_management = ExamManagement.default %>
+            <% key = "ExamManagement_#{exam_management.id}" %>
+            <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900"><%= exam_management.name %></div>
+                <div class="text-xs text-gray-500"><%= exam_management.description %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex justify-center space-x-4">
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleExamPermission('view')" id="exam_view_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">View All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleExamPermission('create')" id="exam_create_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Create All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleExamPermission('edit')" id="exam_edit_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Edit All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleExamPermission('delete')" id="exam_delete_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Delete All</span>
+                  </label>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex justify-center space-x-4">
+                  <button type="button" onclick="setAllExamPermissions(true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Grant All</button>
+                  <button type="button" onclick="setAllExamPermissions(false)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Revoke All</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3" class="px-6 py-3 bg-gray-50">
+                <div class="flex justify-center space-x-6">
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[ExamManagement][can_view]" value="0" id="exam_view_hidden">
+                    <%= check_box_tag "resources[ExamManagement][can_view]", "1", existing_perms['can_view'], 
+                        class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "exam_view_checkbox",
+                        data: { action: "view" } %>
+                    <span class="ml-2 text-sm text-gray-700">View Exam Grades</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[ExamManagement][can_create]" value="0" id="exam_create_hidden">
+                    <%= check_box_tag "resources[ExamManagement][can_create]", "1", existing_perms['can_create'], 
+                        class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "exam_create_checkbox",
+                        data: { action: "create" } %>
+                    <span class="ml-2 text-sm text-gray-700">Create Exam Grades</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[ExamManagement][can_edit]" value="0" id="exam_edit_hidden">
+                    <%= check_box_tag "resources[ExamManagement][can_edit]", "1", existing_perms['can_edit'], 
+                        class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "exam_edit_checkbox",
+                        data: { action: "edit" } %>
+                    <span class="ml-2 text-sm text-gray-700">Edit Exam Grades</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[ExamManagement][can_delete]" value="0" id="exam_delete_hidden">
+                    <%= check_box_tag "resources[ExamManagement][can_delete]", "1", existing_perms['can_delete'], 
+                        class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "exam_delete_checkbox",
+                        data: { action: "delete" } %>
+                    <span class="ml-2 text-sm text-gray-700">Delete Exam Grades</span>
+                  </label>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Transport Management Section -->
+    <div class="border border-gray-200 rounded-lg overflow-hidden">
+      <div class="bg-blue-900 text-white px-6 py-3">
+        <h2 class="text-xl font-bold">Transport Management</h2>
+        <p class="text-sm text-blue-200 mt-1">Control access to transport routes and fares</p>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <button type="button" onclick="toggleAllTransportPermissions(true)" class="text-green-600 hover:text-green-800">Select All</button>
+              </th>
+              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <button type="button" onclick="toggleAllTransportPermissions(false)" class="text-red-600 hover:text-red-800">Clear All</button>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% transport_management = TransportManagement.default %>
+            <% key = "TransportManagement_#{transport_management.id}" %>
+            <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900"><%= transport_management.name %></div>
+                <div class="text-xs text-gray-500"><%= transport_management.description %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex justify-center space-x-4">
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleTransportPermission('view')" id="transport_view_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">View All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleTransportPermission('create')" id="transport_create_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Create All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleTransportPermission('edit')" id="transport_edit_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Edit All</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" onclick="toggleTransportPermission('delete')" id="transport_delete_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
+                    <span class="ml-2 text-xs text-gray-600">Delete All</span>
+                  </label>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex justify-center space-x-4">
+                  <button type="button" onclick="setAllTransportPermissions(true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Grant All</button>
+                  <button type="button" onclick="setAllTransportPermissions(false)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Revoke All</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3" class="px-6 py-3 bg-gray-50">
+                <div class="flex justify-center space-x-6">
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[TransportManagement][can_view]" value="0" id="transport_view_hidden">
+                    <%= check_box_tag "resources[TransportManagement][can_view]", "1", existing_perms['can_view'], 
+                        class: "transport-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "transport_view_checkbox",
+                        data: { action: "view" } %>
+                    <span class="ml-2 text-sm text-gray-700">View Routes</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[TransportManagement][can_create]" value="0" id="transport_create_hidden">
+                    <%= check_box_tag "resources[TransportManagement][can_create]", "1", existing_perms['can_create'], 
+                        class: "transport-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "transport_create_checkbox",
+                        data: { action: "create" } %>
+                    <span class="ml-2 text-sm text-gray-700">Create Routes</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[TransportManagement][can_edit]" value="0" id="transport_edit_hidden">
+                    <%= check_box_tag "resources[TransportManagement][can_edit]", "1", existing_perms['can_edit'], 
+                        class: "transport-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "transport_edit_checkbox",
+                        data: { action: "edit" } %>
+                    <span class="ml-2 text-sm text-gray-700">Edit Routes</span>
+                  </label>
+                  <label class="inline-flex items-center">
+                    <input type="hidden" name="resources[TransportManagement][can_delete]" value="0" id="transport_delete_hidden">
+                    <%= check_box_tag "resources[TransportManagement][can_delete]", "1", existing_perms['can_delete'], 
+                        class: "transport-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
+                        id: "transport_delete_checkbox",
+                        data: { action: "delete" } %>
+                    <span class="ml-2 text-sm text-gray-700">Delete Routes</span>
+                  </label>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
 
     <div class="flex justify-end space-x-3 pt-4">
@@ -617,6 +716,37 @@
       const checkbox = document.getElementById(`exam_${action}_checkbox`);
       checkbox.checked = select;
       updateExamCheckboxState(action);
+    });
+  }
+
+  // Transport management permission functions
+  function toggleTransportPermission(action) {
+    const checkbox = document.getElementById(`transport_${action}_checkbox`);
+    checkbox.checked = !checkbox.checked;
+    updateTransportCheckboxState(action);
+  }
+  
+  function updateTransportCheckboxState(action) {
+    const checkbox = document.getElementById(`transport_${action}_checkbox`);
+    const hidden = document.getElementById(`transport_${action}_hidden`);
+    hidden.value = checkbox.checked ? '1' : '0';
+  }
+  
+  function setAllTransportPermissions(grant) {
+    const actions = ['view', 'create', 'edit', 'delete'];
+    actions.forEach(action => {
+      const checkbox = document.getElementById(`transport_${action}_checkbox`);
+      checkbox.checked = grant;
+      updateTransportCheckboxState(action);
+    });
+  }
+  
+  function toggleAllTransportPermissions(select) {
+    const actions = ['view', 'create', 'edit', 'delete'];
+    actions.forEach(action => {
+      const checkbox = document.getElementById(`transport_${action}_checkbox`);
+      checkbox.checked = select;
+      updateTransportCheckboxState(action);
     });
   }
 </script>

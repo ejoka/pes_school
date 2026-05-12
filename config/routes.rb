@@ -94,6 +94,9 @@ Rails.application.routes.draw do
         get 'by_exam'
       end
     end
+
+    # Transport routes
+    resources :routes
     
     # Admin profile routes
     resource :profile, only: [:show, :edit, :update], controller: 'profiles', as: :admin_profile

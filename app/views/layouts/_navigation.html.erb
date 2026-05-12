@@ -415,6 +415,31 @@
               </div>
             <% end %>
 
+            <!-- Transport Dropdown -->
+            <% if current_user.admin? %>
+              <div x-data="{ open: <%= params[:controller] == 'admin/routes' %> }">
+                <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-white rounded-md hover:bg-blue-800 transition duration-150 ease-in-out">
+                  <div class="flex items-center">
+                    <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                    </svg>
+                    Transport
+                  </div>
+                  <svg :class="{'rotate-180': open}" class="h-4 w-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-2" class="ml-8 mt-1 space-y-1">
+                  <%= link_to admin_routes_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out #{current_page?(admin_routes_path) ? 'bg-yellow-500 text-blue-900' : 'text-blue-200 hover:text-white hover:bg-blue-800'}" do %>
+                    <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
+                    </svg>
+                    Routes
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
             <!-- Profile Link - Different paths for admin and regular users -->
             <% if current_user.admin? %>
               <%= link_to admin_admin_profile_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out #{current_page?(admin_admin_profile_path) ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>

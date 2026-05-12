@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_12_192343) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_12_205249) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -187,6 +187,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_192343) do
     t.index ["student_id"], name: "index_payments_on_student_id"
   end
 
+  create_table "routes", force: :cascade do |t|
+    t.string "name"
+    t.decimal "fare"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "school_classes", force: :cascade do |t|
     t.string "name"
     t.integer "pass_mark"
@@ -251,6 +259,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_192343) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["school_class_id"], name: "index_subjects_on_school_class_id"
+  end
+
+  create_table "transport_managements", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "user_resources", force: :cascade do |t|

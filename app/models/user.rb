@@ -25,7 +25,9 @@ class User < ApplicationRecord
   has_many :assigned_exam_attendances, through: :user_resources, source: :resource, source_type: 'ExamAttendance'
   has_many :entered_marks, class_name: 'EnterMark', foreign_key: 'user_id', dependent: :nullify
   has_many :assigned_enter_marks, through: :user_resources, source: :resource, source_type: 'EnterMark'
-  
+  has_many :assigned_routes, through: :user_resources, source: :resource, source_type: 'Route'
+  has_many :assigned_transport_managements, through: :user_resources, source: :resource, source_type: 'TransportManagement'
+
   # Role management
   enum :role, { user: 0, admin: 1 }
 
@@ -60,6 +62,12 @@ class User < ApplicationRecord
     return true if admin?
     exam_management = ExamManagement.default
     can_access?(exam_management, action)
+  end
+
+  def can_manage_transport?(action = :view)
+    return true if admin?
+    transport_management = TransportManagement.default
+    can_access?(transport_management, action)
   end
 
   def can_generate_invoice?
