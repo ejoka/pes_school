@@ -4,6 +4,7 @@ class SchoolClass < ApplicationRecord
 
   belongs_to :category
   has_many :subjects, dependent: :destroy
+  has_many :students, dependent: :restrict_with_error 
   has_many :user_resources, as: :resource, dependent: :destroy
   has_many :users, through: :user_resources
 

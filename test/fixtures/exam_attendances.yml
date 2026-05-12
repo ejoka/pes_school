@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  student: one
+  school_class: one
+  subject: one
+  exam_schedule: one
+  status: MyString
+  remarks: MyText
+
+two:
+  student: two
+  school_class: two
+  subject: two
+  exam_schedule: two
+  status: MyString
+  remarks: MyText

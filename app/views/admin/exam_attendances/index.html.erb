@@ -1,0 +1,152 @@
+<% content_for :page_title, "Exam Attendance" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-blue-900">Exam Attendance</h1>
+      <p class="text-sm text-gray-500 mt-1">Track student attendance for exams</p>
+    </div>
+    <div class="flex space-x-3">
+      <button onclick="showExamSelector()" class="bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150 font-semibold inline-flex items-center">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Batch Attendance
+      </button>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-blue-900 text-white rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Total Records</h3>
+      <p class="text-2xl font-bold"><%= @total_attendance %></p>
+    </div>
+    <div class="bg-green-600 text-white rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Present</h3>
+      <p class="text-2xl font-bold"><%= @present_count %></p>
+    </div>
+    <div class="bg-red-600 text-white rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Absent</h3>
+      <p class="text-2xl font-bold"><%= @absent_count %></p>
+    </div>
+    <div class="bg-yellow-500 text-blue-900 rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Attendance Rate</h3>
+      <p class="text-2xl font-bold"><%= @attendance_rate %>%</p>
+    </div>
+  </div>
+
+  <!-- Attendance Records Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exam</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Remarks</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% if @exam_attendances.any? %>
+          <% @exam_attendances.each do |attendance| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <%= attendance.exam_schedule&.subject&.name %> - <%= attendance.exam_schedule&.exam_type&.name %>
+                <div class="text-xs text-gray-500"><%= attendance.exam_schedule&.start_time&.strftime("%b %d, %Y") if attendance.exam_schedule&.start_time %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <%= attendance.student&.full_name %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= attendance.school_class&.name %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= attendance.subject&.name %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= attendance.status_badge_color %>">
+                  <%= attendance.status_icon %> <%= attendance.status.capitalize %>
+                </span>
+              <tr>
+              <td class="px-6 py-4 text-sm text-gray-500">
+                <%= attendance.remarks.presence || '—' %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                <%= link_to edit_admin_exam_attendance_path(attendance), class: "text-blue-600 hover:text-blue-900" do %>
+                  Edit
+                <% end %>
+                <%= link_to admin_exam_attendance_path(attendance), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-900" do %>
+                  Delete
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="7" class="text-center py-12">
+              <div class="flex flex-col items-center justify-center">
+                <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                <p class="text-gray-500 text-lg">No exam attendance records found.</p>
+                <p class="text-sm text-gray-400 mt-2">Record attendance from exam schedules.</p>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Exam Selector Modal -->
+<div id="examSelectorModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full z-50">
+  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-lg font-semibold text-blue-900">Select Exam Schedule</h3>
+      <button onclick="closeExamSelector()" class="text-gray-400 hover:text-gray-600">&times;</button>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Choose Exam</label>
+        <select id="exam_schedule_id" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
+          <option value="">Select an exam...</option>
+          <% if @exam_schedules_list.present? %>
+            <% @exam_schedules_list.each do |schedule| %>
+              <option value="<%= schedule.id %>">
+                <%= schedule.subject&.name %> - <%= schedule.exam_type&.name %> (<%= schedule.start_time.strftime("%b %d, %Y") if schedule.start_time %>)
+              </option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+      <div class="flex justify-end space-x-3 pt-4">
+        <button onclick="closeExamSelector()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Cancel</button>
+        <button onclick="goToBatchAttendance()" class="bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function showExamSelector() {
+    document.getElementById('examSelectorModal').classList.remove('hidden');
+  }
+  
+  function closeExamSelector() {
+    document.getElementById('examSelectorModal').classList.add('hidden');
+  }
+  
+  function goToBatchAttendance() {
+    const examId = document.getElementById('exam_schedule_id').value;
+    if (examId) {
+      window.location.href = `/admin/exam_attendances/batch_attendance?exam_schedule_id=${examId}`;
+    } else {
+      alert('Please select an exam schedule');
+    }
+  }
+</script>

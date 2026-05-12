@@ -80,6 +80,13 @@ Rails.application.routes.draw do
     resources :exam_grades
     resources :exam_types
     resources :exam_schedules
+    resources :exam_attendances do
+      collection do
+        get 'batch_attendance'
+        post 'batch_attendance'
+        get 'by_exam'
+      end
+    end
     
     # Admin profile routes
     resource :profile, only: [:show, :edit, :update], controller: 'profiles', as: :admin_profile
