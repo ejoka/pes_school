@@ -38,37 +38,67 @@ class Admin::StudentFeesController < ApplicationController
     end
   end
 
-  def edit
-    unless current_user.can_manage_fees?(:edit)
-      redirect_to admin_student_student_fees_path(@student), alert: 'You do not have permission to edit fees.'
-      return
-    end
+ def edit
+  unless current_user.can_manage_fees?(:edit)
+    redirect_to admin_student_student_fees_path(@student), alert: 'You do not have permission to edit fees.'
+    return
+  end
+  
+  unless @student_fee && @student_fee.id.present?
+    redirect_to admin_student_student_fees_path(@student), alert: 'Fee not found.'
+    return
+  end
+  
+  @fee_categories = FeeCategory.all.order(:name)
+end
+
+def update
+  unless current_user.can_manage_fees?(:edit)
+    redirect_to admin_student_student_fees_path(@student), alert: 'You do not have permission to update fees.'
+    return
+  end
+  
+  unless @student_fee && @student_fee.id.present?
+    redirect_to admin_student_student_fees_path(@student), alert: 'Fee not found.'
+    return
+  end
+  
+  if @student_fee.update(student_fee_params)
+    redirect_to admin_student_student_fees_path(@student), notice: 'Fee was successfully updated.'
+  else
     @fee_categories = FeeCategory.all.order(:name)
+    render :edit
   end
+end
 
-  def update
-    unless current_user.can_manage_fees?(:edit)
-      redirect_to admin_student_student_fees_path(@student), alert: 'You do not have permission to update fees.'
-      return
-    end
-    
-    if @student_fee.update(student_fee_params)
-      redirect_to admin_student_student_fees_path(@student), notice: 'Fee was successfully updated.'
-    else
-      @fee_categories = FeeCategory.all.order(:name)
-      render :edit
-    end
+def destroy
+  unless current_user.can_manage_fees?(:delete)
+    redirect_to admin_student_student_fees_path(@student), alert: 'You do not have permission to delete fees.'
+    return
   end
+  
+  unless @student_fee && @student_fee.id.present?
+    redirect_to admin_student_student_fees_path(@student), alert: 'Fee not found.'
+    return
+  end
+  
+  @student_fee.destroy
+  redirect_to admin_student_student_fees_path(@student), notice: 'Fee was successfully removed.'
+end
 
-  def destroy
-    unless current_user.can_manage_fees?(:delete)
-      redirect_to admin_student_student_fees_path(@student), alert: 'You do not have permission to delete fees.'
-      return
-    end
-    
-    @student_fee.destroy
-    redirect_to admin_student_student_fees_path(@student), notice: 'Fee was successfully removed.'
+def show
+  unless current_user.can_manage_fees?(:view)
+    redirect_to admin_student_student_fees_path(@student), alert: 'You do not have permission to view this fee.'
+    return
   end
+  
+  unless @student_fee && @student_fee.id.present?
+    redirect_to admin_student_student_fees_path(@student), alert: 'Fee not found.'
+    return
+  end
+  
+  @payments = @student_fee.payments.order(payment_date: :desc)
+end
 
   def bulk_add
     unless current_user.can_manage_fees?(:create)
@@ -110,6 +140,7 @@ class Admin::StudentFeesController < ApplicationController
     
     @invoice_data = @student.generate_invoice
     @generated_by = current_user.full_name
+    #@currency_symbol = currency_symbol
     
     render :generate_invoice
   end
@@ -126,8 +157,8 @@ class Admin::StudentFeesController < ApplicationController
     @outstanding = @total_fees - @total_paid
     
     @category_stats = FeeCategory.left_joins(:student_fees)
-                                 .group('fee_categories.name', 'fee_categories.id')
-                                 .sum('student_fees.amount')
+                                .group('fee_categories.name', 'fee_categories.id')
+                                .sum('student_fees.amount')
   end
 
   def sync_invoices
@@ -154,6 +185,8 @@ class Admin::StudentFeesController < ApplicationController
 
   def set_student_fee
     @student_fee = @student.student_fees.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to admin_student_student_fees_path(@student), alert: 'Fee not found.'
   end
 
   def student_fee_params

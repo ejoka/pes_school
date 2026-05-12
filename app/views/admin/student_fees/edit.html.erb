@@ -1,73 +1,69 @@
-<% content_for :page_title, "Edit Fees for #{@student.full_name}" %>
+<% content_for :page_title, "Edit Fee for #{@student.full_name}" %>
 
-<div class="bg-white rounded-lg shadow-lg p-6">
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
   <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold text-blue-900">Edit Fees</h1>
-    <div class="space-x-3">
-      <%= link_to admin_student_student_fee_path(@student, @student_fee), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" do %>
-        Cancel
-      <% end %>
-    </div>
+    <h1 class="text-3xl font-bold text-blue-900">Edit Fee</h1>
+    <%= link_to "Back to Fees", admin_student_student_fees_path(@student), class: "text-blue-600 hover:text-blue-900" %>
   </div>
 
   <p class="text-gray-600 mb-6">Student: <span class="font-semibold"><%= @student.full_name %></span> | Class: <span class="font-semibold"><%= @student.school_class&.name %></span></p>
 
-  <%= form_with(url: admin_student_student_fee_path(@student, @student_fee), method: :patch, local: true, class: "space-y-6") do |f| %>
-    <div class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fee Type</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount ($)</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount Paid ($)</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Remaining</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <% @student_fee_items.each do |fee_item| %>
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><%= fee_item.fee_type.name %></div>
-                <div class="text-xs text-gray-500"><%= fee_item.fee_type.description %></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <input type="number" 
-                       name="fee_items[<%= fee_item.fee_type.id %>][amount]" 
-                       value="<%= fee_item.amount.to_i %>" 
-                       step="0.01" 
-                       min="0" 
-                       class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <input type="number" 
-                       name="fee_items[<%= fee_item.fee_type.id %>][paid]" 
-                       value="<%= fee_item.paid.to_i %>" 
-                       step="0.01" 
-                       min="0" 
-                       class="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
-                <p class="text-xs text-gray-500 mt-1">Paid: $<%= fee_item.paid.to_i %></p>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span class="text-sm text-red-600 font-semibold">
-                  $<%= fee_item.remaining_balance.to_i %>
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <input type="date" 
-                       name="fee_items[<%= fee_item.fee_type.id %>][due_date]" 
-                       value="<%= fee_item.due_date %>" 
-                       class="w-40 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
-              </td>
-            </tr>
+  <%= form_with(model: [:admin, @student, @student_fee], local: true, class: "space-y-6") do |f| %>
+    <% if @student_fee.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <h3 class="font-bold"><%= pluralize(@student_fee.errors.count, "error") %> prohibited this fee from being saved:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @student_fee.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
           <% end %>
-        </tbody>
-      </table>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 gap-6">
+      <div>
+        <%= f.label :fee_category_id, "Fee Category", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <% if @fee_categories.present? %>
+          <%= f.collection_select :fee_category_id, @fee_categories, :id, :name, { include_blank: 'Select Fee Category' }, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        <% else %>
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <p class="text-yellow-800">No fee categories found. Please run <code class="bg-yellow-100 px-2 py-1 rounded">rails db:seed</code> to create fee categories.</p>
+          </div>
+        <% end %>
+      </div>
+
+      <div>
+        <%= f.label :amount, "Amount (#{currency_symbol})", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.number_field :amount, required: true, step: 0.01, min: 0, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "0.00" %>
+      </div>
+
+      <div>
+        <%= f.label :due_date, "Due Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.date_field :due_date, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+      
+      <!-- Display current payment information -->
+      <% if @student_fee.persisted? && @student_fee.amount_paid > 0 %>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h3 class="text-sm font-semibold text-blue-900 mb-2">Payment Information</h3>
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <p class="text-gray-600">Amount Paid:</p>
+              <p class="font-semibold text-green-600"><%= format_currency(@student_fee.amount_paid) %></p>
+            </div>
+            <div>
+              <p class="text-gray-600">Remaining Balance:</p>
+              <p class="font-semibold text-red-600"><%= format_currency(@student_fee.remaining_balance) %></p>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-2">Note: Changing the fee amount will affect the remaining balance.</p>
+        </div>
+      <% end %>
     </div>
 
     <div class="flex justify-end space-x-3">
-      <%= link_to "Cancel", admin_student_student_fee_path(@student, @student_fee), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
-      <%= f.submit "Update Fees", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
+      <%= link_to "Cancel", admin_student_student_fees_path(@student), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      <%= f.submit "Update Fee", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
     </div>
   <% end %>
 </div>

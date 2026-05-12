@@ -1,0 +1,27 @@
+        :root {
+          --primary-color: #1e3a8a;
+          --secondary-color: #eab308;
+          --accent-color: #ffffff;
+          --sidebar-bg: #1e3a8a;
+          --header-bg: #ffffff;
+          --button-bg: #eab308;
+          --button-text: #1e3a8a;
+        }
+        
+        .bg-primary { background-color: var(--primary-color) !important; }
+        .bg-secondary { background-color: var(--secondary-color) !important; }
+        .text-primary { color: var(--primary-color) !important; }
+        .text-secondary { color: var(--secondary-color) !important; }
+        .border-primary { border-color: var(--primary-color) !important; }
+        .border-secondary { border-color: var(--secondary-color) !important; }
+        
+        .btn-primary {
+          background-color: var(--button-bg) !important;
+          color: var(--button-text) !important;
+        }
+        .btn-primary:hover {
+          opacity: 0.9;
+        }
+        
+        .sidebar-bg { background-color: var(--sidebar-bg) !important; }
+        .header-bg { background-color: var(--header-bg) !important; }

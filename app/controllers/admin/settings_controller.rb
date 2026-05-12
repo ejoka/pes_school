@@ -32,7 +32,10 @@ module Admin
         primary_color: Setting.find_or_create_by(key: 'primary_color') { |s| s.value = '#1e3a8a' },
         secondary_color: Setting.find_or_create_by(key: 'secondary_color') { |s| s.value = '#eab308' },
         accent_color: Setting.find_or_create_by(key: 'accent_color') { |s| s.value = '#ffffff' },
-        logo_url: Setting.find_or_create_by(key: 'logo_url') { |s| s.value = '' },
+        sidebar_bg: Setting.find_or_create_by(key: 'sidebar_bg') { |s| s.value = '#1e3a8a' },
+        header_bg: Setting.find_or_create_by(key: 'header_bg') { |s| s.value = '#ffffff' },
+        button_bg: Setting.find_or_create_by(key: 'button_bg') { |s| s.value = '#eab308' },
+        button_text: Setting.find_or_create_by(key: 'button_text') { |s| s.value = '#1e3a8a' },
         footer_text: Setting.find_or_create_by(key: 'footer_text') { |s| s.value = 'Thank you for your business.' },
         invoice_prefix: Setting.find_or_create_by(key: 'invoice_prefix') { |s| s.value = 'INV' },
         academic_year: Setting.find_or_create_by(key: 'academic_year') { |s| s.value = Date.today.year.to_s }
@@ -44,6 +47,15 @@ module Admin
         setting = Setting.find_or_create_by(key: key)
         setting.update(value: value)
       end
+      
+      # Handle logo upload
+      if params[:logo].present?
+        logo_setting = Setting.find_or_create_by(key: 'logo')
+        logo_setting.logo.attach(params[:logo])
+      end
+      
+      # Regenerate theme after settings update
+      regenerate_theme_variables
       
       redirect_to admin_school_settings_path, notice: 'School settings were successfully updated.'
     end
@@ -66,10 +78,10 @@ module Admin
         setting.update(value: value)
       end
       
-      # Update application CSS variables
-      update_theme_variables
+      # Regenerate theme after color update
+      regenerate_theme_variables
       
-      redirect_to admin_color_settings_path, notice: 'Color settings were successfully updated.'
+      redirect_to admin_color_settings_path, notice: 'Color settings were successfully updated. Refresh the page to see changes.'
     end
 
     private
@@ -78,16 +90,55 @@ module Admin
       redirect_to root_path, alert: 'Access denied.' unless current_user&.admin?
     end
 
-    def update_theme_variables
-      # This will be used to update CSS variables
-      colors = {
-        primary: Setting.find_by(key: 'primary_color')&.value || '#1e3a8a',
-        secondary: Setting.find_by(key: 'secondary_color')&.value || '#eab308',
-        accent: Setting.find_by(key: 'accent_color')&.value || '#ffffff'
-      }
+    def regenerate_theme_variables
+      # Generate CSS file with current theme
+      css_content = generate_theme_css
       
-      # Store in session for current request
-      session[:theme_colors] = colors
+      # Write to a file that will be included in the layout
+      File.write(Rails.root.join('app/assets/stylesheets/theme.css'), css_content)
+      
+      # Clear cache
+      Rails.cache.clear
+    end
+    
+    def generate_theme_css
+      primary = Setting.get('primary_color', '#1e3a8a')
+      secondary = Setting.get('secondary_color', '#eab308')
+      accent = Setting.get('accent_color', '#ffffff')
+      sidebar_bg = Setting.get('sidebar_bg', '#1e3a8a')
+      header_bg = Setting.get('header_bg', '#ffffff')
+      button_bg = Setting.get('button_bg', '#eab308')
+      button_text = Setting.get('button_text', '#1e3a8a')
+      
+      <<-CSS
+        :root {
+          --primary-color: #{primary};
+          --secondary-color: #{secondary};
+          --accent-color: #{accent};
+          --sidebar-bg: #{sidebar_bg};
+          --header-bg: #{header_bg};
+          --button-bg: #{button_bg};
+          --button-text: #{button_text};
+        }
+        
+        .bg-primary { background-color: var(--primary-color) !important; }
+        .bg-secondary { background-color: var(--secondary-color) !important; }
+        .text-primary { color: var(--primary-color) !important; }
+        .text-secondary { color: var(--secondary-color) !important; }
+        .border-primary { border-color: var(--primary-color) !important; }
+        .border-secondary { border-color: var(--secondary-color) !important; }
+        
+        .btn-primary {
+          background-color: var(--button-bg) !important;
+          color: var(--button-text) !important;
+        }
+        .btn-primary:hover {
+          opacity: 0.9;
+        }
+        
+        .sidebar-bg { background-color: var(--sidebar-bg) !important; }
+        .header-bg { background-color: var(--header-bg) !important; }
+      CSS
     end
   end
 end

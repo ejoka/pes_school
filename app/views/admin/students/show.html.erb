@@ -164,15 +164,15 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
       <div class="bg-blue-50 rounded-lg p-3">
         <p class="text-sm text-gray-600">Total Fees</p>
-        <p class="text-xl font-bold text-blue-900">$<%= number_with_delimiter(total_amount.to_i) %></p>
+        <p class="text-xl font-bold text-blue-900"><%= format_currency(total_amount.to_i) %></p>
       </div>
       <div class="bg-green-50 rounded-lg p-3">
         <p class="text-sm text-gray-600">Total Paid</p>
-        <p class="text-xl font-bold text-green-600">$<%= number_with_delimiter(total_paid.to_i) %></p>
+        <p class="text-xl font-bold text-green-600"><%= format_currency(total_paid.to_i) %></p>
       </div>
       <div class="bg-yellow-50 rounded-lg p-3">
         <p class="text-sm text-gray-600">Balance</p>
-        <p class="text-xl font-bold text-yellow-600">$<%= number_with_delimiter(balance.to_i) %></p>
+        <p class="text-xl font-bold text-yellow-600"><%= format_currency(balance.to_i) %></p>
       </div>
     </div>
     
@@ -193,8 +193,8 @@
           <div class="flex justify-between items-center text-sm">
             <span class="text-gray-600"><%= fee.fee_category.name %></span>
             <div class="flex space-x-4">
-              <span class="text-green-600">Paid: $<%= fee.amount_paid.to_i %></span>
-              <span class="text-red-600">Balance: $<%= fee.remaining_balance.to_i %></span>
+              <span class="text-green-600">Paid: <%= format_currency(fee.amount_paid.to_i) %></span>
+              <span class="text-red-600">Balance: <%= format_currency(fee.remaining_balance.to_i) %></span>
               <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= fee.status_color %>">
                 <%= fee.status.humanize %>
               </span>

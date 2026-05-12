@@ -19,6 +19,11 @@ class Admin::PaymentsController < ApplicationController
     
     @payment = @student.payments.new
     @unpaid_fees = @student.student_fees.where(is_paid: false)
+    
+    # If fee_id is passed, preselect that fee
+    if params[:fee_id].present?
+      @selected_fee = @student.student_fees.find_by(id: params[:fee_id])
+    end
   end
 
   def create

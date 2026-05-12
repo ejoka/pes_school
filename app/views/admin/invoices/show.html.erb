@@ -4,8 +4,8 @@
   <!-- Invoice Header -->
   <div class="flex justify-between mb-8 pb-8 border-b">
     <div>
-      <% if school_setting('logo_url').present? %>
-        <img src="<%= school_setting('logo_url') %>" alt="School Logo" class="h-16 mb-4">
+      <% if Setting.find_by(key: 'logo')&.logo&.attached? %>
+        <%= image_tag Setting.find_by(key: 'logo').logo, class: "h-16 mb-4", alt: "School Logo" %>
       <% else %>
         <div class="bg-primary text-secondary text-3xl font-bold px-4 py-2 rounded inline-block">
           SMS
@@ -25,7 +25,7 @@
 
   <!-- Student Information -->
   <div class="mb-8 p-4 bg-gray-50 rounded-lg">
-    <h3 class="text-lg font-semibold text-blue-900 mb-2">Bill To:</h3>
+    <h3 class="text-lg font-semibold text-primary mb-2">Bill To:</h3>
     <div class="grid grid-cols-2 gap-4">
       <div>
         <p><strong>Student Name:</strong> <%= @invoice.student.full_name %></p>
@@ -40,7 +40,7 @@
 
   <!-- Invoice Items -->
   <div class="mb-8">
-    <h3 class="text-lg font-semibold text-blue-900 mb-4">Invoice Items</h3>
+    <h3 class="text-lg font-semibold text-primary mb-4">Invoice Items</h3>
     <table class="min-w-full divide-y divide-gray-200">
       <thead class="bg-gray-50">
         <tr>
@@ -51,27 +51,27 @@
         </tr>
       </thead>
       <tbody class="bg-white divide-y divide-gray-200">
-        <% @student_fees.each do |fee| %>
+        <% @student_fees.each do |student_fee| %>
           <tr>
-            <td class="px-4 py-2 text-sm text-gray-900"><%= fee.fee_category.name %></td>
-            <td class="px-4 py-2 text-sm text-gray-900 text-right">$<%= number_with_delimiter(fee.amount.to_i) %></td>
-            <td class="px-4 py-2 text-sm text-green-600 text-right">$<%= number_with_delimiter(fee.amount_paid.to_i) %></td>
-            <td class="px-4 py-2 text-sm text-red-600 text-right">$<%= number_with_delimiter(fee.remaining_balance.to_i) %></td>
+            <td class="px-4 py-2 text-sm text-gray-900"><%= student_fee.fee_category.name %></td>
+            <td class="px-4 py-2 text-sm text-gray-900 text-right"><%= format_currency(student_fee.amount) %></td>
+            <td class="px-4 py-2 text-sm text-green-600 text-right"><%= format_currency(student_fee.amount_paid) %></td>
+            <td class="px-4 py-2 text-sm text-red-600 text-right"><%= format_currency(student_fee.remaining_balance) %></td>
           </tr>
         <% end %>
       </tbody>
       <tfoot class="bg-gray-50">
         <tr>
           <td class="px-4 py-2 font-bold text-right" colspan="3">Total Amount:</td>
-          <td class="px-4 py-2 font-bold text-right">$<%= number_with_delimiter(@invoice.total_amount.to_i) %></td>
+          <td class="px-4 py-2 font-bold text-right"><%= format_currency(@invoice.total_amount) %></td>
         </tr>
         <tr>
           <td class="px-4 py-2 font-bold text-right" colspan="3">Total Paid:</td>
-          <td class="px-4 py-2 font-bold text-green-600 text-right">$<%= number_with_delimiter(@invoice.paid_amount.to_i) %></td>
+          <td class="px-4 py-2 font-bold text-green-600 text-right"><%= format_currency(@invoice.paid_amount) %></td>
         </tr>
         <tr class="border-t-2 border-gray-400">
           <td class="px-4 py-2 text-lg font-bold text-right" colspan="3">Balance Due:</td>
-          <td class="px-4 py-2 text-lg font-bold text-red-600 text-right">$<%= number_with_delimiter(@invoice.remaining_balance.to_i) %></td>
+          <td class="px-4 py-2 text-lg font-bold text-red-600 text-right"><%= format_currency(@invoice.remaining_balance) %></td>
         </tr>
       </tfoot>
     </table>
@@ -80,7 +80,7 @@
   <!-- Payment History -->
   <% if @payments.any? %>
     <div class="mb-8">
-      <h3 class="text-lg font-semibold text-blue-900 mb-4">Payment History</h3>
+      <h3 class="text-lg font-semibold text-primary mb-4">Payment History</h3>
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
@@ -95,7 +95,7 @@
             <tr>
               <td class="px-4 py-2 text-sm text-gray-900"><%= payment.payment_date.strftime("%b %d, %Y") %></td>
               <td class="px-4 py-2 text-sm text-gray-900"><%= payment.payment_method %></td>
-              <td class="px-4 py-2 text-sm text-green-600 text-right">$<%= number_with_delimiter(payment.amount.to_i) %></td>
+              <td class="px-4 py-2 text-sm text-green-600 text-right"><%= format_currency(payment.amount) %></td>
               <td class="px-4 py-2 text-sm text-gray-500"><%= payment.reference || '—' %></td>
             </tr>
           <% end %>
@@ -104,7 +104,7 @@
     </div>
   <% end %>
 
-  <!-- In the footer section -->
+  <!-- Invoice Footer -->
   <div class="mt-8 pt-8 border-t text-center">
     <p class="text-sm text-gray-500"><%= invoice_footer_text %></p>
     <p class="text-sm text-gray-500 mt-2">This is a computer-generated invoice and does not require a signature.</p>
@@ -112,18 +112,18 @@
 </div>
 
 <div class="mt-6 flex justify-center space-x-4">
-  <button onclick="window.print()" class="bg-blue-900 text-yellow-500 px-6 py-2 rounded hover:bg-blue-800 transition duration-150">
+  <button onclick="window.print()" class="bg-primary text-secondary px-6 py-2 rounded hover:opacity-90 transition duration-150">
     Print Invoice
   </button>
   <%= button_to "Refresh Invoice", refresh_admin_student_invoice_path(@student, @invoice), method: :post, class: "bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700 transition duration-150" %>
+  <%= link_to "Edit Invoice", edit_admin_student_invoice_path(@student, @invoice), class: "bg-yellow-500 text-blue-900 px-6 py-2 rounded hover:bg-yellow-600 transition duration-150" %>
   <%= link_to "Back to Student Invoices", student_invoices_admin_student_invoices_path(@student), class: "bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition duration-150" %>
   <%= link_to "Back to All Invoices", admin_all_invoices_path, class: "bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-150" %>
   <%= link_to "Record Payment", new_admin_student_payment_path(@student), class: "bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition duration-150" %>
-  <%= link_to "Edit Invoice", edit_admin_student_invoice_path(@student, @invoice), class: "bg-yellow-500 text-blue-900 px-6 py-2 rounded hover:bg-yellow-600 transition duration-150" %>
 </div>
 
 <style media="print">
   .bg-white { background: white !important; }
-  .no-print, button, .bg-gray-500, .bg-blue-900, .bg-green-600, .bg-blue-600, .bg-yellow-500 { display: none !important; }
+  .no-print, button, .bg-gray-500, .bg-primary, .bg-purple-600, .bg-yellow-500, .bg-blue-600, .bg-green-600 { display: none !important; }
   #invoice { margin: 0; padding: 0; }
 </style>

@@ -19,6 +19,43 @@
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+
+        <style>
+      :root {
+        --primary-color: <%= Setting.get('primary_color', '#1e3a8a') %>;
+        --secondary-color: <%= Setting.get('secondary_color', '#eab308') %>;
+        --accent-color: <%= Setting.get('accent_color', '#ffffff') %>;
+        --sidebar-bg: <%= Setting.get('sidebar_bg', '#1e3a8a') %>;
+        --header-bg: <%= Setting.get('header_bg', '#ffffff') %>;
+        --button-bg: <%= Setting.get('button_bg', '#eab308') %>;
+        --button-text: <%= Setting.get('button_text', '#1e3a8a') %>;
+      }
+      
+      .bg-primary { background-color: var(--primary-color); }
+      .bg-secondary { background-color: var(--secondary-color); }
+      .text-primary { color: var(--primary-color); }
+      .text-secondary { color: var(--secondary-color); }
+      .border-primary { border-color: var(--primary-color); }
+      .border-secondary { border-color: var(--secondary-color); }
+      
+      .btn-primary {
+        background-color: var(--button-bg);
+        color: var(--button-text);
+      }
+      .btn-primary:hover {
+        opacity: 0.9;
+      }
+      
+      /* Sidebar styling */
+      .sidebar-bg {
+        background-color: var(--sidebar-bg);
+      }
+      
+      /* Header styling */
+      .header-bg {
+        background-color: var(--header-bg);
+      }
+    </style>
     <%= javascript_importmap_tags %>
   </head>
 
