@@ -19,7 +19,9 @@ class User < ApplicationRecord
   has_many :assigned_subjects, through: :user_resources, source: :resource, source_type: 'Subject'
   has_many :assigned_student_managements, through: :user_resources, source: :resource, source_type: 'StudentManagement'
   has_many :assigned_fee_managements, through: :user_resources, source: :resource, source_type: 'FeeManagement'
-  
+  has_many :assigned_exam_grades, through: :user_resources, source: :resource, source_type: 'ExamGrade'
+  has_many :assigned_exam_managements, through: :user_resources, source: :resource, source_type: 'ExamManagement'
+
   # Role management
   enum :role, { user: 0, admin: 1 }
 
@@ -50,7 +52,13 @@ class User < ApplicationRecord
     can_access?(fee_management, action)
   end
 
-    def can_generate_invoice?
+  def can_manage_exams?(action = :view)
+    return true if admin?
+    exam_management = ExamManagement.default
+    can_access?(exam_management, action)
+  end
+
+  def can_generate_invoice?
     return true if admin?
     can_manage_fees?(:view) || can_manage_fees?(:edit)
   end

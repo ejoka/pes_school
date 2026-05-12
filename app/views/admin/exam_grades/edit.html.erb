@@ -1,0 +1,50 @@
+<% content_for :page_title, "Edit Exam Grade" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Edit Exam Grade</h1>
+    <%= link_to "Back to Grades", admin_exam_grades_path, class: "text-blue-600 hover:text-blue-900" %>
+  </div>
+
+  <%= form_with(model: [:admin, @exam_grade], local: true, class: "space-y-6") do |f| %>
+    <% if @exam_grade.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <h3 class="font-bold"><%= pluralize(@exam_grade.errors.count, "error") %> prohibited this grade from being saved:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @exam_grade.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Same form fields as new.html.erb -->
+    <div class="grid grid-cols-1 gap-6">
+      <div>
+        <%= f.label :name, "Grade Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_field :name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <%= f.label :percentage_from, "Percentage From (%)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.number_field :percentage_from, required: true, min: 0, max: 100, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+        <div>
+          <%= f.label :percentage_to, "Percentage To (%)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+          <%= f.number_field :percentage_to, required: true, min: 0, max: 100, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        </div>
+      </div>
+
+      <div>
+        <%= f.label :description, "Description (Optional)", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_area :description, rows: 4, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+      <%= link_to "Cancel", admin_exam_grades_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      <%= f.submit "Update Exam Grade", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
+    </div>
+  <% end %>
+</div>

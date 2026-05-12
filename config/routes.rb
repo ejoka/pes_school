@@ -75,6 +75,9 @@ Rails.application.routes.draw do
     get 'color_settings', to: 'settings#color_settings'
     post 'update_color_settings', to: 'settings#update_color_settings'
     resources :settings, only: [:index, :edit, :update]
+
+    # Examination
+    resources :exam_grades
     
     # Admin profile routes
     resource :profile, only: [:show, :edit, :update], controller: 'profiles', as: :admin_profile

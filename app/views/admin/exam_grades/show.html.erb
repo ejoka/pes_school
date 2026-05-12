@@ -1,0 +1,66 @@
+<% content_for :page_title, "Exam Grade: #{@exam_grade.name}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-blue-900">Exam Grade Details</h1>
+      <% 
+        position = ExamGrade.ordered.where("percentage_to > ? OR (percentage_to = ? AND percentage_from > ?)", 
+                  @exam_grade.percentage_to, @exam_grade.percentage_to, @exam_grade.percentage_from).count + 1
+      %>
+      <p class="text-sm text-gray-500 mt-1">Rank #<%= position %> of <%= ExamGrade.count %> grades (highest to lowest)</p>
+    </div>
+    <div class="flex space-x-3">
+      <%= link_to edit_admin_exam_grade_path(@exam_grade), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150 inline-flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        </svg>
+        Edit Grade
+      <% end %>
+      <%= link_to admin_exam_grades_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150 inline-flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Grades
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Grade Badge with Position -->
+  <div class="mb-6">
+    <% if position == 1 %>
+      <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-yellow-500 text-blue-900">
+        🏆 Highest Grade
+      </div>
+    <% elsif position == ExamGrade.count %>
+      <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-gray-500 text-white">
+        Lowest Grade
+      </div>
+    <% end %>
+  </div>
+
+  <div class="border border-gray-200 rounded-lg p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Grade Name</p>
+        <p class="font-medium text-gray-900"><%= @exam_grade.name %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Percentage Range</p>
+        <p class="font-medium text-gray-900"><%= @exam_grade.percentage_range %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Percentage From</p>
+        <p class="font-medium text-gray-900"><%= @exam_grade.percentage_from %>%</p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Percentage To</p>
+        <p class="font-medium text-gray-900"><%= @exam_grade.percentage_to %>%</p>
+      </div>
+      <div class="md:col-span-2">
+        <p class="text-sm text-gray-600 mb-1">Description</p>
+        <p class="font-medium text-gray-900"><%= @exam_grade.description.presence || 'No description provided' %></p>
+      </div>
+    </div>
+  </div>
+</div>
