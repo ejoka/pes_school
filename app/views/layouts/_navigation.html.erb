@@ -368,7 +368,7 @@
 
             <!-- Examination Dropdown (for admin only) -->
             <% if current_user.admin? %>
-              <div x-data="{ open: <%= params[:controller] == 'admin/exam_grades' %> }">
+              <div x-data="{ open: <%= params[:controller].in?(%w[admin/exam_grades admin/exam_types]) %> }">
                 <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-white rounded-md hover:bg-blue-800 transition duration-150 ease-in-out">
                   <div class="flex items-center">
                     <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -386,6 +386,12 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     Exam Grades
+                  <% end %>
+                  <%= link_to admin_exam_types_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out #{current_page?(admin_exam_types_path) ? 'bg-yellow-500 text-blue-900' : 'text-blue-200 hover:text-white hover:bg-blue-800'}" do %>
+                    <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Exam Types
                   <% end %>
                 </div>
               </div>

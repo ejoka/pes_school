@@ -6,7 +6,7 @@ class ExamManagement < ApplicationRecord
 
   def self.default
     find_or_create_by(name: 'Exam Management') do |em|
-      em.description = 'Manage exam grades and examination settings.'
+      em.description = 'Manage exam grades, exam types, and examination settings.'
     end
   end
   

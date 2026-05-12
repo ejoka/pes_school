@@ -21,7 +21,8 @@ class User < ApplicationRecord
   has_many :assigned_fee_managements, through: :user_resources, source: :resource, source_type: 'FeeManagement'
   has_many :assigned_exam_grades, through: :user_resources, source: :resource, source_type: 'ExamGrade'
   has_many :assigned_exam_managements, through: :user_resources, source: :resource, source_type: 'ExamManagement'
-
+  has_many :assigned_exam_types, through: :user_resources, source: :resource, source_type: 'ExamType'
+  
   # Role management
   enum :role, { user: 0, admin: 1 }
 

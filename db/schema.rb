@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_12_154948) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_12_162858) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -59,6 +59,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_154948) do
 
   create_table "exam_managements", force: :cascade do |t|
     t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "exam_types", force: :cascade do |t|
+    t.string "name"
+    t.decimal "average_pass_mark"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

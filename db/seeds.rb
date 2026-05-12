@@ -54,5 +54,24 @@
 # english = Subject.create!(name: "English", subject_code: "ENG101", pass_mark: 50, school_class: SchoolClass.first)
 # science = Subject.create!(name: "Science", subject_code: "SCI101", pass_mark: 50, school_class: SchoolClass.first)
 
-puts "Seed data created successfully!"
-puts "Admin login: admin@school.com / password123"
+# puts "Seed data created successfully!"
+# puts "Admin login: admin@school.com / password123"
+
+# Seed Exam Types
+exam_types = [
+  { name: 'Mid-term Exam', average_pass_mark: 50, description: 'Examination conducted in the middle of the academic term' },
+  { name: 'Final Exam', average_pass_mark: 50, description: 'End of term/year comprehensive examination' },
+  { name: 'Quiz', average_pass_mark: 40, description: 'Short assessment test' },
+  { name: 'Assignment', average_pass_mark: 60, description: 'Take-home or in-class assignment' },
+  { name: 'Project', average_pass_mark: 70, description: 'Long-term research or practical project' },
+  { name: 'Practical Exam', average_pass_mark: 65, description: 'Hands-on practical assessment' }
+]
+
+exam_types.each do |type|
+  ExamType.find_or_create_by(name: type[:name]) do |et|
+    et.average_pass_mark = type[:average_pass_mark]
+    et.description = type[:description]
+  end
+end
+
+puts "Exam types seeded successfully!"
