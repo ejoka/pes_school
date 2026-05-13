@@ -1,0 +1,103 @@
+<% content_for :page_title, "Student Transport Assignment Details" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <h1 class="text-2xl sm:text-3xl font-bold text-blue-900">Student Transport Assignment Details</h1>
+    <div class="flex space-x-3">
+      <%= link_to edit_admin_student_transport_assignment_path(@assignment), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150 inline-flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        </svg>
+        Edit Assignment
+      <% end %>
+      <%= link_to admin_student_transport_assignments_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150 inline-flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Assignments
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Student Information -->
+    <div class="bg-gradient-to-r from-blue-50 to-white rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-blue-900 mb-4">Student Information</h2>
+      <div class="space-y-3">
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Student Name</p>
+          <p class="text-lg font-semibold text-gray-900"><%= @assignment.student_name %></p>
+        </div>
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Class</p>
+          <p class="text-base text-gray-700"><%= @assignment.student&.school_class&.name || 'Not assigned' %></p>
+        </div>
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Admission No</p>
+          <p class="text-base text-gray-700"><%= @assignment.student&.admission_no || @assignment.student&.id %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Route Information -->
+    <div class="bg-gradient-to-r from-green-50 to-white rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-blue-900 mb-4">Transport Route Details</h2>
+      <div class="space-y-3">
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Route Name</p>
+          <p class="text-lg font-semibold text-gray-900"><%= @assignment.route&.name %></p>
+        </div>
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Fare</p>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <%= @assignment.route&.formatted_fare %>
+          </span>
+        </div>
+        <div class="border-b pb-2">
+          <p class="text-xs text-gray-500 uppercase tracking-wide">Transport Fee Status</p>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= @assignment.transport_fee_color %>">
+            <%= @assignment.transport_fee_status %>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assignment Details -->
+  <div class="mt-6 bg-gray-50 rounded-lg p-6">
+    <h2 class="text-lg font-semibold text-blue-900 mb-4">Assignment Details</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Assigned Date</p>
+        <p class="text-base font-semibold text-gray-900"><%= @assignment.assigned_date.strftime("%B %d, %Y") if @assignment.assigned_date %></p>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Status</p>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= @assignment.status_color %>">
+          <%= @assignment.status_badge %>
+        </span>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500 uppercase tracking-wide">Created On</p>
+        <p class="text-base text-gray-700"><%= @assignment.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <% if @assignment.description.present? %>
+    <div class="mt-6 bg-yellow-50 rounded-lg p-6">
+      <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Description / Notes</p>
+      <p class="text-gray-700"><%= @assignment.description %></p>
+    </div>
+  <% end %>
+
+  <!-- Danger Zone -->
+  <div class="mt-8 pt-6 border-t border-red-200">
+    <div class="bg-red-50 rounded-lg p-6">
+      <h3 class="text-lg font-semibold text-red-700 mb-3">Danger Zone</h3>
+      <p class="text-sm text-red-600 mb-4">This action cannot be undone. This will permanently remove the student's transport assignment.</p>
+      <%= link_to "Remove Assignment", admin_student_transport_assignment_path(@assignment), method: :delete, data: { confirm: "Are you sure you want to remove this student's transport assignment?" }, class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-150" %>
+    </div>
+  </div>
+</div>

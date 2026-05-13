@@ -1,0 +1,51 @@
+namespace :transport do
+  task check_fees: :environment do
+    puts "=== Checking Transport Fee Status ===\n\n"
+    
+    Student.all.each do |student|
+      transport_fee = student.student_fees.joins(:fee_category)
+                            .where(fee_categories: { name: 'Transport Fee' })
+                            .first
+      
+      if transport_fee
+        status = transport_fee.amount_paid >= transport_fee.amount ? "PAID" : "UNPAID"
+        puts "#{student.full_name} (ID: #{student.id}) - #{status} - Paid: #{transport_fee.amount_paid}, Due: #{transport_fee.amount}"
+      else
+        puts "#{student.full_name} (ID: #{student.id}) - NO TRANSPORT FEE RECORD"
+      end
+    end
+  end
+  
+  task create_test_fee: :environment do
+    student = Student.first
+    transport_fee_category = FeeCategory.find_by(name: 'Transport Fee')
+    
+    if student && transport_fee_category
+      fee = student.student_fees.create(
+        fee_category: transport_fee_category,
+        amount: 500,
+        due_date: Date.today + 30.days
+      )
+      puts "Created transport fee of 500 for #{student.full_name}"
+    else
+      puts "Student or Transport Fee category not found"
+    end
+  end
+  
+  task mark_paid: :environment do
+    student = Student.find_by(id: ENV['STUDENT_ID'])
+    if student
+      transport_fee = student.student_fees.joins(:fee_category)
+                            .where(fee_categories: { name: 'Transport Fee' })
+                            .first
+      if transport_fee
+        transport_fee.update(amount_paid: transport_fee.amount)
+        puts "Marked transport fee as paid for #{student.full_name}"
+      else
+        puts "No transport fee found for #{student.full_name}"
+      end
+    else
+      puts "Student not found. Usage: rake transport:mark_paid STUDENT_ID=1"
+    end
+  end
+end

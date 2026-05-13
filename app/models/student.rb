@@ -51,6 +51,31 @@ class Student < ApplicationRecord
     }
   end
 
+  def has_paid_transport_fee?
+    transport_fee = student_fees.joins(:fee_category)
+                                .where(fee_categories: { name: 'Transport Fee' })
+                                .first
+    
+    return false unless transport_fee
+    transport_fee.amount_paid >= transport_fee.amount
+  end
+  
+  def transport_fee_status
+    if has_paid_transport_fee?
+      'Paid'
+    else
+      'Unpaid'
+    end
+  end
+  
+  def transport_fee_balance
+    transport_fee = student_fees.joins(:fee_category)
+                                .where(fee_categories: { name: 'Transport Fee' })
+                                .first
+    return nil unless transport_fee
+    transport_fee.remaining_balance
+  end
+
   # Scope for accessible students based on user permissions
   def self.accessible_by(user)
     return all if user.admin?

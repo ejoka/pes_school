@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_12_213347) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_12_214802) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -269,6 +269,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_213347) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "student_transport_assignments", force: :cascade do |t|
+    t.bigint "student_id", null: false
+    t.bigint "route_id", null: false
+    t.date "assigned_date"
+    t.string "status"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["route_id"], name: "index_student_transport_assignments_on_route_id"
+    t.index ["student_id"], name: "index_student_transport_assignments_on_student_id"
+  end
+
   create_table "students", force: :cascade do |t|
     t.string "first_name"
     t.string "middle_name"
@@ -362,6 +374,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_213347) do
   add_foreign_key "school_classes", "categories"
   add_foreign_key "student_fees", "fee_categories"
   add_foreign_key "student_fees", "students"
+  add_foreign_key "student_transport_assignments", "routes"
+  add_foreign_key "student_transport_assignments", "students"
   add_foreign_key "students", "school_classes"
   add_foreign_key "students", "users"
   add_foreign_key "subjects", "school_classes"

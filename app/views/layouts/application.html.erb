@@ -20,7 +20,8 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
 
-        <style>
+      <!-- Dynamic Theme CSS -->
+    <style>
       :root {
         --primary-color: <%= Setting.get('primary_color', '#1e3a8a') %>;
         --secondary-color: <%= Setting.get('secondary_color', '#eab308') %>;
@@ -46,14 +47,30 @@
         opacity: 0.9;
       }
       
-      /* Sidebar styling */
       .sidebar-bg {
         background-color: var(--sidebar-bg);
       }
       
-      /* Header styling */
       .header-bg {
         background-color: var(--header-bg);
+      }
+      
+      /* Mobile sidebar overlay */
+      .sidebar-overlay {
+        transition: opacity 0.3s ease-in-out;
+      }
+      
+      /* Sidebar transition for mobile */
+      @media (max-width: 768px) {
+        .sidebar-transition {
+          transition: transform 0.3s ease-in-out;
+        }
+        .sidebar-hidden {
+          transform: translateX(-100%);
+        }
+        .sidebar-visible {
+          transform: translateX(0);
+        }
       }
     </style>
     <%= javascript_importmap_tags %>
