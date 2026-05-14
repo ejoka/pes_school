@@ -367,6 +367,7 @@
             <% end %>
 
            <!-- Examination Dropdown -->
+
             <% if current_user.admin? %>
               <div x-data="{ open: <%= params[:controller].in?(%w[admin/exam_grades admin/exam_types admin/exam_schedules]) %> }">
                 <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-white rounded-md hover:bg-blue-800 transition duration-150 ease-in-out">
@@ -463,6 +464,49 @@
                 </div>
               </div>
             <% end %>
+
+             <!-- Inventory Dropdown -->
+        <% if current_user.admin? || current_user.can_manage_inventory?(:view) %>
+          <div x-data="{ open: <%= params[:controller].in?(%w[admin/inventory_items admin/inventory_categories admin/suppliers admin/stock_receipts]) %> }">
+            <button @click="open = !open" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-white rounded-md hover:bg-blue-800 transition duration-150 ease-in-out">
+              <div class="flex items-center">
+                <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+                Inventory
+              </div>
+              <svg :class="{'rotate-180': open}" class="h-4 w-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-2" class="ml-8 mt-1 space-y-1">
+              <%= link_to admin_inventory_items_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out #{current_page?(admin_inventory_items_path) ? 'bg-yellow-500 text-blue-900' : 'text-blue-200 hover:text-white hover:bg-blue-800'}" do %>
+                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                </svg>
+                Inventory Items
+              <% end %>
+              <%= link_to admin_inventory_categories_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out text-blue-200 hover:text-white hover:bg-blue-800" do %>
+                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5 5a2 2 0 01.586 1.414V19a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"></path>
+                </svg>
+                Categories
+              <% end %>
+              <%= link_to admin_suppliers_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out text-blue-200 hover:text-white hover:bg-blue-800" do %>
+                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+                Suppliers
+              <% end %>
+              <%= link_to admin_stock_receipts_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out text-blue-200 hover:text-white hover:bg-blue-800" do %>
+                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                Stock Receipts
+              <% end %>
+            </div>
+          </div>
+        <% end %>
 
             <!-- Profile Link - Different paths for admin and regular users -->
             <% if current_user.admin? %>

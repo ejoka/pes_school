@@ -1,0 +1,90 @@
+<% content_for :page_title, "Inventory Items" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-blue-900">Inventory Items</h1>
+      <p class="text-sm text-gray-500 mt-1">Manage school inventory and stock levels</p>
+    </div>
+    <div class="flex space-x-3">
+      <%= link_to new_admin_inventory_item_path, class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150 font-semibold inline-flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add New Item
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-blue-900 text-white rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Total Items</h3>
+      <p class="text-2xl font-bold"><%= @total_items %></p>
+    </div>
+    <div class="bg-yellow-500 text-blue-900 rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Low Stock Items</h3>
+      <p class="text-2xl font-bold"><%= @low_stock_items %></p>
+    </div>
+    <div class="bg-red-600 text-white rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Out of Stock</h3>
+      <p class="text-2xl font-bold"><%= @out_of_stock_items %></p>
+    </div>
+    <div class="bg-green-600 text-white rounded-lg p-6">
+      <h3 class="text-sm font-semibold mb-2">Total Value</h3>
+      <p class="text-2xl font-bold"><%= format_currency(@total_value) %></p>
+    </div>
+  </div>
+
+  <!-- Items Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Name</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">In Stock</th>
+          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Min Stock</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Unit</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @inventory_items.each do |item| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium text-gray-900"><%= item.name %></div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= item.inventory_category&.name %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-center font-semibold">
+              <%= item.quantity %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-center text-red-600">
+              <%= item.minimum_stock %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= item.unit %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= item.location || '—' %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= item.stock_status[:color] %>">
+                <%= item.stock_status[:text] %>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+              <%= link_to "View", admin_inventory_item_path(item), class: "text-green-600 hover:text-green-900" %>
+              <%= link_to "Edit", edit_admin_inventory_item_path(item), class: "text-blue-600 hover:text-blue-900" %>
+              <%= link_to "Stock", new_admin_stock_movement_path(item_id: item.id), class: "text-yellow-600 hover:text-yellow-900" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -101,6 +101,22 @@ Rails.application.routes.draw do
     resources :driver_assignments
     resources :bus_route_assignments
     resources :student_transport_assignments
+
+      # Inventory routes
+    resources :inventory_categories
+    resources :suppliers
+    resources :inventory_items do
+      collection do
+        get 'low_stock'
+      end
+    end
+    resources :stock_movements, only: [:new, :create]
+    resources :stock_receipts do
+      member do
+        post 'receive'
+        post 'cancel'
+      end
+    end
     
     # Admin profile routes
     resource :profile, only: [:show, :edit, :update], controller: 'profiles', as: :admin_profile

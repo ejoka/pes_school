@@ -47,6 +47,26 @@ module Admin
       end
     end
 
+    def edit
+      @suppliers = Supplier.all.order(:name)
+      @inventory_items = InventoryItem.all.order(:name)
+    end
+
+    def update
+      if @stock_receipt.update(stock_receipt_params)
+        redirect_to admin_stock_receipt_path(@stock_receipt), notice: 'Stock receipt was successfully updated.'
+      else
+        @suppliers = Supplier.all.order(:name)
+        @inventory_items = InventoryItem.all.order(:name)
+        render :edit
+      end
+    end
+
+    def destroy
+      @stock_receipt.destroy
+      redirect_to admin_stock_receipts_path, notice: 'Stock receipt was successfully deleted.'
+    end
+
     def receive
       @stock_receipt.update(status: 'received')
       # Create stock movements for each item
@@ -65,12 +85,7 @@ module Admin
 
     def cancel
       @stock_receipt.update(status: 'cancelled')
-      redirect_to admin_stock_receipts_path, notice: 'Stock receipt was cancelled.'
-    end
-
-    def destroy
-      @stock_receipt.destroy
-      redirect_to admin_stock_receipts_path, notice: 'Stock receipt was successfully deleted.'
+      redirect_to admin_stock_receipt_path(@stock_receipt), notice: 'Stock receipt was cancelled.'
     end
 
     private
@@ -83,6 +98,8 @@ module Admin
 
     def set_stock_receipt
       @stock_receipt = StockReceipt.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to admin_stock_receipts_path, alert: 'Stock receipt not found.'
     end
 
     def stock_receipt_params

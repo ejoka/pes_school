@@ -1,0 +1,74 @@
+<% content_for :page_title, "Edit Inventory Item" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-3xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Edit Inventory Item</h1>
+    <%= link_to "Back to Items", admin_inventory_items_path, class: "text-blue-600 hover:text-blue-900" %>
+  </div>
+
+  <%= form_with(model: [:admin, @inventory_item], local: true, class: "space-y-6") do |f| %>
+    <% if @inventory_item.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        <h3 class="font-bold"><%= pluralize(@inventory_item.errors.count, "error") %> prohibited this item from being saved:</h3>
+        <ul class="list-disc list-inside mt-2">
+          <% @inventory_item.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <%= f.label :name, "Item Name", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_field :name, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div>
+        <%= f.label :inventory_category_id, "Category", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.collection_select :inventory_category_id, @categories, :id, :name, { include_blank: 'Select Category' }, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div>
+        <%= f.label :supplier_id, "Supplier", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.collection_select :supplier_id, @suppliers, :id, :name, { include_blank: 'Select Supplier' }, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div>
+        <%= f.label :unit, "Unit of Measurement", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_field :unit, required: true, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "e.g., pcs, kg, liters" %>
+      </div>
+
+      <div>
+        <%= f.label :quantity, "Current Quantity", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.number_field :quantity, required: true, min: 0, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div>
+        <%= f.label :minimum_stock, "Minimum Stock Level", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.number_field :minimum_stock, required: true, min: 0, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+        <p class="mt-1 text-xs text-gray-500">Alert when quantity falls below this level</p>
+      </div>
+
+      <div>
+        <%= f.label :unit_price, "Unit Price", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.number_field :unit_price, step: 0.01, min: 0, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+
+      <div>
+        <%= f.label :location, "Storage Location", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_field :location, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500", placeholder: "e.g., Warehouse A, Shelf 3" %>
+      </div>
+
+      <div class="md:col-span-2">
+        <%= f.label :description, "Description", class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.text_area :description, rows: 3, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500" %>
+      </div>
+    </div>
+
+    <div class="flex justify-end space-x-3">
+      <%= link_to "Cancel", admin_inventory_items_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
+      <%= f.submit "Update Item", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 transition duration-150 font-semibold" %>
+    </div>
+  <% end %>
+</div>

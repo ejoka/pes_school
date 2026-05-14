@@ -28,6 +28,10 @@ class User < ApplicationRecord
   has_many :assigned_routes, through: :user_resources, source: :resource, source_type: 'Route'
   has_many :assigned_transport_managements, through: :user_resources, source: :resource, source_type: 'TransportManagement'
   has_many :assigned_school_buses, through: :user_resources, source: :resource, source_type: 'SchoolBus'
+  has_many :assigned_inventory_categories, through: :user_resources, source: :resource, source_type: 'InventoryCategory'
+  has_many :assigned_suppliers, through: :user_resources, source: :resource, source_type: 'Supplier'
+  has_many :assigned_inventory_items, through: :user_resources, source: :resource, source_type: 'InventoryItem'
+  has_many :assigned_inventory_managements, through: :user_resources, source: :resource, source_type: 'InventoryManagement'
   
   # Role management
   enum :role, { user: 0, admin: 1 }
@@ -74,6 +78,12 @@ class User < ApplicationRecord
   def can_generate_invoice?
     return true if admin?
     can_manage_fees?(:view) || can_manage_fees?(:edit)
+  end
+
+  def can_manage_inventory?(action = :view)
+    return true if admin?
+    inventory_management = InventoryManagement.default
+    can_access?(inventory_management, action)
   end
   
   def accessible_students

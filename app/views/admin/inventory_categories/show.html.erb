@@ -1,0 +1,32 @@
+<% content_for :page_title, "Category: #{@inventory_category.name}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Category Details</h1>
+    <div class="space-x-3">
+      <%= link_to edit_admin_inventory_category_path(@inventory_category), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600" do %>
+        Edit Category
+      <% end %>
+      <%= link_to admin_inventory_categories_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" do %>
+        Back to Categories
+      <% end %>
+    </div>
+  </div>
+
+  <div class="border border-gray-200 rounded-lg p-6">
+    <div class="grid grid-cols-1 gap-4">
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Name</p>
+        <p class="font-medium text-gray-900"><%= @inventory_category.name %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Description</p>
+        <p class="font-medium text-gray-900"><%= @inventory_category.description.presence || 'No description' %></p>
+      </div>
+      <div>
+        <p class="text-sm text-gray-600 mb-1">Items Count</p>
+        <p class="font-medium text-gray-900"><%= @inventory_category.inventory_items.count %></p>
+      </div>
+    </div>
+  </div>
+</div>
