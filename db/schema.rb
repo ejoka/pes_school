@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_12_214802) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_14_082552) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -164,6 +164,29 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_214802) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "inventory_categories", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "inventory_items", force: :cascade do |t|
+    t.string "name"
+    t.bigint "inventory_category_id", null: false
+    t.bigint "supplier_id", null: false
+    t.integer "quantity"
+    t.integer "minimum_stock"
+    t.string "unit"
+    t.decimal "unit_price"
+    t.string "location"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_category_id"], name: "index_inventory_items_on_inventory_category_id"
+    t.index ["supplier_id"], name: "index_inventory_items_on_supplier_id"
+  end
+
   create_table "invoices", force: :cascade do |t|
     t.bigint "student_id", null: false
     t.string "invoice_number"
@@ -248,6 +271,43 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_214802) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "stock_movements", force: :cascade do |t|
+    t.bigint "inventory_item_id", null: false
+    t.string "movement_type"
+    t.integer "quantity"
+    t.string "reference_number"
+    t.date "date"
+    t.text "notes"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_item_id"], name: "index_stock_movements_on_inventory_item_id"
+  end
+
+  create_table "stock_receipt_items", force: :cascade do |t|
+    t.bigint "stock_receipt_id", null: false
+    t.bigint "inventory_item_id", null: false
+    t.integer "quantity"
+    t.decimal "unit_price"
+    t.decimal "total_price"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["inventory_item_id"], name: "index_stock_receipt_items_on_inventory_item_id"
+    t.index ["stock_receipt_id"], name: "index_stock_receipt_items_on_stock_receipt_id"
+  end
+
+  create_table "stock_receipts", force: :cascade do |t|
+    t.string "receipt_number"
+    t.bigint "supplier_id", null: false
+    t.date "received_date"
+    t.string "status"
+    t.text "notes"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["supplier_id"], name: "index_stock_receipts_on_supplier_id"
+  end
+
   create_table "student_fees", force: :cascade do |t|
     t.bigint "student_id", null: false
     t.bigint "fee_category_id", null: false
@@ -309,6 +369,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_214802) do
     t.index ["school_class_id"], name: "index_subjects_on_school_class_id"
   end
 
+  create_table "suppliers", force: :cascade do |t|
+    t.string "name"
+    t.string "contact_person"
+    t.string "phone"
+    t.string "email"
+    t.text "address"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "transport_managements", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -368,10 +439,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_12_214802) do
   add_foreign_key "exam_schedules", "school_classes"
   add_foreign_key "exam_schedules", "subjects"
   add_foreign_key "exam_schedules", "users"
+  add_foreign_key "inventory_items", "inventory_categories"
+  add_foreign_key "inventory_items", "suppliers"
   add_foreign_key "invoices", "students"
   add_foreign_key "parent_infos", "students"
   add_foreign_key "payments", "students"
   add_foreign_key "school_classes", "categories"
+  add_foreign_key "stock_movements", "inventory_items"
+  add_foreign_key "stock_receipt_items", "inventory_items"
+  add_foreign_key "stock_receipt_items", "stock_receipts"
+  add_foreign_key "stock_receipts", "suppliers"
   add_foreign_key "student_fees", "fee_categories"
   add_foreign_key "student_fees", "students"
   add_foreign_key "student_transport_assignments", "routes"

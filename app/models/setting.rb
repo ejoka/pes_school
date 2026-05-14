@@ -1,5 +1,7 @@
 class Setting < ApplicationRecord
+  # Attachments
   has_one_attached :logo
+  has_one_attached :favicon
   
   validates :key, presence: true, uniqueness: true
   
@@ -17,7 +19,7 @@ class Setting < ApplicationRecord
     setting = find_by(key: 'logo')
     setting&.logo&.attached? ? setting.logo : nil
   end
-
+  
   def self.favicon_url
     setting = find_by(key: 'favicon')
     setting&.favicon&.attached? ? setting.favicon : nil

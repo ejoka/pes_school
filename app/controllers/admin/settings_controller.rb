@@ -54,6 +54,12 @@ module Admin
         logo_setting.logo.attach(params[:logo])
       end
       
+      # Handle favicon upload
+      if params[:favicon].present?
+        favicon_setting = Setting.find_or_create_by(key: 'favicon')
+        favicon_setting.favicon.attach(params[:favicon])
+      end
+      
       # Regenerate theme after settings update
       regenerate_theme_variables
       
@@ -78,10 +84,18 @@ module Admin
         setting.update(value: value)
       end
       
-      # Regenerate theme after color update
-      regenerate_theme_variables
+      # Clear Rails cache to force refresh
+      Rails.cache.clear
+
+      # Update timestamp to force cache refresh
+      timestamp_setting = Setting.find_or_create_by(key: 'theme_last_updated')
+      timestamp_setting.update(value: Time.now.to_i)
       
-      redirect_to admin_color_settings_path, notice: 'Color settings were successfully updated. Refresh the page to see changes.'
+      # Touch the theme.css route to force refresh
+      # This ensures the browser fetches a fresh copy
+      flash[:notice] = 'Color settings were successfully updated. Refresh the page to see changes.'
+      
+      redirect_to admin_color_settings_path
     end
 
     private

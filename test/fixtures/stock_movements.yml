@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  inventory_item: one
+  movement_type: MyString
+  quantity: 1
+  reference_number: MyString
+  date: 2026-05-14
+  notes: MyText
+  performed_by: one
+
+two:
+  inventory_item: two
+  movement_type: MyString
+  quantity: 1
+  reference_number: MyString
+  date: 2026-05-14
+  notes: MyText
+  performed_by: two
