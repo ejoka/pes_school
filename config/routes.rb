@@ -121,6 +121,23 @@ Rails.application.routes.draw do
         post 'cancel'
       end
     end
+
+    # Attendance routes
+    get 'attendance', to: 'attendances#select_class', as: :attendance_select
+    get 'attendances', to: 'attendances#index', as: :attendances
+    get 'attendances/mark', to: 'attendances#mark_attendance', as: :mark_attendance
+    post 'attendances/save', to: 'attendances#save_attendance', as: :save_attendance
+    get 'attendances/weekly_report', to: 'attendances#weekly_report', as: :attendance_weekly_report
+    get 'attendances/student_report', to: 'attendances#student_report', as: :attendance_student_report
+    # resources :attendances, only: [] do
+    #   collection do
+    #     get '/', to: 'attendances#index', as: ''
+    #     get 'mark_attendance'
+    #     post 'save_attendance'
+    #     get 'weekly_report'
+    #     get 'student_report'
+    #   end
+    # end
     
     # Admin profile routes
     resource :profile, only: [:show, :edit, :update], controller: 'profiles', as: :admin_profile

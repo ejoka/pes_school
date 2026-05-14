@@ -1,0 +1,84 @@
+<% content_for :page_title, "Mark Attendance - #{@school_class.name}" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-blue-900">Mark Attendance</h1>
+      <p class="text-gray-600 mt-1">Class: <%= @school_class.name %> | Date: <%= @date.strftime("%A, %B %d, %Y") %></p>
+    </div>
+    <div class="flex space-x-3">
+      <%= link_to "Previous Day", admin_attendances_path(class_id: @school_class.id, date: @date - 1.day), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" %>
+      <%= link_to "Today", admin_attendances_path(class_id: @school_class.id, date: Date.today), class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+      <%= link_to "Next Day", admin_attendances_path(class_id: @school_class.id, date: @date + 1.day), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" %>
+      <%= link_to "Weekly Report", admin_attendance_weekly_report_path(class_id: @school_class.id, date: @date), class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
+    </div>
+  </div>
+
+  <%= form_tag admin_save_attendance_path, method: :post, class: "space-y-6" do %>
+    <%= hidden_field_tag :class_id, @school_class.id %>
+    <%= hidden_field_tag :date, @date %>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admission No</th>
+            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Attendance Status</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Remarks</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @students.each do |student| %>
+            <% existing = @attendance_records[student.id] %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900"><%= student.full_name %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= student.id %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex justify-center space-x-4">
+                  <% @statuses.each do |status| %>
+                    <label class="inline-flex items-center">
+                      <%= radio_button_tag "attendances[#{student.id}]", status.id, existing&.attendance_status_id == status.id, class: "form-radio h-4 w-4 text-yellow-500" %>
+                      <span class="ml-1 text-sm text-gray-700"><%= status.code %></span>
+                    </label>
+                  <% end %>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <input type="text" name="remarks[<%= student.id %>]" value="<%= existing&.remarks %>" class="w-full px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 text-sm" placeholder="Optional...">
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex justify-between items-center pt-4">
+      <div class="flex space-x-4">
+        <button type="button" onclick="markAll('<%= AttendanceStatus.find_by(code: 'P')&.id %>')" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+          Mark All Present
+        </button>
+        <button type="button" onclick="markAll('<%= AttendanceStatus.find_by(code: 'A')&.id %>')" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+          Mark All Absent
+        </button>
+      </div>
+      <div class="flex space-x-3">
+        <%= link_to "Cancel", admin_dashboard_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" %>
+        <%= submit_tag "Save Attendance", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded hover:bg-blue-800 font-semibold" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  function markAll(statusId) {
+    const radios = document.querySelectorAll(`input[type="radio"][value="${statusId}"]`);
+    radios.forEach(radio => {
+      radio.checked = true;
+    });
+  }
+</script>
