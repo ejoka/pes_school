@@ -110,7 +110,11 @@ Rails.application.routes.draw do
         get 'low_stock'
       end
     end
-    resources :stock_movements, only: [:new, :create]
+    resources :stock_movements, only: [:index, :new, :create, :destroy] do
+      collection do
+        get 'by_item/:item_id', to: 'stock_movements#by_item', as: :by_item
+      end
+    end
     resources :stock_receipts do
       member do
         post 'receive'

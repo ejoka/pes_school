@@ -2,7 +2,16 @@ module Admin
   class StockMovementsController < ApplicationController
     before_action :authenticate_user!
     before_action :ensure_inventory_permission!
-    before_action :set_inventory_item
+    before_action :set_inventory_item, only: [:new, :create]
+    before_action :set_stock_movement, only: [:destroy]
+
+    def index
+      @stock_movements = if current_user.admin?
+                           StockMovement.includes(:inventory_item, :user).order(date: :desc)
+                         else
+                           StockMovement.accessible_by(current_user).includes(:inventory_item, :user).order(date: :desc)
+                         end
+    end
 
     def new
       @stock_movement = @inventory_item.stock_movements.new
@@ -20,6 +29,11 @@ module Admin
       end
     end
 
+    def destroy
+      @stock_movement.destroy
+      redirect_to admin_stock_movements_path, notice: 'Stock movement was successfully deleted.'
+    end
+
     private
 
     def ensure_inventory_permission!
@@ -30,6 +44,10 @@ module Admin
 
     def set_inventory_item
       @inventory_item = InventoryItem.find(params[:item_id])
+    end
+
+    def set_stock_movement
+      @stock_movement = StockMovement.find(params[:id])
     end
 
     def stock_movement_params

@@ -480,12 +480,6 @@
               </svg>
             </button>
             <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-2" class="ml-8 mt-1 space-y-1">
-              <%= link_to admin_inventory_items_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out #{current_page?(admin_inventory_items_path) ? 'bg-yellow-500 text-blue-900' : 'text-blue-200 hover:text-white hover:bg-blue-800'}" do %>
-                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-                </svg>
-                Inventory Items
-              <% end %>
               <%= link_to admin_inventory_categories_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out text-blue-200 hover:text-white hover:bg-blue-800" do %>
                 <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5 5a2 2 0 01.586 1.414V19a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"></path>
@@ -498,11 +492,23 @@
                 </svg>
                 Suppliers
               <% end %>
+              <%= link_to admin_inventory_items_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out #{current_page?(admin_inventory_items_path) ? 'bg-yellow-500 text-blue-900' : 'text-blue-200 hover:text-white hover:bg-blue-800'}" do %>
+                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                </svg>
+                Inventory Items
+              <% end %>
               <%= link_to admin_stock_receipts_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out text-blue-200 hover:text-white hover:bg-blue-800" do %>
                 <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                 </svg>
                 Stock Receipts
+              <% end %>
+              <%= link_to admin_stock_movements_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-md transition duration-150 ease-in-out #{current_page?(admin_stock_movements_path) ? 'bg-yellow-500 text-blue-900' : 'text-blue-200 hover:text-white hover:bg-blue-800'}" do %>
+                <svg class="mr-3 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                </svg>
+                Stock Movements
               <% end %>
             </div>
           </div>

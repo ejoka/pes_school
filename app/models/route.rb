@@ -13,6 +13,6 @@ class Route < ApplicationRecord
   end
   
   def formatted_fare
-    "$#{fare.to_i}"
+    "#{fare.to_i}"
   end
 end
