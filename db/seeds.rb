@@ -58,20 +58,38 @@
 # puts "Admin login: admin@school.com / password123"
 
 # Seed Exam Types
-exam_types = [
-  { name: 'Mid-term Exam', average_pass_mark: 50, description: 'Examination conducted in the middle of the academic term' },
-  { name: 'Final Exam', average_pass_mark: 50, description: 'End of term/year comprehensive examination' },
-  { name: 'Quiz', average_pass_mark: 40, description: 'Short assessment test' },
-  { name: 'Assignment', average_pass_mark: 60, description: 'Take-home or in-class assignment' },
-  { name: 'Project', average_pass_mark: 70, description: 'Long-term research or practical project' },
-  { name: 'Practical Exam', average_pass_mark: 65, description: 'Hands-on practical assessment' }
+# exam_types = [
+#   { name: 'Mid-term Exam', average_pass_mark: 50, description: 'Examination conducted in the middle of the academic term' },
+#   { name: 'Final Exam', average_pass_mark: 50, description: 'End of term/year comprehensive examination' },
+#   { name: 'Quiz', average_pass_mark: 40, description: 'Short assessment test' },
+#   { name: 'Assignment', average_pass_mark: 60, description: 'Take-home or in-class assignment' },
+#   { name: 'Project', average_pass_mark: 70, description: 'Long-term research or practical project' },
+#   { name: 'Practical Exam', average_pass_mark: 65, description: 'Hands-on practical assessment' }
+# ]
+
+# exam_types.each do |type|
+#   ExamType.find_or_create_by(name: type[:name]) do |et|
+#     et.average_pass_mark = type[:average_pass_mark]
+#     et.description = type[:description]
+#   end
+# end
+
+# puts "Exam types seeded successfully!"
+
+# Seed Attendance Statuses
+attendance_statuses = [
+  { name: 'Present', code: 'P', color: 'bg-green-100 text-green-800' },
+  { name: 'Absent', code: 'A', color: 'bg-red-100 text-red-800' },
+  { name: 'Late', code: 'L', color: 'bg-yellow-100 text-yellow-800' },
+  { name: 'Excused', code: 'E', color: 'bg-blue-100 text-blue-800' },
+  { name: 'Holiday', code: 'H', color: 'bg-gray-100 text-gray-800' }
 ]
 
-exam_types.each do |type|
-  ExamType.find_or_create_by(name: type[:name]) do |et|
-    et.average_pass_mark = type[:average_pass_mark]
-    et.description = type[:description]
+attendance_statuses.each do |status|
+  AttendanceStatus.find_or_create_by(name: status[:name]) do |s|
+    s.code = status[:code]
+    s.color = status[:color]
   end
 end
 
-puts "Exam types seeded successfully!"
+puts "Attendance statuses seeded successfully!"

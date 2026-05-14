@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_14_083537) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_14_125255) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,28 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_14_083537) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "attendance_records", force: :cascade do |t|
+    t.bigint "student_id", null: false
+    t.bigint "school_class_id", null: false
+    t.date "date"
+    t.bigint "attendance_status_id", null: false
+    t.text "remarks"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attendance_status_id"], name: "index_attendance_records_on_attendance_status_id"
+    t.index ["school_class_id"], name: "index_attendance_records_on_school_class_id"
+    t.index ["student_id"], name: "index_attendance_records_on_student_id"
+  end
+
+  create_table "attendance_statuses", force: :cascade do |t|
+    t.string "name"
+    t.string "code"
+    t.string "color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "bus_route_assignments", force: :cascade do |t|
@@ -428,8 +450,23 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_14_083537) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "weekly_attendance_summaries", force: :cascade do |t|
+    t.bigint "student_id", null: false
+    t.date "week_starting"
+    t.integer "total_present"
+    t.integer "total_absent"
+    t.integer "total_late"
+    t.decimal "attendance_percentage"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_weekly_attendance_summaries_on_student_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "attendance_records", "attendance_statuses"
+  add_foreign_key "attendance_records", "school_classes"
+  add_foreign_key "attendance_records", "students"
   add_foreign_key "bus_route_assignments", "routes"
   add_foreign_key "bus_route_assignments", "school_buses"
   add_foreign_key "driver_assignments", "school_buses"
@@ -464,4 +501,5 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_14_083537) do
   add_foreign_key "students", "users"
   add_foreign_key "subjects", "school_classes"
   add_foreign_key "user_resources", "users"
+  add_foreign_key "weekly_attendance_summaries", "students"
 end
