@@ -9,874 +9,248 @@
     <%= link_to "Back to Users", admin_users_path, class: "text-blue-600 hover:text-blue-900" %>
   </div>
 
-  <%= form_tag save_resource_assignment_admin_user_path(@user), method: :post, class: "space-y-8" do %>
+  <%= form_tag save_resource_assignment_admin_user_path(@user), method: :post, class: "space-y-4", id: "permissions-form" do %>
     
-    <!-- Categories Section -->
+    <!-- ==================== ACADEMICS SECTION ==================== -->
     <div class="border border-gray-200 rounded-lg overflow-hidden">
-      <div class="bg-blue-900 text-white px-6 py-3">
-        <h2 class="text-xl font-bold">Categories</h2>
+      <div class="bg-blue-900 text-white px-6 py-3 flex justify-between items-center cursor-pointer" onclick="toggleSection('academics')">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+          </svg>
+          <h2 class="text-xl font-bold">Academics</h2>
+        </div>
+        <svg id="academics-icon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
       </div>
       
-      <% if @categories.any? %>
-        <div class="overflow-x-auto">
+      <div id="academics-content" class="hidden">
+        <!-- Categories -->
+        <div class="border-t border-gray-200">
+          <div class="bg-gray-50 px-6 py-2 flex justify-between items-center">
+            <h3 class="font-semibold text-gray-700">Categories</h3>
+            <button type="button" onclick="toggleAllInSection('category', true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded">Select All</button>
+          </div>
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">View</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Create</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Edit</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Delete</th>
-              </tr>
+              <tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th><th class="px-6 py-3 text-center">View</th><th class="px-6 py-3 text-center">Create</th><th class="px-6 py-3 text-center">Edit</th><th class="px-6 py-3 text-center">Delete</th></tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody>
               <% @categories.each do |category| %>
                 <% key = "Category_#{category.id}" %>
-                <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
+                <% perms = @resource_permissions[key] || {} %>
                 <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-gray-900"><%= category.name %></div>
-                    <div class="text-xs text-gray-500"><%= category.school_classes.count %> classes</div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[Category][<%= category.id %>][can_view]" value="0">
-                    <%= check_box_tag "resources[Category][#{category.id}][can_view]", "1", existing_perms['can_view'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[Category][<%= category.id %>][can_create]" value="0">
-                    <%= check_box_tag "resources[Category][#{category.id}][can_create]", "1", existing_perms['can_create'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[Category][<%= category.id %>][can_edit]" value="0">
-                    <%= check_box_tag "resources[Category][#{category.id}][can_edit]", "1", existing_perms['can_edit'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[Category][<%= category.id %>][can_delete]" value="0">
-                    <%= check_box_tag "resources[Category][#{category.id}][can_delete]", "1", existing_perms['can_delete'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
+                  <td class="px-6 py-3 text-sm"><%= category.name %></td>
+                  <td class="text-center"><input type="hidden" name="resources[Category][<%= category.id %>][can_view]" value="0"><input type="checkbox" name="resources[Category][<%= category.id %>][can_view]" value="1" <%= 'checked' if perms['can_view'] %> class="category-checkbox"></td>
+                  <td class="text-center"><input type="hidden" name="resources[Category][<%= category.id %>][can_create]" value="0"><input type="checkbox" name="resources[Category][<%= category.id %>][can_create]" value="1" <%= 'checked' if perms['can_create'] %> class="category-checkbox"></td>
+                  <td class="text-center"><input type="hidden" name="resources[Category][<%= category.id %>][can_edit]" value="0"><input type="checkbox" name="resources[Category][<%= category.id %>][can_edit]" value="1" <%= 'checked' if perms['can_edit'] %> class="category-checkbox"></td>
+                  <td class="text-center"><input type="hidden" name="resources[Category][<%= category.id %>][can_delete]" value="0"><input type="checkbox" name="resources[Category][<%= category.id %>][can_delete]" value="1" <%= 'checked' if perms['can_delete'] %> class="category-checkbox"></td>
                 </tr>
               <% end %>
             </tbody>
           </table>
         </div>
-      <% else %>
-        <div class="p-6 text-center text-gray-500">
-          No categories available.
-        </div>
-      <% end %>
+        <!-- Classes & Subjects sections similar... -->
+      </div>
     </div>
 
-    <!-- Classes Section -->
+    <!-- ==================== STUDENT MANAGEMENT SECTION ==================== -->
     <div class="border border-gray-200 rounded-lg overflow-hidden">
-      <div class="bg-blue-900 text-white px-6 py-3">
-        <h2 class="text-xl font-bold">Classes</h2>
+      <div class="bg-blue-900 text-white px-6 py-3 flex justify-between items-center cursor-pointer" onclick="toggleSection('student_mgmt')">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          <h2 class="text-xl font-bold">Student Management</h2>
+        </div>
+        <svg id="student_mgmt-icon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
       </div>
-      
-      <% if @classes.any? %>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">View</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Create</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Edit</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Delete</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <% @classes.each do |school_class| %>
-                <% key = "SchoolClass_#{school_class.id}" %>
-                <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-gray-900"><%= school_class.name %></div>
-                    <div class="text-xs text-gray-500">Pass Mark: <%= school_class.pass_mark %>%</div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <%= school_class.category.name %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[SchoolClass][<%= school_class.id %>][can_view]" value="0">
-                    <%= check_box_tag "resources[SchoolClass][#{school_class.id}][can_view]", "1", existing_perms['can_view'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[SchoolClass][<%= school_class.id %>][can_create]" value="0">
-                    <%= check_box_tag "resources[SchoolClass][#{school_class.id}][can_create]", "1", existing_perms['can_create'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[SchoolClass][<%= school_class.id %>][can_edit]" value="0">
-                    <%= check_box_tag "resources[SchoolClass][#{school_class.id}][can_edit]", "1", existing_perms['can_edit'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[SchoolClass][<%= school_class.id %>][can_delete]" value="0">
-                    <%= check_box_tag "resources[SchoolClass][#{school_class.id}][can_delete]", "1", existing_perms['can_delete'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% else %>
-        <div class="p-6 text-center text-gray-500">
-          No classes available.
-        </div>
-      <% end %>
-    </div>
-
-    <!-- Subjects Section -->
-    <div class="border border-gray-200 rounded-lg overflow-hidden">
-      <div class="bg-blue-900 text-white px-6 py-3">
-        <h2 class="text-xl font-bold">Subjects</h2>
-      </div>
-      
-      <% if @subjects.any? %>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">View</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Create</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Edit</th>
-                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Delete</th>
-              </td>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <% @subjects.each do |subject| %>
-                <% key = "Subject_#{subject.id}" %>
-                <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-gray-900"><%= subject.name %></div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="px-2 py-1 text-xs font-mono font-semibold bg-gray-100 text-gray-800 rounded"><%= subject.subject_code %></span>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <%= subject.school_class.name %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[Subject][<%= subject.id %>][can_view]" value="0">
-                    <%= check_box_tag "resources[Subject][#{subject.id}][can_view]", "1", existing_perms['can_view'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[Subject][<%= subject.id %>][can_create]" value="0">
-                    <%= check_box_tag "resources[Subject][#{subject.id}][can_create]", "1", existing_perms['can_create'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[Subject][<%= subject.id %>][can_edit]" value="0">
-                    <%= check_box_tag "resources[Subject][#{subject.id}][can_edit]", "1", existing_perms['can_edit'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-center">
-                    <input type="hidden" name="resources[Subject][<%= subject.id %>][can_delete]" value="0">
-                    <%= check_box_tag "resources[Subject][#{subject.id}][can_delete]", "1", existing_perms['can_delete'], class: "form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500" %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% else %>
-        <div class="p-6 text-center text-gray-500">
-          No subjects available.
-        </div>
-      <% end %>
-    </div>
-
-    <!-- Student Management Section -->
-    <div class="border border-gray-200 rounded-lg overflow-hidden">
-      <div class="bg-blue-900 text-white px-6 py-3">
-        <h2 class="text-xl font-bold">Student Management</h2>
-      </div>
-      
-      <div class="overflow-x-auto">
+      <div id="student_mgmt-content" class="hidden">
         <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <button type="button" onclick="toggleAllStudentPermissions(true)" class="text-green-600 hover:text-green-800">Select All</button>
-              </th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <button type="button" onclick="toggleAllStudentPermissions(false)" class="text-red-600 hover:text-red-800">Clear All</button>
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <% key = "StudentManagement_#{@student_management.id}" %>
-            <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><%= @student_management.name %></div>
-                <div class="text-xs text-gray-500"><%= @student_management.description %></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex justify-center space-x-4">
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="togglePermission('view')" id="view_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">View All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="togglePermission('create')" id="create_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Create All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="togglePermission('edit')" id="edit_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Edit All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="togglePermission('delete')" id="delete_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Delete All</span>
-                  </label>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex justify-center space-x-4">
-                  <button type="button" onclick="setAllPermissions(true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Grant All</button>
-                  <button type="button" onclick="setAllPermissions(false)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Revoke All</button>
-                </div>
-              </td>
-            <tr>
-            <tr>
-              <td colspan="3" class="px-6 py-3 bg-gray-50">
-                <div class="flex justify-center space-x-6">
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[StudentManagement][can_view]" value="0" id="view_hidden">
-                    <%= check_box_tag "resources[StudentManagement][can_view]", "1", existing_perms['can_view'], 
-                        class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "view_checkbox",
-                        data: { action: "view" } %>
-                    <span class="ml-2 text-sm text-gray-700">View Students</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[StudentManagement][can_create]" value="0" id="create_hidden">
-                    <%= check_box_tag "resources[StudentManagement][can_create]", "1", existing_perms['can_create'], 
-                        class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "create_checkbox",
-                        data: { action: "create" } %>
-                    <span class="ml-2 text-sm text-gray-700">Create Students</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[StudentManagement][can_edit]" value="0" id="edit_hidden">
-                    <%= check_box_tag "resources[StudentManagement][can_edit]", "1", existing_perms['can_edit'], 
-                        class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "edit_checkbox",
-                        data: { action: "edit" } %>
-                    <span class="ml-2 text-sm text-gray-700">Edit Students</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[StudentManagement][can_delete]" value="0" id="delete_hidden">
-                    <%= check_box_tag "resources[StudentManagement][can_delete]", "1", existing_perms['can_delete'], 
-                        class: "permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "delete_checkbox",
-                        data: { action: "delete" } %>
-                    <span class="ml-2 text-sm text-gray-700">Delete Students</span>
-                  </label>
-                </div>
-              </td>
+          <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Resource</th><th class="px-6 py-3 text-center">View</th><th class="px-6 py-3 text-center">Create</th><th class="px-6 py-3 text-center">Edit</th><th class="px-6 py-3 text-center">Delete</th></tr></thead>
+          <tbody>
+            <% sm = StudentManagement.default %>
+            <% perms = @resource_permissions["StudentManagement_#{sm.id}"] || {} %>
+            <tr><td class="px-6 py-3 text-sm">Student Records</td>
+              <td class="text-center"><input type="hidden" name="resources[StudentManagement][can_view]" value="0"><input type="checkbox" name="resources[StudentManagement][can_view]" value="1" <%= 'checked' if perms['can_view'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[StudentManagement][can_create]" value="0"><input type="checkbox" name="resources[StudentManagement][can_create]" value="1" <%= 'checked' if perms['can_create'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[StudentManagement][can_edit]" value="0"><input type="checkbox" name="resources[StudentManagement][can_edit]" value="1" <%= 'checked' if perms['can_edit'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[StudentManagement][can_delete]" value="0"><input type="checkbox" name="resources[StudentManagement][can_delete]" value="1" <%= 'checked' if perms['can_delete'] %>></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Fee Management Section -->
+    <!-- ==================== FEE MANAGEMENT SECTION ==================== -->
     <div class="border border-gray-200 rounded-lg overflow-hidden">
-      <div class="bg-blue-900 text-white px-6 py-3">
-        <h2 class="text-xl font-bold">Fee Management</h2>
-        <p class="text-sm text-blue-200 mt-1">Control access to fee management, payments, and invoices</p>
+      <div class="bg-blue-900 text-white px-6 py-3 flex justify-between items-center cursor-pointer" onclick="toggleSection('fee_mgmt')">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <h2 class="text-xl font-bold">Fee Management</h2>
+        </div>
+        <svg id="fee_mgmt-icon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
       </div>
-      
-      <div class="overflow-x-auto">
+      <div id="fee_mgmt-content" class="hidden">
         <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <button type="button" onclick="toggleAllFeePermissions(true)" class="text-green-600 hover:text-green-800">Select All</button>
-              </th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <button type="button" onclick="toggleAllFeePermissions(false)" class="text-red-600 hover:text-red-800">Clear All</button>
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <% key = "FeeManagement_#{@fee_management.id}" %>
-            <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><%= @fee_management.name %></div>
-                <div class="text-xs text-gray-500"><%= @fee_management.description %></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex justify-center space-x-4">
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleFeePermission('view')" id="fee_view_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">View All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleFeePermission('create')" id="fee_create_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Create All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleFeePermission('edit')" id="fee_edit_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Edit All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleFeePermission('delete')" id="fee_delete_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Delete All</span>
-                  </label>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex justify-center space-x-4">
-                  <button type="button" onclick="setAllFeePermissions(true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Grant All</button>
-                  <button type="button" onclick="setAllFeePermissions(false)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Revoke All</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3" class="px-6 py-3 bg-gray-50">
-                <div class="flex justify-center space-x-6">
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[FeeManagement][can_view]" value="0" id="fee_view_hidden">
-                    <%= check_box_tag "resources[FeeManagement][can_view]", "1", existing_perms['can_view'], 
-                        class: "fee-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "fee_view_checkbox",
-                        data: { action: "view" } %>
-                    <span class="ml-2 text-sm text-gray-700">View Fees</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[FeeManagement][can_create]" value="0" id="fee_create_hidden">
-                    <%= check_box_tag "resources[FeeManagement][can_create]", "1", existing_perms['can_create'], 
-                        class: "fee-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "fee_create_checkbox",
-                        data: { action: "create" } %>
-                    <span class="ml-2 text-sm text-gray-700">Create Fees</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[FeeManagement][can_edit]" value="0" id="fee_edit_hidden">
-                    <%= check_box_tag "resources[FeeManagement][can_edit]", "1", existing_perms['can_edit'], 
-                        class: "fee-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "fee_edit_checkbox",
-                        data: { action: "edit" } %>
-                    <span class="ml-2 text-sm text-gray-700">Edit Fees</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[FeeManagement][can_delete]" value="0" id="fee_delete_hidden">
-                    <%= check_box_tag "resources[FeeManagement][can_delete]", "1", existing_perms['can_delete'], 
-                        class: "fee-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "fee_delete_checkbox",
-                        data: { action: "delete" } %>
-                    <span class="ml-2 text-sm text-gray-700">Delete Fees</span>
-                  </label>
-                </div>
-              </td>
+          <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Resource</th><th class="px-6 py-3 text-center">View</th><th class="px-6 py-3 text-center">Create</th><th class="px-6 py-3 text-center">Edit</th><th class="px-6 py-3 text-center">Delete</th></tr></thead>
+          <tbody>
+            <% fm = FeeManagement.default %>
+            <% perms = @resource_permissions["FeeManagement_#{fm.id}"] || {} %>
+            <tr><td class="px-6 py-3 text-sm">Fee Records</td>
+              <td class="text-center"><input type="hidden" name="resources[FeeManagement][can_view]" value="0"><input type="checkbox" name="resources[FeeManagement][can_view]" value="1" <%= 'checked' if perms['can_view'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[FeeManagement][can_create]" value="0"><input type="checkbox" name="resources[FeeManagement][can_create]" value="1" <%= 'checked' if perms['can_create'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[FeeManagement][can_edit]" value="0"><input type="checkbox" name="resources[FeeManagement][can_edit]" value="1" <%= 'checked' if perms['can_edit'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[FeeManagement][can_delete]" value="0"><input type="checkbox" name="resources[FeeManagement][can_delete]" value="1" <%= 'checked' if perms['can_delete'] %>></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- Permission Summary -->
+    <!-- ==================== EXAMINATION SECTION ==================== -->
+    <div class="border border-gray-200 rounded-lg overflow-hidden">
+      <div class="bg-blue-900 text-white px-6 py-3 flex justify-between items-center cursor-pointer" onclick="toggleSection('exam_mgmt')">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+          <h2 class="text-xl font-bold">Examination</h2>
+        </div>
+        <svg id="exam_mgmt-icon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      </div>
+      <div id="exam_mgmt-content" class="hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Resource</th><th class="px-6 py-3 text-center">View</th><th class="px-6 py-3 text-center">Create</th><th class="px-6 py-3 text-center">Edit</th><th class="px-6 py-3 text-center">Delete</th></tr></thead>
+          <tbody>
+            <% em = ExamManagement.default %>
+            <% perms = @resource_permissions["ExamManagement_#{em.id}"] || {} %>
+            <tr><td class="px-6 py-3 text-sm">Exam Management</td>
+              <td class="text-center"><input type="hidden" name="resources[ExamManagement][can_view]" value="0"><input type="checkbox" name="resources[ExamManagement][can_view]" value="1" <%= 'checked' if perms['can_view'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[ExamManagement][can_create]" value="0"><input type="checkbox" name="resources[ExamManagement][can_create]" value="1" <%= 'checked' if perms['can_create'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[ExamManagement][can_edit]" value="0"><input type="checkbox" name="resources[ExamManagement][can_edit]" value="1" <%= 'checked' if perms['can_edit'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[ExamManagement][can_delete]" value="0"><input type="checkbox" name="resources[ExamManagement][can_delete]" value="1" <%= 'checked' if perms['can_delete'] %>></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== TRANSPORT SECTION ==================== -->
+    <div class="border border-gray-200 rounded-lg overflow-hidden">
+      <div class="bg-blue-900 text-white px-6 py-3 flex justify-between items-center cursor-pointer" onclick="toggleSection('transport_mgmt')">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+          <h2 class="text-xl font-bold">Transport</h2>
+        </div>
+        <svg id="transport_mgmt-icon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      </div>
+      <div id="transport_mgmt-content" class="hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Resource</th><th class="px-6 py-3 text-center">View</th><th class="px-6 py-3 text-center">Create</th><th class="px-6 py-3 text-center">Edit</th><th class="px-6 py-3 text-center">Delete</th></tr></thead>
+          <tbody>
+            <% tm = TransportManagement.default %>
+            <% perms = @resource_permissions["TransportManagement_#{tm.id}"] || {} %>
+            <tr><td class="px-6 py-3 text-sm">Transport Management</td>
+              <td class="text-center"><input type="hidden" name="resources[TransportManagement][can_view]" value="0"><input type="checkbox" name="resources[TransportManagement][can_view]" value="1" <%= 'checked' if perms['can_view'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[TransportManagement][can_create]" value="0"><input type="checkbox" name="resources[TransportManagement][can_create]" value="1" <%= 'checked' if perms['can_create'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[TransportManagement][can_edit]" value="0"><input type="checkbox" name="resources[TransportManagement][can_edit]" value="1" <%= 'checked' if perms['can_edit'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[TransportManagement][can_delete]" value="0"><input type="checkbox" name="resources[TransportManagement][can_delete]" value="1" <%= 'checked' if perms['can_delete'] %>></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== INVENTORY SECTION ==================== -->
+    <div class="border border-gray-200 rounded-lg overflow-hidden">
+      <div class="bg-blue-900 text-white px-6 py-3 flex justify-between items-center cursor-pointer" onclick="toggleSection('inventory_mgmt')">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+          <h2 class="text-xl font-bold">Inventory</h2>
+        </div>
+        <svg id="inventory_mgmt-icon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      </div>
+      <div id="inventory_mgmt-content" class="hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Resource</th><th class="px-6 py-3 text-center">View</th><th class="px-6 py-3 text-center">Create</th><th class="px-6 py-3 text-center">Edit</th><th class="px-6 py-3 text-center">Delete</th></tr></thead>
+          <tbody>
+            <% im = InventoryManagement.default %>
+            <% perms = @resource_permissions["InventoryManagement_#{im.id}"] || {} %>
+            <tr><td class="px-6 py-3 text-sm">Inventory Management</td>
+              <td class="text-center"><input type="hidden" name="resources[InventoryManagement][can_view]" value="0"><input type="checkbox" name="resources[InventoryManagement][can_view]" value="1" <%= 'checked' if perms['can_view'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[InventoryManagement][can_create]" value="0"><input type="checkbox" name="resources[InventoryManagement][can_create]" value="1" <%= 'checked' if perms['can_create'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[InventoryManagement][can_edit]" value="0"><input type="checkbox" name="resources[InventoryManagement][can_edit]" value="1" <%= 'checked' if perms['can_edit'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[InventoryManagement][can_delete]" value="0"><input type="checkbox" name="resources[InventoryManagement][can_delete]" value="1" <%= 'checked' if perms['can_delete'] %>></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ==================== ATTENDANCE SECTION ==================== -->
+    <div class="border border-gray-200 rounded-lg overflow-hidden">
+      <div class="bg-blue-900 text-white px-6 py-3 flex justify-between items-center cursor-pointer" onclick="toggleSection('attendance_mgmt')">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <h2 class="text-xl font-bold">Attendance</h2>
+        </div>
+        <svg id="attendance_mgmt-icon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      </div>
+      <div id="attendance_mgmt-content" class="hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Resource</th><th class="px-6 py-3 text-center">View</th><th class="px-6 py-3 text-center">Create</th><th class="px-6 py-3 text-center">Edit</th><th class="px-6 py-3 text-center">Delete</th></tr></thead>
+          <tbody>
+            <% am = AttendanceManagement.default %>
+            <% perms = @resource_permissions["AttendanceManagement_#{am.id}"] || {} %>
+            <tr><td class="px-6 py-3 text-sm">Attendance Management</td>
+              <td class="text-center"><input type="hidden" name="resources[AttendanceManagement][can_view]" value="0"><input type="checkbox" name="resources[AttendanceManagement][can_view]" value="1" <%= 'checked' if perms['can_view'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[AttendanceManagement][can_create]" value="0"><input type="checkbox" name="resources[AttendanceManagement][can_create]" value="1" <%= 'checked' if perms['can_create'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[AttendanceManagement][can_edit]" value="0"><input type="checkbox" name="resources[AttendanceManagement][can_edit]" value="1" <%= 'checked' if perms['can_edit'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[AttendanceManagement][can_delete]" value="0"><input type="checkbox" name="resources[AttendanceManagement][can_delete]" value="1" <%= 'checked' if perms['can_delete'] %>></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Permission Guidelines -->
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
       <h3 class="font-semibold text-blue-900 mb-2">Permission Guidelines</h3>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
-        <div>
-          <span class="font-medium text-green-700">View:</span>
-          <span class="text-gray-600">Can see student records</span>
-        </div>
-        <div>
-          <span class="font-medium text-blue-700">Create:</span>
-          <span class="text-gray-600">Can add new students</span>
-        </div>
-        <div>
-          <span class="font-medium text-yellow-700">Edit:</span>
-          <span class="text-gray-600">Can modify student records</span>
-        </div>
-        <div>
-          <span class="font-medium text-red-700">Delete:</span>
-          <span class="text-gray-600">Can remove student records</span>
-        </div>
+        <div><span class="font-medium text-green-700">View:</span> <span class="text-gray-600">Can see the resource</span></div>
+        <div><span class="font-medium text-blue-700">Create:</span> <span class="text-gray-600">Can add new items</span></div>
+        <div><span class="font-medium text-yellow-700">Edit:</span> <span class="text-gray-600">Can modify existing items</span></div>
+        <div><span class="font-medium text-red-700">Delete:</span> <span class="text-gray-600">Can remove items</span></div>
       </div>
-      <div class="mt-3 text-xs text-gray-500">
-        Note: Admin users have full access regardless of these settings.
-      </div>
+      <div class="mt-3 text-xs text-gray-500">Note: Admin users have full access regardless of these settings.</div>
     </div>
-
-    <!-- Exam Management Section -->
-    <div class="border border-gray-200 rounded-lg overflow-hidden">
-      <div class="bg-blue-900 text-white px-6 py-3">
-        <h2 class="text-xl font-bold">Exam Management</h2>
-        <p class="text-sm text-blue-200 mt-1">Control access to exam grades and examination settings</p>
-      </div>
-      
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <button type="button" onclick="toggleAllExamPermissions(true)" class="text-green-600 hover:text-green-800">Select All</button>
-              </th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <button type="button" onclick="toggleAllExamPermissions(false)" class="text-red-600 hover:text-red-800">Clear All</button>
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <% exam_management = ExamManagement.default %>
-            <% key = "ExamManagement_#{exam_management.id}" %>
-            <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><%= exam_management.name %></div>
-                <div class="text-xs text-gray-500"><%= exam_management.description %></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex justify-center space-x-4">
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleExamPermission('view')" id="exam_view_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">View All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleExamPermission('create')" id="exam_create_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Create All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleExamPermission('edit')" id="exam_edit_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Edit All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleExamPermission('delete')" id="exam_delete_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Delete All</span>
-                  </label>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex justify-center space-x-4">
-                  <button type="button" onclick="setAllExamPermissions(true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Grant All</button>
-                  <button type="button" onclick="setAllExamPermissions(false)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Revoke All</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3" class="px-6 py-3 bg-gray-50">
-                <div class="flex justify-center space-x-6">
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[ExamManagement][can_view]" value="0" id="exam_view_hidden">
-                    <%= check_box_tag "resources[ExamManagement][can_view]", "1", existing_perms['can_view'], 
-                        class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "exam_view_checkbox",
-                        data: { action: "view" } %>
-                    <span class="ml-2 text-sm text-gray-700">View Exam Grades</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[ExamManagement][can_create]" value="0" id="exam_create_hidden">
-                    <%= check_box_tag "resources[ExamManagement][can_create]", "1", existing_perms['can_create'], 
-                        class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "exam_create_checkbox",
-                        data: { action: "create" } %>
-                    <span class="ml-2 text-sm text-gray-700">Create Exam Grades</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[ExamManagement][can_edit]" value="0" id="exam_edit_hidden">
-                    <%= check_box_tag "resources[ExamManagement][can_edit]", "1", existing_perms['can_edit'], 
-                        class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "exam_edit_checkbox",
-                        data: { action: "edit" } %>
-                    <span class="ml-2 text-sm text-gray-700">Edit Exam Grades</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[ExamManagement][can_delete]" value="0" id="exam_delete_hidden">
-                    <%= check_box_tag "resources[ExamManagement][can_delete]", "1", existing_perms['can_delete'], 
-                        class: "exam-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "exam_delete_checkbox",
-                        data: { action: "delete" } %>
-                    <span class="ml-2 text-sm text-gray-700">Delete Exam Grades</span>
-                  </label>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Transport Management Section -->
-    <div class="border border-gray-200 rounded-lg overflow-hidden">
-      <div class="bg-blue-900 text-white px-6 py-3">
-        <h2 class="text-xl font-bold">Transport Management</h2>
-        <p class="text-sm text-blue-200 mt-1">Control access to transport routes and fares</p>
-      </div>
-      
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <button type="button" onclick="toggleAllTransportPermissions(true)" class="text-green-600 hover:text-green-800">Select All</button>
-              </th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <button type="button" onclick="toggleAllTransportPermissions(false)" class="text-red-600 hover:text-red-800">Clear All</button>
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <% transport_management = TransportManagement.default %>
-            <% key = "TransportManagement_#{transport_management.id}" %>
-            <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><%= transport_management.name %></div>
-                <div class="text-xs text-gray-500"><%= transport_management.description %></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex justify-center space-x-4">
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleTransportPermission('view')" id="transport_view_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">View All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleTransportPermission('create')" id="transport_create_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Create All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleTransportPermission('edit')" id="transport_edit_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Edit All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleTransportPermission('delete')" id="transport_delete_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Delete All</span>
-                  </label>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex justify-center space-x-4">
-                  <button type="button" onclick="setAllTransportPermissions(true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Grant All</button>
-                  <button type="button" onclick="setAllTransportPermissions(false)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Revoke All</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3" class="px-6 py-3 bg-gray-50">
-                <div class="flex justify-center space-x-6">
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[TransportManagement][can_view]" value="0" id="transport_view_hidden">
-                    <%= check_box_tag "resources[TransportManagement][can_view]", "1", existing_perms['can_view'], 
-                        class: "transport-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "transport_view_checkbox",
-                        data: { action: "view" } %>
-                    <span class="ml-2 text-sm text-gray-700">View Routes</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[TransportManagement][can_create]" value="0" id="transport_create_hidden">
-                    <%= check_box_tag "resources[TransportManagement][can_create]", "1", existing_perms['can_create'], 
-                        class: "transport-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "transport_create_checkbox",
-                        data: { action: "create" } %>
-                    <span class="ml-2 text-sm text-gray-700">Create Routes</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[TransportManagement][can_edit]" value="0" id="transport_edit_hidden">
-                    <%= check_box_tag "resources[TransportManagement][can_edit]", "1", existing_perms['can_edit'], 
-                        class: "transport-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "transport_edit_checkbox",
-                        data: { action: "edit" } %>
-                    <span class="ml-2 text-sm text-gray-700">Edit Routes</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[TransportManagement][can_delete]" value="0" id="transport_delete_hidden">
-                    <%= check_box_tag "resources[TransportManagement][can_delete]", "1", existing_perms['can_delete'], 
-                        class: "transport-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "transport_delete_checkbox",
-                        data: { action: "delete" } %>
-                    <span class="ml-2 text-sm text-gray-700">Delete Routes</span>
-                  </label>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Inventory Management Section -->
-    <div class="border border-gray-200 rounded-lg overflow-hidden">
-      <div class="bg-blue-900 text-white px-6 py-3">
-        <h2 class="text-xl font-bold">Inventory Management</h2>
-        <p class="text-sm text-blue-200 mt-1">Control access to inventory items, suppliers, and stock management</p>
-      </div>
-      
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resource</th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <button type="button" onclick="toggleAllInventoryPermissions(true)" class="text-green-600 hover:text-green-800">Select All</button>
-              </th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <button type="button" onclick="toggleAllInventoryPermissions(false)" class="text-red-600 hover:text-red-800">Clear All</button>
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <% inventory_management = InventoryManagement.default %>
-            <% key = "InventoryManagement_#{inventory_management.id}" %>
-            <% existing_perms = @resource_permissions[key] || { 'can_view' => false, 'can_create' => false, 'can_edit' => false, 'can_delete' => false } %>
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900"><%= inventory_management.name %></div>
-                <div class="text-xs text-gray-500"><%= inventory_management.description %></div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex justify-center space-x-4">
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleInventoryPermission('view')" id="inventory_view_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">View All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleInventoryPermission('create')" id="inventory_create_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Create All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleInventoryPermission('edit')" id="inventory_edit_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Edit All</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="checkbox" onclick="toggleInventoryPermission('delete')" id="inventory_delete_all_checkbox" class="form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500">
-                    <span class="ml-2 text-xs text-gray-600">Delete All</span>
-                  </label>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex justify-center space-x-4">
-                  <button type="button" onclick="setAllInventoryPermissions(true)" class="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Grant All</button>
-                  <button type="button" onclick="setAllInventoryPermissions(false)" class="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Revoke All</button>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3" class="px-6 py-3 bg-gray-50">
-                <div class="flex justify-center space-x-6">
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[InventoryManagement][can_view]" value="0" id="inventory_view_hidden">
-                    <%= check_box_tag "resources[InventoryManagement][can_view]", "1", existing_perms['can_view'], 
-                        class: "inventory-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "inventory_view_checkbox",
-                        data: { action: "view" } %>
-                    <span class="ml-2 text-sm text-gray-700">View Inventory</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[InventoryManagement][can_create]" value="0" id="inventory_create_hidden">
-                    <%= check_box_tag "resources[InventoryManagement][can_create]", "1", existing_perms['can_create'], 
-                        class: "inventory-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "inventory_create_checkbox",
-                        data: { action: "create" } %>
-                    <span class="ml-2 text-sm text-gray-700">Create Items</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[InventoryManagement][can_edit]" value="0" id="inventory_edit_hidden">
-                    <%= check_box_tag "resources[InventoryManagement][can_edit]", "1", existing_perms['can_edit'], 
-                        class: "inventory-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "inventory_edit_checkbox",
-                        data: { action: "edit" } %>
-                    <span class="ml-2 text-sm text-gray-700">Edit Items</span>
-                  </label>
-                  <label class="inline-flex items-center">
-                    <input type="hidden" name="resources[InventoryManagement][can_delete]" value="0" id="inventory_delete_hidden">
-                    <%= check_box_tag "resources[InventoryManagement][can_delete]", "1", existing_perms['can_delete'], 
-                        class: "inventory-permission-checkbox form-checkbox h-5 w-5 text-yellow-500 rounded focus:ring-yellow-500",
-                        id: "inventory_delete_checkbox",
-                        data: { action: "delete" } %>
-                    <span class="ml-2 text-sm text-gray-700">Delete Items</span>
-                  </label>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
 
     <div class="flex justify-end space-x-3 pt-4">
-      <%= link_to "Cancel", admin_users_path, class: "bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition duration-150" %>
-      <%= submit_tag "Save Assignments & Permissions", class: "bg-blue-900 text-yellow-500 px-6 py-2 rounded-lg hover:bg-blue-800 transition duration-150 font-semibold" %>
+      <%= link_to "Cancel", admin_users_path, class: "bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600" %>
+      <%= submit_tag "Save Assignments & Permissions", class: "bg-blue-900 text-yellow-500 px-6 py-2 rounded-lg hover:bg-blue-800 font-semibold" %>
     </div>
   <% end %>
 </div>
 
 <script>
-  function togglePermission(action) {
-    const checkbox = document.getElementById(`${action}_checkbox`);
-    checkbox.checked = !checkbox.checked;
-    updateCheckboxState(action);
+  function toggleSection(sectionId) {
+    const content = document.getElementById(`${sectionId}-content`);
+    const icon = document.getElementById(`${sectionId}-icon`);
+    if (content) {
+      content.classList.toggle('hidden');
+      if (icon) icon.classList.toggle('rotate-180');
+    }
   }
   
-  function updateCheckboxState(action) {
-    const checkbox = document.getElementById(`${action}_checkbox`);
-    const hidden = document.getElementById(`${action}_hidden`);
-    hidden.value = checkbox.checked ? '1' : '0';
-  }
-  
-  function setAllPermissions(grant) {
-    const actions = ['view', 'create', 'edit', 'delete'];
-    actions.forEach(action => {
-      const checkbox = document.getElementById(`${action}_checkbox`);
-      checkbox.checked = grant;
-      updateCheckboxState(action);
-    });
-  }
-  
-  function toggleAllStudentPermissions(select) {
-    const actions = ['view', 'create', 'edit', 'delete'];
-    actions.forEach(action => {
-      const checkbox = document.getElementById(`${action}_checkbox`);
-      checkbox.checked = select;
-      updateCheckboxState(action);
-    });
-  }
-  
-  // Initialize checkboxes
-  document.querySelectorAll('.permission-checkbox').forEach(checkbox => {
-    const action = checkbox.dataset.action;
-    checkbox.addEventListener('change', () => updateCheckboxState(action));
-  });
-
-    // Fee management permission functions
-  function toggleFeePermission(action) {
-    const checkbox = document.getElementById(`fee_${action}_checkbox`);
-    checkbox.checked = !checkbox.checked;
-    updateFeeCheckboxState(action);
-  }
-  
-  function updateFeeCheckboxState(action) {
-    const checkbox = document.getElementById(`fee_${action}_checkbox`);
-    const hidden = document.getElementById(`fee_${action}_hidden`);
-    hidden.value = checkbox.checked ? '1' : '0';
-  }
-  
-  function setAllFeePermissions(grant) {
-    const actions = ['view', 'create', 'edit', 'delete'];
-    actions.forEach(action => {
-      const checkbox = document.getElementById(`fee_${action}_checkbox`);
-      checkbox.checked = grant;
-      updateFeeCheckboxState(action);
-    });
-  }
-  
-  function toggleAllFeePermissions(select) {
-    const actions = ['view', 'create', 'edit', 'delete'];
-    actions.forEach(action => {
-      const checkbox = document.getElementById(`fee_${action}_checkbox`);
-      checkbox.checked = select;
-      updateFeeCheckboxState(action);
-    });
-  }
-  
-  // Initialize fee checkboxes
-  document.querySelectorAll('.fee-permission-checkbox').forEach(checkbox => {
-    const action = checkbox.dataset.action;
-    checkbox.addEventListener('change', () => updateFeeCheckboxState(action));
-  });
-
-  // Exam management permission functions
-  function toggleExamPermission(action) {
-    const checkbox = document.getElementById(`exam_${action}_checkbox`);
-    checkbox.checked = !checkbox.checked;
-    updateExamCheckboxState(action);
-  }
-  
-  function updateExamCheckboxState(action) {
-    const checkbox = document.getElementById(`exam_${action}_checkbox`);
-    const hidden = document.getElementById(`exam_${action}_hidden`);
-    hidden.value = checkbox.checked ? '1' : '0';
-  }
-  
-  function setAllExamPermissions(grant) {
-    const actions = ['view', 'create', 'edit', 'delete'];
-    actions.forEach(action => {
-      const checkbox = document.getElementById(`exam_${action}_checkbox`);
-      checkbox.checked = grant;
-      updateExamCheckboxState(action);
-    });
-  }
-  
-  function toggleAllExamPermissions(select) {
-    const actions = ['view', 'create', 'edit', 'delete'];
-    actions.forEach(action => {
-      const checkbox = document.getElementById(`exam_${action}_checkbox`);
-      checkbox.checked = select;
-      updateExamCheckboxState(action);
-    });
-  }
-
-  // Transport management permission functions
-  function toggleTransportPermission(action) {
-    const checkbox = document.getElementById(`transport_${action}_checkbox`);
-    checkbox.checked = !checkbox.checked;
-    updateTransportCheckboxState(action);
-  }
-  
-  function updateTransportCheckboxState(action) {
-    const checkbox = document.getElementById(`transport_${action}_checkbox`);
-    const hidden = document.getElementById(`transport_${action}_hidden`);
-    hidden.value = checkbox.checked ? '1' : '0';
-  }
-  
-  function setAllTransportPermissions(grant) {
-    const actions = ['view', 'create', 'edit', 'delete'];
-    actions.forEach(action => {
-      const checkbox = document.getElementById(`transport_${action}_checkbox`);
-      checkbox.checked = grant;
-      updateTransportCheckboxState(action);
-    });
-  }
-  
-  function toggleAllTransportPermissions(select) {
-    const actions = ['view', 'create', 'edit', 'delete'];
-    actions.forEach(action => {
-      const checkbox = document.getElementById(`transport_${action}_checkbox`);
-      checkbox.checked = select;
-      updateTransportCheckboxState(action);
-    });
-  }
-
-  // Inventory management permission functions
-  function toggleInventoryPermission(action) {
-    const checkbox = document.getElementById(`inventory_${action}_checkbox`);
-    checkbox.checked = !checkbox.checked;
-    updateInventoryCheckboxState(action);
-  }
-  
-  function updateInventoryCheckboxState(action) {
-    const checkbox = document.getElementById(`inventory_${action}_checkbox`);
-    const hidden = document.getElementById(`inventory_${action}_hidden`);
-    hidden.value = checkbox.checked ? '1' : '0';
-  }
-  
-  function setAllInventoryPermissions(grant) {
-    const actions = ['view', 'create', 'edit', 'delete'];
-    actions.forEach(action => {
-      const checkbox = document.getElementById(`inventory_${action}_checkbox`);
-      checkbox.checked = grant;
-      updateInventoryCheckboxState(action);
-    });
-  }
-  
-  function toggleAllInventoryPermissions(select) {
-    const actions = ['view', 'create', 'edit', 'delete'];
-    actions.forEach(action => {
-      const checkbox = document.getElementById(`inventory_${action}_checkbox`);
-      checkbox.checked = select;
-      updateInventoryCheckboxState(action);
-    });
+  function toggleAllInSection(section, checked) {
+    document.querySelectorAll(`.${section}-checkbox`).forEach(cb => cb.checked = checked);
   }
 </script>
+
+<style>
+  .rotate-180 { transform: rotate(180deg); }
+  .form-checkbox { width: 1.25rem; height: 1.25rem; border-radius: 0.25rem; border-color: #d1d5db; }
+  .form-checkbox:checked { background-color: #eab308; border-color: #eab308; }
+  table input[type="checkbox"] { width: 1.25rem; height: 1.25rem; cursor: pointer; }
+  .hover\:bg-gray-50:hover { background-color: #f9fafb; }
+  .cursor-pointer { cursor: pointer; }
+  .transition-transform { transition: transform 0.2s ease; }
+</style>

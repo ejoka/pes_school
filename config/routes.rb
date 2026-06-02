@@ -1,66 +1,17 @@
-# Rails.application.routes.draw do
-#   devise_for :users, controllers: {
-#     sessions: 'users/sessions',
-#     registrations: 'users/registrations'
-#   }
-  
-#   root to: "users#dashboard"
-  
-#   # Admin namespace
-#   namespace :admin do
-#     get 'dashboard', to: 'dashboard#index'
-#     resource :profile, only: [:show, :edit, :update], controller: 'profiles'
-
-#     resources :users do
-#       member do
-#         get 'assign_resources'
-#         post 'save_resource_assignment'
-#       end
-#     end
-#     resources :categories
-#     resources :school_classes
-#     resources :subjects
-#   end
-
-#    # User routes
-#   get "dashboard", to: "users#dashboard"
-#   resource :profile, only: [:show, :update], controller: 'users/profile'
-#   patch "profile", to: "users#update_profile"
-# end
-
-# Rails.application.routes.draw do
-#   devise_for :users
-  
-#   root to: "users#dashboard"
-  
-#   # Admin namespace
-#   namespace :admin do
-#     get 'dashboard', to: 'dashboard#index'
-#     get 'profile', to: 'profiles#show'
-#     get 'profile/edit', to: 'profiles#edit'
-#     patch 'profile', to: 'profiles#update'
-#     put 'profile', to: 'profiles#update'
-    
-#     resources :users do
-#       member do
-#         get 'assign_resources'
-#         post 'save_resource_assignment'
-#       end
-#     end
-#     resources :categories
-#     resources :school_classes
-#     resources :subjects
-#   end
-  
-#   # User routes - use resource to generate proper helpers
-#   resource :profile, only: [:show, :edit, :update], controller: 'users'
-  
-#   # User dashboard
-#   get 'dashboard', to: 'users#dashboard'
-# end
-
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users,
+  controllers: {
+    sessions: 'users/sessions',
+    registrations: 'users/registrations',
+    passwords: 'users/passwords'
+  },
+  path: '',
+  path_names: {
+    sign_in: 'login',
+    sign_out: 'logout',
+    sign_up: 'register',
+    password: 'password'
+  }
   
   root to: "users#dashboard"
   
@@ -129,15 +80,6 @@ Rails.application.routes.draw do
     post 'attendances/save', to: 'attendances#save_attendance', as: :save_attendance
     get 'attendances/weekly_report', to: 'attendances#weekly_report', as: :attendance_weekly_report
     get 'attendances/student_report', to: 'attendances#student_report', as: :attendance_student_report
-    # resources :attendances, only: [] do
-    #   collection do
-    #     get '/', to: 'attendances#index', as: ''
-    #     get 'mark_attendance'
-    #     post 'save_attendance'
-    #     get 'weekly_report'
-    #     get 'student_report'
-    #   end
-    # end
     
     # Admin profile routes
     resource :profile, only: [:show, :edit, :update], controller: 'profiles', as: :admin_profile
