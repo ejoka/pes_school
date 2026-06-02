@@ -211,6 +211,32 @@
       </div>
     </div>
 
+    <!-- Staff Management Section -->
+    <div class="border border-gray-200 rounded-lg overflow-hidden">
+      <div class="bg-blue-900 text-white px-6 py-3 flex justify-between items-center cursor-pointer" onclick="toggleSection('staff_mgmt')">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          <h2 class="text-xl font-bold">Staff Management</h2>
+        </div>
+        <svg id="staff_mgmt-icon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      </div>
+      <div id="staff_mgmt-content" class="hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50"><tr><th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Resource</th><th class="px-6 py-3 text-center">View</th><th class="px-6 py-3 text-center">Create</th><th class="px-6 py-3 text-center">Edit</th><th class="px-6 py-3 text-center">Delete</th></tr></thead>
+          <tbody>
+            <% sm = StaffManagement.default %>
+            <% perms = @resource_permissions["StaffManagement_#{sm.id}"] || {} %>
+            <tr><td class="px-6 py-3 text-sm">Staff Management</td>
+              <td class="text-center"><input type="hidden" name="resources[StaffManagement][can_view]" value="0"><input type="checkbox" name="resources[StaffManagement][can_view]" value="1" <%= 'checked' if perms['can_view'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[StaffManagement][can_create]" value="0"><input type="checkbox" name="resources[StaffManagement][can_create]" value="1" <%= 'checked' if perms['can_create'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[StaffManagement][can_edit]" value="0"><input type="checkbox" name="resources[StaffManagement][can_edit]" value="1" <%= 'checked' if perms['can_edit'] %>></td>
+              <td class="text-center"><input type="hidden" name="resources[StaffManagement][can_delete]" value="0"><input type="checkbox" name="resources[StaffManagement][can_delete]" value="1" <%= 'checked' if perms['can_delete'] %>></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- Permission Guidelines -->
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
       <h3 class="font-semibold text-blue-900 mb-2">Permission Guidelines</h3>

@@ -63,6 +63,12 @@ class User < ApplicationRecord
     can_access?(attendance_management, action)
   end
 
+  def can_manage_staff?(action = :view)
+    return true if admin?
+    staff_management = StaffManagement.default
+    can_access?(staff_management, action)
+  end
+
   def can_manage_fees?(action = :view)
     return true if admin?
     fee_management = FeeManagement.default

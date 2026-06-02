@@ -119,6 +119,15 @@ Rails.application.routes.draw do
     get 'all_invoices', to: 'invoices#index', as: :all_invoices
     get 'all_payments', to: 'all_payments#index', as: :all_payments
     get 'all_students_fees', to: 'student_fees#all_students', as: :all_students_fees
+
+    # Staff routes
+    resources :departments
+    resources :staff_assignments
+    resources :payrolls do
+      member do
+        post 'mark_paid'
+      end
+    end
     
     resources :fee_types
     resources :invoices, only: [] 
