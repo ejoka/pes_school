@@ -10,16 +10,19 @@ module Admin
                      else
                        StaffAssignment.accessible_by(current_user).includes(:user, :department).order(created_at: :desc)
                      end
+      
+      # Ensure @assignments is always an array
+      @assignments = @assignments.to_a
     end
 
     def show
-      @payrolls = @assignment.payrolls.order(year: :desc, month: :desc)
+      @payrolls = @assignment.payrolls.order(year: :desc, month: :desc).to_a
     end
 
     def new
       @assignment = StaffAssignment.new
-      @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name)
-      @departments = Department.all.order(:name)
+      @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name).to_a
+      @departments = Department.all.order(:name).to_a
     end
 
     def create
@@ -27,23 +30,23 @@ module Admin
       if @assignment.save
         redirect_to admin_staff_assignments_path, notice: 'Staff was successfully assigned.'
       else
-        @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name)
-        @departments = Department.all.order(:name)
+        @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name).to_a
+        @departments = Department.all.order(:name).to_a
         render :new
       end
     end
 
     def edit
-      @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name)
-      @departments = Department.all.order(:name)
+      @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name).to_a
+      @departments = Department.all.order(:name).to_a
     end
 
     def update
       if @assignment.update(assignment_params)
         redirect_to admin_staff_assignments_path, notice: 'Staff assignment was successfully updated.'
       else
-        @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name)
-        @departments = Department.all.order(:name)
+        @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name).to_a
+        @departments = Department.all.order(:name).to_a
         render :edit
       end
     end
@@ -63,6 +66,8 @@ module Admin
 
     def set_assignment
       @assignment = StaffAssignment.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to admin_staff_assignments_path, alert: 'Staff assignment not found.'
     end
 
     def assignment_params

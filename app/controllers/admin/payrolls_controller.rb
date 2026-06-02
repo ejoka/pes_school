@@ -5,11 +5,20 @@ module Admin
     before_action :set_payroll, only: [:show, :edit, :update, :destroy, :mark_paid]
 
     def index
-      @payrolls = if current_user.admin?
-                    Payroll.includes(staff_assignment: [:user, :department]).order(year: :desc, month: :desc)
-                  else
-                    Payroll.accessible_by(current_user).includes(staff_assignment: [:user, :department]).order(year: :desc, month: :desc)
-                  end
+      @payrolls = []
+      
+      begin
+        if current_user.admin?
+          @payrolls = Payroll.includes(staff_assignment: [:user, :department]).order(year: :desc, month: :desc).to_a
+        else
+          @payrolls = Payroll.accessible_by(current_user).includes(staff_assignment: [:user, :department]).order(year: :desc, month: :desc).to_a
+        end
+      rescue => e
+        Rails.logger.error "Error fetching payrolls: #{e.message}"
+        @payrolls = []
+      end
+      
+      @payrolls ||= []
     end
 
     def show
@@ -17,7 +26,7 @@ module Admin
 
     def new
       @payroll = Payroll.new
-      @staff_members = StaffAssignment.active.includes(:user)
+      @staff_members = StaffAssignment.active.includes(:user).to_a
     end
 
     def create
@@ -25,20 +34,20 @@ module Admin
       if @payroll.save
         redirect_to admin_payrolls_path, notice: 'Payroll was successfully created.'
       else
-        @staff_members = StaffAssignment.active.includes(:user)
+        @staff_members = StaffAssignment.active.includes(:user).to_a
         render :new
       end
     end
 
     def edit
-      @staff_members = StaffAssignment.active.includes(:user)
+      @staff_members = StaffAssignment.active.includes(:user).to_a
     end
 
     def update
       if @payroll.update(payroll_params)
         redirect_to admin_payrolls_path, notice: 'Payroll was successfully updated.'
       else
-        @staff_members = StaffAssignment.active.includes(:user)
+        @staff_members = StaffAssignment.active.includes(:user).to_a
         render :edit
       end
     end
@@ -49,8 +58,11 @@ module Admin
     end
 
     def mark_paid
-      @payroll.update(status: 'paid', payment_date: Date.today)
-      redirect_to admin_payrolls_path, notice: 'Payroll was marked as paid.'
+      if @payroll.update(status: 'paid', payment_date: Date.today)
+        redirect_to admin_payrolls_path, notice: 'Payroll was marked as paid successfully.'
+      else
+        redirect_to admin_payrolls_path, alert: 'Failed to mark payroll as paid.'
+      end
     end
 
     private
@@ -63,6 +75,8 @@ module Admin
 
     def set_payroll
       @payroll = Payroll.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to admin_payrolls_path, alert: 'Payroll record not found.'
     end
 
     def payroll_params

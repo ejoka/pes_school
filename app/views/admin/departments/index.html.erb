@@ -1,0 +1,38 @@
+<% content_for :page_title, "Departments" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Departments</h1>
+    <%= link_to "Add Department", new_admin_department_path, class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600" %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @departments.each do |dept| %>
+      <div class="border rounded-lg p-4 hover:shadow-lg transition">
+        <div class="flex justify-between items-start">
+          <div>
+            <h3 class="font-bold text-lg text-blue-900"><%= dept.name %></h3>
+            <p class="text-sm text-gray-500">Code: <%= dept.code %></p>
+          </div>
+          <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs"><%= dept.staff_count %> staff</span>
+        </div>
+        <p class="text-gray-600 text-sm mt-2"><%= dept.description %></p>
+        <div class="mt-3 pt-3 border-t flex justify-between items-center">
+          <span class="text-xs text-gray-500">HOD: <%= dept.hod_name %></span>
+          <div class="flex space-x-2">
+            <%= link_to "View", admin_department_path(dept), class: "text-blue-600 hover:text-blue-800 text-sm" %>
+            <%= link_to "Edit", edit_admin_department_path(dept), class: "text-yellow-600 hover:text-yellow-800 text-sm" %>
+            <%= link_to "Delete", admin_department_path(dept), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-800 text-sm" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @departments.empty? %>
+    <div class="text-center py-12">
+      <p class="text-gray-500">No departments created yet.</p>
+      <%= link_to "Create First Department", new_admin_department_path, class: "mt-2 inline-block text-blue-600" %>
+    </div>
+  <% end %>
+</div>

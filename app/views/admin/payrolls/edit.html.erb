@@ -1,0 +1,59 @@
+<% content_for :page_title, "Edit Payroll" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+  <h1 class="text-3xl font-bold text-blue-900 mb-6">Edit Payroll</h1>
+
+  <%= form_with(model: [:admin, @payroll], local: true, class: "space-y-4") do |f| %>
+    <% if @payroll.errors.any? %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <% @payroll.errors.full_messages.each do |msg| %><p><%= msg %></p><% end %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :staff_assignment_id, "Staff Member", class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= f.collection_select :staff_assignment_id, @staff_members, :id, ->(sa) { "#{sa.user.full_name} - #{sa.department.name}" }, { include_blank: 'Select Staff' }, required: true, class: "w-full px-3 py-2 border rounded-md" %>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= f.label :month, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.select :month, options_for_select(Payroll::MONTHS.map { |k,v| [v,k] }), {}, required: true, class: "w-full px-3 py-2 border rounded-md" %>
+      </div>
+      <div>
+        <%= f.label :year, class: "block text-sm font-medium text-gray-700 mb-2" %>
+        <%= f.number_field :year, required: true, min: 2020, max: 2030, value: Date.today.year, class: "w-full px-3 py-2 border rounded-md" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :basic_salary, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= f.number_field :basic_salary, step: 0.01, required: true, class: "w-full px-3 py-2 border rounded-md" %>
+    </div>
+
+    <div>
+      <%= f.label :allowances, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= f.number_field :allowances, step: 0.01, value: 0, class: "w-full px-3 py-2 border rounded-md" %>
+    </div>
+
+    <div>
+      <%= f.label :deductions, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= f.number_field :deductions, step: 0.01, value: 0, class: "w-full px-3 py-2 border rounded-md" %>
+    </div>
+
+    <div>
+      <%= f.label :status, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= f.select :status, options_for_select(Payroll::STATUSES.map { |k,v| [v,k] }, 'draft'), {}, class: "w-full px-3 py-2 border rounded-md" %>
+    </div>
+
+    <div>
+      <%= f.label :notes, class: "block text-sm font-medium text-gray-700 mb-2" %>
+      <%= f.text_area :notes, rows: 2, class: "w-full px-3 py-2 border rounded-md" %>
+    </div>
+
+    <div class="flex justify-end space-x-3 pt-4">
+      <%= link_to "Cancel", admin_payrolls_path, class: "bg-gray-500 text-white px-4 py-2 rounded" %>
+      <%= f.submit "Update Payroll", class: "bg-blue-900 text-yellow-500 px-4 py-2 rounded font-semibold" %>
+    </div>
+  <% end %>
+</div>

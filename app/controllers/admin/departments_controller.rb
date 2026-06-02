@@ -10,15 +10,18 @@ module Admin
                      else
                        Department.accessible_by(current_user).ordered
                      end
+      
+      # Ensure @departments is always an array
+      @departments = @departments.to_a
     end
 
     def show
-      @staff_assignments = @department.staff_assignments.active.includes(:user)
+      @staff_assignments = @department.staff_assignments.active.includes(:user).to_a
     end
 
     def new
       @department = Department.new
-      @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name)
+      @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name).to_a
     end
 
     def create
@@ -26,20 +29,20 @@ module Admin
       if @department.save
         redirect_to admin_departments_path, notice: 'Department was successfully created.'
       else
-        @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name)
+        @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name).to_a
         render :new
       end
     end
 
     def edit
-      @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name)
+      @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name).to_a
     end
 
     def update
       if @department.update(department_params)
         redirect_to admin_departments_path, notice: 'Department was successfully updated.'
       else
-        @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name)
+        @users = User.where(role: :user).or(User.where(role: :admin)).order(:first_name).to_a
         render :edit
       end
     end
@@ -59,6 +62,8 @@ module Admin
 
     def set_department
       @department = Department.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to admin_departments_path, alert: 'Department not found.'
     end
 
     def department_params

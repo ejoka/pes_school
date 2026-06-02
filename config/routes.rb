@@ -125,7 +125,7 @@ Rails.application.routes.draw do
     resources :staff_assignments
     resources :payrolls do
       member do
-        post 'mark_paid'
+        patch 'mark_paid'
       end
     end
     
