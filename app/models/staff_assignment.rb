@@ -3,6 +3,8 @@ class StaffAssignment < ApplicationRecord
   belongs_to :department
   
   has_many :payrolls, dependent: :destroy
+  has_many :staff_attendance_records, dependent: :destroy  # Add this line
+  has_many :staff_leave_requests, dependent: :destroy      # Add this line
   has_many :user_resources, as: :resource, dependent: :destroy
   has_many :users, through: :user_resources
   

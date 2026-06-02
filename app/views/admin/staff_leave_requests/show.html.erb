@@ -1,0 +1,57 @@
+<% content_for :page_title, "Leave Request Details" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Leave Request Details</h1>
+    <div class="flex space-x-2">
+      <%= link_to edit_admin_staff_leave_request_path(@leave_request), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded" do %>
+        Edit
+      <% end %>
+      <%= link_to admin_staff_leave_requests_path, class: "bg-gray-500 text-white px-4 py-2 rounded" do %>
+        Back
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="border rounded-lg p-4">
+      <h2 class="font-bold text-lg mb-3">Staff Information</h2>
+      <p><strong>Name:</strong> <%= @leave_request.staff_assignment.user.full_name %></p>
+      <p><strong>Department:</strong> <%= @leave_request.staff_assignment.department.name %></p>
+      <p><strong>Position:</strong> <%= @leave_request.staff_assignment.position %></p>
+    </div>
+
+    <div class="border rounded-lg p-4">
+      <h2 class="font-bold text-lg mb-3">Leave Details</h2>
+      <p><strong>Leave Type:</strong> <%= @leave_request.leave_type_humanized %></p>
+      <p><strong>Start Date:</strong> <%= @leave_request.start_date.strftime("%B %d, %Y") %></p>
+      <p><strong>End Date:</strong> <%= @leave_request.end_date.strftime("%B %d, %Y") %></p>
+      <p><strong>Total Days:</strong> <%= @leave_request.leave_days %></p>
+    </div>
+  </div>
+
+  <div class="mt-6 border rounded-lg p-4">
+    <h2 class="font-bold text-lg mb-3">Reason</h2>
+    <p class="text-gray-700"><%= @leave_request.reason.presence || 'No reason provided' %></p>
+  </div>
+
+  <div class="mt-6 border rounded-lg p-4">
+    <h2 class="font-bold text-lg mb-3">Approval Status</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <p><strong>Status:</strong> <span class="px-2 py-1 rounded-full text-xs <%= @leave_request.status_color %>"><%= @leave_request.status.humanize %></span></p>
+        <p><strong>Approved By:</strong> <%= @leave_request.approver_name %></p>
+      </div>
+      <div>
+        <p><strong>Approved Date:</strong> <%= @leave_request.approved_date&.strftime("%B %d, %Y") || 'Not yet' %></p>
+      </div>
+    </div>
+  </div>
+
+  <% if @leave_request.status == 'pending' %>
+    <div class="mt-6 flex justify-end space-x-3">
+      <%= button_to "Approve", approve_admin_staff_leave_request_path(@leave_request), method: :patch, class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" %>
+      <%= button_to "Reject", reject_admin_staff_leave_request_path(@leave_request), method: :patch, class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700" %>
+    </div>
+  <% end %>
+</div>

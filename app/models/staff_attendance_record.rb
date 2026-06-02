@@ -1,6 +1,6 @@
 class StaffAttendanceRecord < ApplicationRecord
   belongs_to :staff_assignment
-  belongs_to :staff_attendance_status, optional: true  # Changed from status
+  belongs_to :staff_attendance_status, optional: true  
   belongs_to :recorded_by, class_name: 'User', optional: true
   
   validates :date, presence: true

@@ -1,8 +1,8 @@
 class StaffAttendanceStatus < ApplicationRecord
   has_many :staff_attendance_records, dependent: :restrict_with_error
   
-  validates :name, presence: true, unique: true
-  validates :code, presence: true, unique: true
+  validates :name, presence: true, uniqueness: true
+  validates :code, presence: true, uniqueness: true
   
   STATUSES = [
     { name: 'Present', code: 'P', color: 'bg-green-100 text-green-800' },
