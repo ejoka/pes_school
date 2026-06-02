@@ -128,6 +128,22 @@ Rails.application.routes.draw do
         patch 'mark_paid'
       end
     end
+
+    # Staff attendance routes
+    resources :staff_attendances, only: [:index] do
+      collection do
+        get 'mark_attendance'
+        post 'save_attendance'
+        get 'weekly_report'
+        get 'monthly_summary'
+      end
+    end
+    resources :staff_leave_requests do
+      member do
+        patch 'approve'
+        patch 'reject'
+      end
+    end
     
     resources :fee_types
     resources :invoices, only: [] 
