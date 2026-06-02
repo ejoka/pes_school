@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  staff_assignment: one
+  date: 2026-06-02
+  status: one
+  check_in_time: 2026-06-02 22:48:10
+  check_out_time: 9.99
+  notes: MyText
+  recorded_by: one
+
+two:
+  staff_assignment: two
+  date: 2026-06-02
+  status: two
+  check_in_time: 2026-06-02 22:48:10
+  check_out_time: 9.99
+  notes: MyText
+  recorded_by: two

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_02_154324) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_02_194822) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -344,6 +344,58 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_02_154324) do
     t.index ["user_id"], name: "index_staff_assignments_on_user_id"
   end
 
+  create_table "staff_attendance_records", force: :cascade do |t|
+    t.bigint "staff_assignment_id", null: false
+    t.date "date", null: false
+    t.bigint "staff_attendance_status_id"
+    t.time "check_in_time"
+    t.time "check_out_time"
+    t.text "notes"
+    t.bigint "recorded_by_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recorded_by_id"], name: "index_staff_attendance_records_on_recorded_by_id"
+    t.index ["staff_assignment_id", "date"], name: "index_staff_attendance_on_staff_and_date", unique: true
+    t.index ["staff_assignment_id"], name: "index_staff_attendance_records_on_staff_assignment_id"
+    t.index ["staff_attendance_status_id"], name: "index_staff_attendance_records_on_staff_attendance_status_id"
+  end
+
+  create_table "staff_attendance_statuses", force: :cascade do |t|
+    t.string "name"
+    t.string "code"
+    t.string "color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "staff_attendance_summaries", force: :cascade do |t|
+    t.bigint "staff_assignment_id", null: false
+    t.integer "month"
+    t.integer "year"
+    t.integer "total_present"
+    t.integer "total_absent"
+    t.integer "total_late"
+    t.integer "total_leave"
+    t.decimal "attendance_percentage"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["staff_assignment_id"], name: "index_staff_attendance_summaries_on_staff_assignment_id"
+  end
+
+  create_table "staff_leave_requests", force: :cascade do |t|
+    t.bigint "staff_assignment_id", null: false
+    t.string "leave_type"
+    t.date "start_date"
+    t.date "end_date"
+    t.text "reason"
+    t.string "status"
+    t.integer "user_id"
+    t.date "approved_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["staff_assignment_id"], name: "index_staff_leave_requests_on_staff_assignment_id"
+  end
+
   create_table "staff_managements", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -543,6 +595,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_02_154324) do
   add_foreign_key "school_classes", "categories"
   add_foreign_key "staff_assignments", "departments"
   add_foreign_key "staff_assignments", "users"
+  add_foreign_key "staff_attendance_records", "staff_assignments"
+  add_foreign_key "staff_attendance_records", "staff_attendance_statuses"
+  add_foreign_key "staff_attendance_records", "users", column: "recorded_by_id"
+  add_foreign_key "staff_attendance_summaries", "staff_assignments"
+  add_foreign_key "staff_leave_requests", "staff_assignments"
   add_foreign_key "stock_movements", "inventory_items"
   add_foreign_key "stock_receipt_items", "inventory_items"
   add_foreign_key "stock_receipt_items", "stock_receipts"

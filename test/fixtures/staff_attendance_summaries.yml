@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  staff_assignment: one
+  month: 1
+  year: 1
+  total_present: 1
+  total_absent: 1
+  total_late: 1
+  total_leave: 1
+  attendance_percentage: 9.99
+
+two:
+  staff_assignment: two
+  month: 1
+  year: 1
+  total_present: 1
+  total_absent: 1
+  total_late: 1
+  total_leave: 1
+  attendance_percentage: 9.99

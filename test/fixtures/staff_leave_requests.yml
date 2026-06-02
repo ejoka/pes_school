@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  staff_assignment: one
+  leave_type: MyString
+  start_date: 2026-06-02
+  end_date: 2026-06-02
+  reason: MyText
+  status: MyString
+  approved_by: one
+  approved_date: 2026-06-02
+
+two:
+  staff_assignment: two
+  leave_type: MyString
+  start_date: 2026-06-02
+  end_date: 2026-06-02
+  reason: MyText
+  status: MyString
+  approved_by: two
+  approved_date: 2026-06-02
