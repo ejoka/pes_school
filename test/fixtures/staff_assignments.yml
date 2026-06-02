@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  department: one
+  position: MyString
+  joined_date: 2026-06-02
+  status: MyString
+
+two:
+  user: two
+  department: two
+  position: MyString
+  joined_date: 2026-06-02
+  status: MyString

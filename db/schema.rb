@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_05_14_130122) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_02_154114) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -85,6 +85,15 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_14_130122) do
 
   create_table "categories", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "departments", force: :cascade do |t|
+    t.string "name"
+    t.string "code"
+    t.text "description"
+    t.integer "hod_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -272,6 +281,22 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_14_130122) do
     t.index ["student_id"], name: "index_payments_on_student_id"
   end
 
+  create_table "payrolls", force: :cascade do |t|
+    t.bigint "staff_assignment_id", null: false
+    t.integer "month"
+    t.integer "year"
+    t.decimal "basic_salary"
+    t.decimal "allowances"
+    t.decimal "deductions"
+    t.decimal "net_salary"
+    t.date "payment_date"
+    t.string "status"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["staff_assignment_id"], name: "index_payrolls_on_staff_assignment_id"
+  end
+
   create_table "routes", force: :cascade do |t|
     t.string "name"
     t.decimal "fare"
@@ -305,6 +330,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_14_130122) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "staff_assignments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "department_id", null: false
+    t.string "position"
+    t.date "joined_date"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["department_id"], name: "index_staff_assignments_on_department_id"
+    t.index ["user_id"], name: "index_staff_assignments_on_user_id"
   end
 
   create_table "stock_movements", force: :cascade do |t|
@@ -495,7 +532,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_05_14_130122) do
   add_foreign_key "invoices", "students"
   add_foreign_key "parent_infos", "students"
   add_foreign_key "payments", "students"
+  add_foreign_key "payrolls", "staff_assignments"
   add_foreign_key "school_classes", "categories"
+  add_foreign_key "staff_assignments", "departments"
+  add_foreign_key "staff_assignments", "users"
   add_foreign_key "stock_movements", "inventory_items"
   add_foreign_key "stock_receipt_items", "inventory_items"
   add_foreign_key "stock_receipt_items", "stock_receipts"
