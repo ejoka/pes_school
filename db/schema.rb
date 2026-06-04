@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_02_200536) do
+ActiveRecord::Schema[8.0].define(version: 2026_06_04_070849) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -202,6 +202,32 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_02_200536) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "goal_progresses", force: :cascade do |t|
+    t.bigint "goal_id", null: false
+    t.bigint "user_id", null: false
+    t.text "comment"
+    t.integer "progress_percentage"
+    t.datetime "recorded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["goal_id"], name: "index_goal_progresses_on_goal_id"
+    t.index ["user_id"], name: "index_goal_progresses_on_user_id"
+  end
+
+  create_table "goals", force: :cascade do |t|
+    t.string "title"
+    t.string "description"
+    t.string "professional_type"
+    t.string "status"
+    t.date "start_date"
+    t.date "end_date"
+    t.string "priority"
+    t.integer "progress"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "inventory_categories", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -245,6 +271,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_02_200536) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["student_id"], name: "index_invoices_on_student_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "title"
+    t.string "message"
+    t.boolean "read"
+    t.string "actionable_type"
+    t.integer "actionable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "parent_infos", force: :cascade do |t|
@@ -519,6 +557,21 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_02_200536) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tasks", force: :cascade do |t|
+    t.bigint "goal_id", null: false
+    t.integer "user_id"
+    t.string "title"
+    t.text "description"
+    t.string "status", default: "pending"
+    t.date "due_date"
+    t.datetime "completed_at"
+    t.string "priority", default: "medium"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["goal_id"], name: "index_tasks_on_goal_id"
+    t.index ["user_id"], name: "index_tasks_on_user_id"
+  end
+
   create_table "transport_managements", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -593,9 +646,12 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_02_200536) do
   add_foreign_key "exam_schedules", "school_classes"
   add_foreign_key "exam_schedules", "subjects"
   add_foreign_key "exam_schedules", "users"
+  add_foreign_key "goal_progresses", "goals"
+  add_foreign_key "goal_progresses", "users"
   add_foreign_key "inventory_items", "inventory_categories"
   add_foreign_key "inventory_items", "suppliers"
   add_foreign_key "invoices", "students"
+  add_foreign_key "notifications", "users"
   add_foreign_key "parent_infos", "students"
   add_foreign_key "payments", "students"
   add_foreign_key "payrolls", "staff_assignments"
@@ -618,6 +674,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_06_02_200536) do
   add_foreign_key "students", "school_classes"
   add_foreign_key "students", "users"
   add_foreign_key "subjects", "school_classes"
+  add_foreign_key "tasks", "goals"
+  add_foreign_key "tasks", "users"
   add_foreign_key "user_resources", "users"
   add_foreign_key "weekly_attendance_summaries", "students"
 end

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  goal: one
+  user: one
+  comment: MyText
+  progress_percentage: 1
+  recorded_at: 2026-06-04 10:06:24
+
+two:
+  goal: two
+  user: two
+  comment: MyText
+  progress_percentage: 1
+  recorded_at: 2026-06-04 10:06:24

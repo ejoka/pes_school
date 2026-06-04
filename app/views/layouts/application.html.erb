@@ -3,35 +3,27 @@
   <head>
     <title><%= content_for(:title) || "Pes School" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
+    
     <!-- Favicon -->
     <% favicon_setting = Setting.find_by(key: 'favicon') %>
     <% if favicon_setting&.favicon&.attached? %>
       <%= favicon_link_tag url_for(favicon_setting.favicon), type: 'image/png' %>
       <%= favicon_link_tag url_for(favicon_setting.favicon), rel: 'icon', type: 'image/x-icon' %>
     <% else %>
-      <!-- Default favicon - simple SMS text -->
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231e3a8a'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='%23eab308' font-family='Arial, sans-serif' font-weight='bold'%3ESMS%3C/text%3E%3C/svg%3E">
     <% end %>
-
-    <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <% timestamp = Setting.get('theme_last_updated', Time.now.to_i) %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-
-      <!-- Dynamic Theme CSS -->
+    
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
+    
     <style>
       :root {
         --primary-color: <%= Setting.get('primary_color', '#1e3a8a') %>;
@@ -43,227 +35,68 @@
         --button-text: <%= Setting.get('button_text', '#1e3a8a') %>;
       }
       
-      .bg-primary { background-color: var(--primary-color); }
-      .bg-secondary { background-color: var(--secondary-color); }
-      .text-primary { color: var(--primary-color); }
-      .text-secondary { color: var(--secondary-color); }
-      .border-primary { border-color: var(--primary-color); }
-      .border-secondary { border-color: var(--secondary-color); }
-      
-      .btn-primary {
-        background-color: var(--button-bg);
-        color: var(--button-text);
-      }
-      .btn-primary:hover {
-        opacity: 0.9;
+      /* Base sidebar styles */
+      .sidebar {
+        background-color: #1e3a8a;
+        transition: transform 0.3s ease-in-out;
       }
       
-      .sidebar-bg {
-        background-color: var(--sidebar-bg);
+      .menu-item {
+        transition: all 0.2s ease;
       }
       
-      .header-bg {
-        background-color: var(--header-bg);
+      .menu-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
       }
       
-      /* Mobile sidebar overlay */
-      .sidebar-overlay {
-        transition: opacity 0.3s ease-in-out;
-      }
-      
-      /* Sidebar transition for mobile */
-      @media (max-width: 768px) {
-        .sidebar-transition {
-          transition: transform 0.3s ease-in-out;
+      /* Desktop styles */
+      @media (min-width: 769px) {
+        .sidebar {
+          position: relative !important;
+          width: 260px !important;
+          transform: translateX(0) !important;
         }
-        .sidebar-hidden {
+        .mobile-menu-btn {
+          display: none !important;
+        }
+        .sidebar-overlay {
+          display: none !important;
+        }
+      }
+      
+      /* Mobile styles */
+      @media (max-width: 768px) {
+        .sidebar {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          bottom: 0 !important;
+          width: 280px !important;
+          z-index: 1000 !important;
           transform: translateX(-100%);
         }
-        .sidebar-visible {
-          transform: translateX(0);
+        .sidebar.mobile-open {
+          transform: translateX(0) !important;
+        }
+        .sidebar-overlay {
+          position: fixed !important;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 999;
+          display: none;
+        }
+        .sidebar-overlay.active {
+          display: block !important;
+        }
+        .mobile-menu-btn {
+          display: flex !important;
         }
       }
-    
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-      
-      * {
-        font-family: 'Inter', sans-serif;
-      }
-      
-      body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        min-height: 100vh;
-      }
-      
-      /* Split screen layout */
-      .split-container {
-        display: flex;
-        min-height: 100vh;
-      }
-      
-      /* Left side - Branding/Content */
-      .brand-section {
-        flex: 1;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
-        backdrop-filter: blur(10px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 3rem;
-        position: relative;
-        overflow: hidden;
-      }
-      
-      .brand-content {
-        max-width: 500px;
-        color: white;
-        position: relative;
-        z-index: 2;
-      }
-      
-      .brand-logo {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: white;
-        width: 60px;
-        height: 60px;
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-      }
-      
-      .brand-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin-bottom: 1rem;
-        line-height: 1.2;
-      }
-      
-      .brand-description {
-        font-size: 1.125rem;
-        line-height: 1.6;
-        opacity: 0.9;
-        margin-bottom: 2rem;
-      }
-      
-      .feature-list {
-        list-style: none;
-        padding: 0;
-        margin-top: 2rem;
-      }
-      
-      .feature-list li {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-        font-size: 1rem;
-      }
-      
-      .feature-list li svg {
-        margin-right: 0.75rem;
-        flex-shrink: 0;
-      }
-      
-      /* Right side - Form */
-      .form-section {
-        flex: 1;
-        background: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 3rem;
-        overflow-y: auto;
-      }
-      
-      .form-container {
-        max-width: 450px;
-        width: 100%;
-      }
-      
-      /* Form styles */
-      .form-input {
-        width: 100%;
-        padding: 12px 16px;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        font-size: 14px;
-        transition: all 0.3s ease;
-      }
-      
-      .form-input:focus {
-        border-color: #667eea;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-      }
-      
-      .form-button {
-        width: 100%;
-        padding: 12px 24px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 16px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-      }
-      
-      .form-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px -5px rgba(102, 126, 234, 0.4);
-      }
-      
-      .form-link {
-        color: #667eea;
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s ease;
-      }
-      
-      .form-link:hover {
-        color: #764ba2;
-      }
-      
-      /* Floating shapes animation */
-      .floating-shape {
-        position: absolute;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        animation: float 20s infinite;
-      }
-      
-      @keyframes float {
-        0%, 100% {
-          transform: translateY(0) rotate(0deg);
-        }
-        50% {
-          transform: translateY(-20px) rotate(10deg);
-        }
-      }
-      
-      /* Responsive */
-      @media (max-width: 768px) {
-        .split-container {
-          flex-direction: column;
-        }
-        
-        .brand-section {
-          padding: 2rem;
-          min-height: 300px;
-        }
-        
-        .brand-title {
-          font-size: 1.75rem;
-        }
-        
-        .form-section {
-          padding: 2rem;
-        }
-      } 
-   
     </style>
+    
     <%= javascript_importmap_tags %>
   </head>
 

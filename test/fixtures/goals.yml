@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  description: MyText
+  professional_type: MyString
+  status: MyString
+  start_date: 2026-06-04
+  end_date: 2026-06-04
+  created_by: one
+  priority: MyString
+  progress: 1
+
+two:
+  title: MyString
+  description: MyText
+  professional_type: MyString
+  status: MyString
+  start_date: 2026-06-04
+  end_date: 2026-06-04
+  created_by: two
+  priority: MyString
+  progress: 1
