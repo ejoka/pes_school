@@ -144,6 +144,20 @@ Rails.application.routes.draw do
         patch 'reject'
       end
     end
+
+    # Goals routes
+    resources :goals do
+      member do
+        post 'add_progress'
+      end
+      resources :tasks, only: [:new, :create, :edit, :update, :destroy] do
+        member do
+          post 'complete'
+        end
+      end
+    end
+
+    
     
     resources :fee_types
     resources :invoices, only: [] 
@@ -154,4 +168,17 @@ Rails.application.routes.draw do
   
   # User dashboard
   get 'dashboard', to: 'users#dashboard'
+
+  # User tasks
+  get 'my_tasks', to: 'tasks#my_tasks', as: :my_tasks
+
+  # notifications routes
+  resources :notifications, only: [:index, :destroy] do
+    collection do
+      post 'mark_all_as_read'
+    end
+    member do
+      patch 'mark_as_read'
+    end
+  end
 end

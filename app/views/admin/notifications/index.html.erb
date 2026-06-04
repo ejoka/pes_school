@@ -1,0 +1,49 @@
+<% content_for :page_title, "Notifications" %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-blue-900">Notifications</h1>
+    <% if @notifications.unread.any? %>
+      <%= link_to "Mark all as read", mark_all_as_read_notifications_path, method: :post, class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600" %>
+    <% end %>
+  </div>
+
+  <div class="space-y-3">
+    <% if @notifications.any? %>
+      <% @notifications.each do |notification| %>
+        <div class="border rounded-lg p-4 hover:shadow-md transition <%= 'bg-blue-50' unless notification.read %>">
+          <div class="flex justify-between items-start">
+            <div class="flex-1">
+              <div class="flex items-center space-x-2 mb-2">
+                <h3 class="font-semibold text-gray-900"><%= notification.title %></h3>
+                <% unless notification.read %>
+                  <span class="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">New</span>
+                <% end %>
+              </div>
+              <p class="text-gray-600"><%= notification.message %></p>
+              <p class="text-xs text-gray-400 mt-2"><%= time_ago_in_words(notification.created_at) %> ago</p>
+            </div>
+            <div class="flex space-x-2">
+              <% unless notification.read %>
+                <%= link_to mark_as_read_notification_path(notification), method: :post, class: "text-sm text-blue-600 hover:text-blue-800" do %>
+                  Mark read
+                <% end %>
+              <% end %>
+              <%= link_to notification_path(notification), method: :delete, data: { confirm: "Delete this notification?" }, class: "text-sm text-red-600 hover:text-red-800" do %>
+                Delete
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="text-center py-12">
+        <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+        </svg>
+        <p class="text-gray-500 text-lg">No notifications yet</p>
+        <p class="text-gray-400 text-sm mt-1">When you receive notifications, they will appear here.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

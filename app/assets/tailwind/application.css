@@ -31,3 +31,37 @@
 .sidebar-scroll::-webkit-scrollbar-thumb:hover {
   background: #fbbf24;
 }
+
+
+/* Notification dropdown styles - ensures it doesn't push content */
+.notification-dropdown {
+  position: absolute !important;
+  top: 100% !important;
+  right: 0 !important;
+  margin-top: 0.5rem !important;
+  width: 320px !important;
+  background: white !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  z-index: 9999 !important;
+  display: none;
+  overflow: hidden;
+}
+
+/* Ensure the parent has relative positioning */
+.relative-parent {
+  position: relative;
+}
+
+/* Fix for top bar sticky behavior */
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+}
+
+/* Prevent body scroll when dropdown is open */
+body.dropdown-open {
+  overflow: hidden;
+}

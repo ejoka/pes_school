@@ -1,0 +1,178 @@
+<% content_for :page_title, @goal.title %>
+
+<div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-blue-900"><%= @goal.title %></h1>
+      <p class="text-gray-600 mt-1">Created by: <%= @goal.created_by_name %> | <%= @goal.created_at.strftime("%B %d, %Y") %></p>
+    </div>
+    <div class="flex space-x-2">
+      <%= link_to edit_admin_goal_path(@goal), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150 inline-flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        </svg>
+        Edit Goal
+      <% end %>
+      <%= link_to admin_goals_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150 inline-flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Goals
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Goal Details -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="border rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-blue-900 mb-4">Goal Information</h2>
+      <div class="space-y-3">
+        <div>
+          <p class="text-sm text-gray-500">Description</p>
+          <p class="text-gray-700"><%= @goal.description %></p>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-gray-500">Professional Type</p>
+            <p class="font-semibold text-gray-900"><%= @goal.professional_type.humanize %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Priority</p>
+            <span class="px-2 py-1 text-xs font-semibold rounded-full <%= @goal.priority_color %>">
+              <%= @goal.priority.humanize %>
+            </span>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Start Date</p>
+            <p class="font-semibold text-gray-900"><%= @goal.start_date.strftime("%B %d, %Y") %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">End Date</p>
+            <p class="font-semibold text-gray-900"><%= @goal.end_date.strftime("%B %d, %Y") %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="border rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-blue-900 mb-4">Progress Tracking</h2>
+      <div class="text-center mb-4">
+        <div class="text-4xl font-bold text-blue-600"><%= @goal.progress %>%</div>
+        <div class="w-full bg-gray-200 rounded-full h-3 mt-2">
+          <div class="bg-blue-600 h-3 rounded-full transition-all duration-500" style="width: <%= @goal.progress %>%"></div>
+        </div>
+        <p class="text-sm text-gray-500 mt-2">Overall Progress</p>
+      </div>
+      
+      <!-- Update Progress Form -->
+      <div class="mt-4 pt-4 border-t">
+        <h3 class="font-semibold text-gray-700 mb-2">Update Progress</h3>
+        <%= form_tag add_progress_admin_goal_path(@goal), method: :post, class: "flex gap-2" do %>
+          <input type="number" name="progress_percentage" min="0" max="100" step="5" 
+                 class="w-24 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
+                 placeholder="0-100">
+          <input type="text" name="comment" placeholder="Progress comment..." 
+                 class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-yellow-500 focus:border-yellow-500">
+          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Update
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tasks Section -->
+  <div class="border rounded-lg p-6 mb-8">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold text-blue-900">Tasks</h2>
+      <%= link_to new_admin_goal_task_path(@goal), class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-150 inline-flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add Task
+      <% end %>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Task</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Assigned To</th>
+            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Priority</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Due Date</th>
+            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Status</th>
+            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @tasks.each do |task| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-3">
+                <div class="font-medium text-gray-900"><%= task.title %></div>
+                <div class="text-xs text-gray-500"><%= truncate(task.description, length: 50) %></div>
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-500"><%= task.assigned_to_name %></td>
+              <td class="px-4 py-3 text-center">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full <%= task.priority_color %>">
+                  <%= task.priority.humanize %>
+                </span>
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-500">
+                <%= task.due_date.strftime("%b %d, %Y") %>
+                <% if task.due_date < Date.today && task.status != 'completed' %>
+                  <span class="text-red-600 text-xs ml-1">(Overdue)</span>
+                <% end %>
+              </td>
+              <td class="px-4 py-3 text-center">
+                <span class="px-2 py-1 text-xs font-semibold rounded-full <%= task.status_color %>">
+                  <%= task.status.humanize %>
+                </span>
+              </td>
+              <td class="px-4 py-3 text-center space-x-2">
+                <% if task.status != 'completed' %>
+                  <%= button_to complete_admin_goal_task_path(@goal, task), method: :post, class: "text-green-600 hover:text-green-800 text-sm inline-block" do %>
+                    Complete
+                  <% end %>
+                <% end %>
+                <%= link_to edit_admin_goal_task_path(@goal, task), class: "text-blue-600 hover:text-blue-800 text-sm" do %>
+                  Edit
+                <% end %>
+                <%= link_to admin_goal_task_path(@goal, task), method: :delete, data: { confirm: "Delete this task?" }, class: "text-red-600 hover:text-red-800 text-sm" do %>
+                  Delete
+                <% end %>
+              </td>
+            </td>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @tasks.empty? %>
+      <div class="text-center py-8">
+        <p class="text-gray-500">No tasks added yet.</p>
+        <%= link_to "Add First Task", new_admin_goal_task_path(@goal), class: "mt-2 inline-block text-blue-600 hover:text-blue-800" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Progress History -->
+  <% if @progress_records.any? %>
+    <div class="border rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-blue-900 mb-4">Progress History</h2>
+      <div class="space-y-3">
+        <% @progress_records.each do |record| %>
+          <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+            <div>
+              <p class="text-sm text-gray-600"><%= record.comment %></p>
+              <p class="text-xs text-gray-400 mt-1">Updated by <%= record.user&.full_name %> • <%= time_ago_in_words(record.recorded_at) %> ago</p>
+            </div>
+            <div class="text-right">
+              <span class="text-lg font-bold text-blue-600"><%= record.progress_percentage %>%</span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

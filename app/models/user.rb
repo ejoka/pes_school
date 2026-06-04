@@ -12,6 +12,7 @@ class User < ApplicationRecord
 
   # Relationships
   has_many :user_resources, dependent: :destroy
+  has_many :notifications, dependent: :destroy
   
   # Polymorphic associations with proper class names
   has_many :assigned_categories, through: :user_resources, source: :resource, source_type: 'Category'
@@ -73,6 +74,24 @@ class User < ApplicationRecord
     return true if admin?
     staff_attendance_management = StaffAttendanceManagement.default
     can_access?(staff_attendance_management, action)
+  end
+
+  def can_manage_goals?(action = :view)
+    return true if admin?
+    goal_management = GoalManagement.default
+    can_access?(goal_management, action)
+  end
+
+  def my_tasks
+    Task.where(user_id: self.id).order(due_date: :asc)
+  end
+
+  def pending_tasks
+    my_tasks.where(status: ['pending', 'in_progress'])
+  end
+
+  def overdue_tasks
+    my_tasks.where('due_date < ? AND status != ?', Date.today, 'completed')
   end
 
   def can_manage_fees?(action = :view)
