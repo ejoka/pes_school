@@ -15,6 +15,22 @@ Rails.application.routes.draw do
   
   root to: "users#dashboard"
   
+  # User dashboard
+  get 'dashboard', to: 'users#dashboard'
+
+  # User tasks
+  get 'my_tasks', to: 'tasks#my_tasks', as: :my_tasks
+
+  # notifications routes
+  resources :notifications, only: [:index, :destroy] do
+    collection do
+      patch 'mark_all_as_read'
+    end
+    member do
+      patch 'mark_as_read'
+    end
+  end
+  
   # Admin namespace
   namespace :admin do
     get 'dashboard', to: 'dashboard#index'
@@ -157,28 +173,10 @@ Rails.application.routes.draw do
       end
     end
 
-    
-    
     resources :fee_types
     resources :invoices, only: [] 
   end
   
   # User profile routes - use a different name to avoid conflict
   resource :user_profile, only: [:show, :edit, :update], controller: 'users', as: :user_profile
-  
-  # User dashboard
-  get 'dashboard', to: 'users#dashboard'
-
-  # User tasks
-  get 'my_tasks', to: 'tasks#my_tasks', as: :my_tasks
-
-  # notifications routes
-  resources :notifications, only: [:index, :destroy] do
-    collection do
-      post 'mark_all_as_read'
-    end
-    member do
-      patch 'mark_as_read'
-    end
-  end
 end

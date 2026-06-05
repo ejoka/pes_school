@@ -1,0 +1,175 @@
+<% content_for :page_title, "Notifications" %>
+
+<div class="bg-white rounded-xl shadow-sm">
+  <div class="px-6 py-4 border-b border-gray-100">
+    <div class="flex justify-between items-center">
+      <h1 class="text-xl font-bold text-gray-900">Notifications</h1>
+      <% if @notifications.unread.any? %>
+        <button id="markAllReadBtnPage" class="text-sm text-blue-600 hover:text-blue-700 font-medium">
+          Mark all as read
+        </button>
+      <% end %>
+    </div>
+  </div>
+
+  <div id="notificationsList" class="divide-y divide-gray-100">
+    <% if @notifications.any? %>
+      <% @notifications.each do |notification| %>
+        <div class="notification-item px-6 py-4 hover:bg-gray-50 transition-colors duration-150 <%= 'bg-blue-50/30' unless notification.read %>" data-id="<%= notification.id %>">
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="font-semibold text-gray-900"><%= notification.title %></h3>
+                <% unless notification.read %>
+                  <span class="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">New</span>
+                <% end %>
+              </div>
+              <p class="text-gray-600 text-sm mb-2"><%= notification.message %></p>
+              <div class="flex items-center justify-between">
+                <p class="text-xs text-gray-400"><%= time_ago_in_words(notification.created_at) %> ago</p>
+                <div class="flex gap-3">
+                  <% unless notification.read %>
+                    <button class="mark-read-btn text-xs text-blue-600 hover:text-blue-700 font-medium" data-id="<%= notification.id %>">
+                      Mark read
+                    </button>
+                  <% end %>
+                  <button class="delete-notification-btn text-xs text-gray-500 hover:text-red-600 font-medium" data-id="<%= notification.id %>">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="px-6 py-12 text-center">
+        <div class="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+          </svg>
+        </div>
+        <p class="text-gray-500">No notifications yet</p>
+        <p class="text-sm text-gray-400 mt-1">When you receive notifications, they will appear here.</p>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="px-6 py-3 border-t border-gray-100 text-center">
+    <%= link_to "Back to Dashboard", dashboard_path, class: "text-sm text-blue-600 hover:text-blue-700 font-medium" %>
+  </div>
+</div>
+
+<script>
+  // Mark single notification as read
+  function markAsRead(notificationId, buttonElement) {
+    const csrfToken = document.querySelector('[name="csrf-token"]').content;
+    
+    fetch(`/notifications/${notificationId}/mark_as_read`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+      },
+      credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const notificationItem = buttonElement.closest('.notification-item');
+        if (notificationItem) {
+          notificationItem.classList.remove('bg-blue-50/30');
+          const newBadge = notificationItem.querySelector('.bg-blue-500');
+          if (newBadge) newBadge.remove();
+          buttonElement.remove();
+        }
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+  
+  // Delete notification
+  function deleteNotification(notificationId, buttonElement) {
+    const csrfToken = document.querySelector('[name="csrf-token"]').content;
+    
+    if (!confirm('Delete this notification?')) return;
+    
+    fetch(`/notifications/${notificationId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+      },
+      credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const notificationItem = buttonElement.closest('.notification-item');
+        if (notificationItem) {
+          notificationItem.remove();
+          
+          // Check if no notifications left
+          const remainingItems = document.querySelectorAll('.notification-item');
+          if (remainingItems.length === 0) {
+            location.reload();
+          }
+        }
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+  
+  // Mark all as read
+  function markAllAsRead() {
+    const csrfToken = document.querySelector('[name="csrf-token"]').content;
+    
+    fetch('/notifications/mark_all_as_read', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
+      },
+      credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        location.reload();
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+  
+  // Attach event listeners
+  document.querySelectorAll('.mark-read-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const id = this.dataset.id;
+      markAsRead(id, this);
+    });
+  });
+  
+  document.querySelectorAll('.delete-notification-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const id = this.dataset.id;
+      deleteNotification(id, this);
+    });
+  });
+  
+  const markAllBtn = document.getElementById('markAllReadBtnPage');
+  if (markAllBtn) {
+    markAllBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      markAllAsRead();
+    });
+  }
+</script>

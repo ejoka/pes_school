@@ -19,7 +19,7 @@ module Admin
     end
 
     def show
-      @tasks = @goal.tasks.includes(:assigned_to).order(due_date: :asc)
+      @tasks = @goal.tasks.includes(:user).order(due_date: :asc)
       @progress_records = @goal.goal_progresses.includes(:user).order(recorded_at: :desc)
     end
 
@@ -91,6 +91,8 @@ module Admin
 
     def set_goal
       @goal = Goal.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to admin_goals_path, alert: 'Goal not found.'
     end
 
     def goal_params

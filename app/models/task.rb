@@ -1,6 +1,6 @@
 class Task < ApplicationRecord
   belongs_to :goal
-  belongs_to :user, class_name: 'User', foreign_key: 'assigned_to_id', optional: true
+  belongs_to :user, class_name: 'User', foreign_key: 'user_id', optional: true
   has_many :notifications, as: :actionable, dependent: :destroy
   
   validates :title, presence: true
@@ -22,7 +22,7 @@ class Task < ApplicationRecord
   scope :pending, -> { where(status: 'pending') }
   scope :completed, -> { where(status: 'completed') }
   scope :overdue, -> { where('due_date < ? AND status != ?', Date.today, 'completed') }
-  scope :assigned_to_user, ->(user_id) { where(assigned_to_id: user_id) }
+  scope :assigned_to_user, ->(user_id) { where(user_id: user_id) }
   
   before_save :update_status_based_on_due_date
   after_save :update_goal_progress
@@ -39,9 +39,9 @@ class Task < ApplicationRecord
   end
   
   def create_notification_for_assignment
-    if assigned_to_id.present?
+    if user_id.present?
       Notification.create(
-        user_id: assigned_to_id,
+        user_id: user_id,
         title: "New Task Assigned",
         message: "You have been assigned a new task: #{title}",
         actionable: self,

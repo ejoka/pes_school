@@ -1,5 +1,6 @@
 class NotificationsController < ApplicationController
   before_action :authenticate_user!
+  skip_before_action :verify_authenticity_token, only: [:mark_as_read, :mark_all_as_read]
   
   def index
     @notifications = current_user.notifications.order(created_at: :desc)
@@ -10,6 +11,7 @@ class NotificationsController < ApplicationController
     @notification = current_user.notifications.find(params[:id])
     @notification.mark_as_read!
     
+    # Return JSON for AJAX requests
     respond_to do |format|
       format.html { redirect_to notifications_path, notice: 'Notification marked as read.' }
       format.json { render json: { success: true, unread_count: current_user.notifications.unread.count } }
@@ -31,7 +33,7 @@ class NotificationsController < ApplicationController
     
     respond_to do |format|
       format.html { redirect_to notifications_path, notice: 'Notification deleted.' }
-      format.json { render json: { success: true } }
+      format.json { render json: { success: true, unread_count: current_user.notifications.unread.count } }
     end
   end
 end

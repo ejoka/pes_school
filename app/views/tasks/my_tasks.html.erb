@@ -1,90 +1,110 @@
 <% content_for :page_title, "My Tasks" %>
 
-<div class="bg-white rounded-lg shadow-lg p-6">
-  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-    <div>
-      <h1 class="text-2xl sm:text-3xl font-bold text-blue-900">My Tasks</h1>
-      <p class="text-sm text-gray-500 mt-1">Tasks assigned to you</p>
-    </div>
-  </div>
-
-  <!-- Task Statistics -->
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-    <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white rounded-lg p-6">
-      <h3 class="text-sm font-semibold mb-2">Total Tasks</h3>
-      <p class="text-2xl font-bold"><%= @tasks.count %></p>
-    </div>
-    <div class="bg-gradient-to-r from-yellow-500 to-yellow-400 text-blue-900 rounded-lg p-6">
-      <h3 class="text-sm font-semibold mb-2">Pending</h3>
-      <p class="text-2xl font-bold"><%= @tasks.where(status: ['pending', 'in_progress']).count %></p>
-    </div>
-    <div class="bg-gradient-to-r from-green-600 to-green-500 text-white rounded-lg p-6">
-      <h3 class="text-sm font-semibold mb-2">Completed</h3>
-      <p class="text-2xl font-bold"><%= @tasks.where(status: 'completed').count %></p>
-    </div>
-  </div>
-
-  <!-- Tasks List -->
-  <div class="space-y-4">
-    <% @tasks.each do |task| %>
-      <div class="border rounded-lg p-4 hover:shadow-lg transition">
-        <div class="flex flex-col lg:flex-row justify-between items-start gap-4">
-          <div class="flex-1">
-            <div class="flex flex-wrap items-center gap-2 mb-2">
-              <h2 class="text-lg font-semibold text-gray-900"><%= task.title %></h2>
-              <span class="px-2 py-1 text-xs font-semibold rounded-full <%= task.priority_color %>">
-                <%= task.priority.humanize %>
-              </span>
-              <span class="px-2 py-1 text-xs font-semibold rounded-full <%= task.status_color %>">
-                <%= task.status.humanize %>
-              </span>
-              <% if task.due_date < Date.today && task.status != 'completed' %>
-                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                  Overdue
-                </span>
-              <% end %>
-            </div>
-            <p class="text-gray-600 text-sm mb-3"><%= task.description %></p>
-            <div class="flex flex-wrap gap-4 text-sm text-gray-500">
-              <span class="flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                </svg>
-                Goal: <%= link_to task.goal.title, admin_goal_path(task.goal), class: "text-blue-600 hover:underline" %>
-              </span>
-              <span class="flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                </svg>
-                Due: <%= task.due_date.strftime("%b %d, %Y") %>
-              </span>
-            </div>
-          </div>
-          <% if task.status != 'completed' %>
-            <div class="text-right">
-              <%= button_to complete_admin_goal_task_path(task.goal, task), method: :post, class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-150" do %>
-                Mark Complete
-              <% end %>
-            </div>
-          <% else %>
-            <div class="text-right">
-              <span class="px-3 py-2 bg-gray-100 text-gray-500 rounded-lg text-sm">Completed</span>
-            </div>
-          <% end %>
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">My Tasks</h1>
+        <p class="text-gray-500 text-sm mt-1">Tasks assigned to you</p>
+      </div>
+      <div class="flex space-x-3">
+        <div class="bg-blue-50 rounded-lg px-4 py-2 text-center">
+          <p class="text-xs text-blue-600">Total Tasks</p>
+          <p class="text-xl font-bold text-blue-700"><%= @tasks.count %></p>
+        </div>
+        <div class="bg-yellow-50 rounded-lg px-4 py-2 text-center">
+          <p class="text-xs text-yellow-600">Pending</p>
+          <p class="text-xl font-bold text-yellow-700"><%= @tasks.where(status: ['pending', 'in_progress']).count %></p>
+        </div>
+        <div class="bg-green-50 rounded-lg px-4 py-2 text-center">
+          <p class="text-xs text-green-600">Completed</p>
+          <p class="text-xl font-bold text-green-700"><%= @tasks.where(status: 'completed').count %></p>
         </div>
       </div>
-    <% end %>
+    </div>
   </div>
 
-  <% if @tasks.empty? %>
-    <div class="text-center py-12">
-      <div class="flex flex-col items-center justify-center">
-        <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+  <!-- Tasks Grid -->
+  <% if @tasks.any? %>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <% @tasks.each do |task| %>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 overflow-hidden">
+          <!-- Task Header -->
+          <div class="p-4 border-b bg-gray-50">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <div class="w-2 h-2 rounded-full <%= task.status == 'completed' ? 'bg-green-500' : 'bg-yellow-500' %>"></div>
+                <h3 class="font-semibold text-gray-800"><%= task.title %></h3>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-1 text-xs font-medium rounded-full <%= task.priority_color %>">
+                  <%= task.priority.humanize %>
+                </span>
+                <span class="px-2 py-1 text-xs font-medium rounded-full <%= task.status_color %>">
+                  <%= task.status.humanize %>
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Task Body -->
+          <div class="p-4">
+            <p class="text-gray-600 text-sm line-clamp-2 mb-3"><%= task.description %></p>
+            
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center space-x-4">
+                <!-- Due Date -->
+                <div class="flex items-center text-gray-500">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  <span class="<%= task.due_date < Date.today && task.status != 'completed' ? 'text-red-600 font-medium' : '' %>">
+                    <%= task.due_date.strftime("%b %d, %Y") %>
+                    <%= ' (Overdue)' if task.due_date < Date.today && task.status != 'completed' %>
+                  </span>
+                </div>
+                
+                <!-- Goal Link -->
+                <div class="flex items-center text-gray-500">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                  </svg>
+                  <%= link_to task.goal.title, admin_goal_path(task.goal), class: "text-blue-600 hover:underline truncate max-w-[150px]" %>
+                </div>
+              </div>
+              
+              <!-- Complete Button -->
+              <% if task.status != 'completed' %>
+                <%= button_to complete_admin_goal_task_path(task.goal, task), method: :post, class: "bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors duration-200 flex items-center space-x-1" do %>
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Complete</span>
+                <% end %>
+              <% else %>
+                <div class="flex items-center text-green-600 text-sm">
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span>Completed</span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <!-- Empty State -->
+    <div class="bg-white rounded-xl shadow-sm p-12 text-center">
+      <div class="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
         </svg>
-        <p class="text-gray-500 text-lg">No tasks assigned to you yet.</p>
-        <p class="text-gray-400 text-sm mt-1">When tasks are assigned, they will appear here.</p>
       </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">No tasks assigned</h3>
+      <p class="text-gray-500 text-sm">When tasks are assigned to you, they will appear here.</p>
     </div>
   <% end %>
 </div>
