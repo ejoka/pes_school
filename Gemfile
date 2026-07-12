@@ -66,6 +66,6 @@ group :test do
 end
 
 gem "role_model", "~> 0.8.2"
-gem "pagy", "~> 43.5"
+gem "pagy", "~> 43.6"
 gem "cancancan", "~> 3.6"
 gem "devise", "~> 5.0"
