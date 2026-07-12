@@ -4,7 +4,7 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-blue-900">User Details</h1>
     <div class="space-x-3">
-      <%= link_to edit_admin_user_path(@user), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150" do %>
+      <%= link_to edit_admin_user_path(@user), class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" do %>
         Edit User
       <% end %>
       <%= link_to "Back to Users", admin_users_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>
@@ -106,7 +106,7 @@
   <div class="border border-gray-200 rounded-lg p-6">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-bold text-blue-900">Assigned Resources</h2>
-      <%= link_to "Manage Permissions", assign_resources_admin_user_path(@user), class: "text-yellow-600 hover:text-yellow-700 text-sm font-semibold" %>
+      <%= link_to "Manage Permissions", assign_resources_admin_user_path(@user), class: "inline-flex items-center px-3 py-1.5 bg-amber-700 text-white font-medium rounded-lg shadow-sm hover:bg-amber-800 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
     </div>
     
     <!-- Categories -->
@@ -127,7 +127,7 @@
                   <%= perms['can_delete'] ? '🗑️' : '' %>
                 </p>
               </div>
-              <%= link_to "View", admin_category_path(category), class: "text-blue-600 hover:text-blue-800 text-sm" %>
+              <%= link_to "View", admin_category_path(category), class: "inline-flex items-center px-2 py-1 bg-green-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-green-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
             </div>
           <% end %>
         </div>
@@ -154,7 +154,7 @@
                   <%= perms['can_delete'] ? '🗑️' : '' %>
                 </p>
               </div>
-              <%= link_to "View", admin_school_class_path(school_class), class: "text-blue-600 hover:text-blue-800 text-sm" %>
+              <%= link_to "View", admin_school_class_path(school_class), class: "inline-flex items-center px-2 py-1 bg-green-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-green-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
             </div>
           <% end %>
         </div>
@@ -182,7 +182,7 @@
                   <%= perms['can_delete'] ? '🗑️' : '' %>
                 </p>
               </div>
-              <%= link_to "View", admin_subject_path(subject), class: "text-blue-600 hover:text-blue-800 text-sm" %>
+              <%= link_to "View", admin_subject_path(subject), class: "inline-flex items-center px-2 py-1 bg-green-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-green-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
             </div>
           <% end %>
         </div>
@@ -198,7 +198,7 @@
       <div class="bg-red-50 rounded-lg p-6">
         <h3 class="text-lg font-semibold text-red-700 mb-3">Danger Zone</h3>
         <p class="text-sm text-red-600 mb-4">This action cannot be undone. This will permanently delete the user account.</p>
-        <%= link_to "Delete User", admin_user_path(@user), method: :delete, data: { confirm: "Are you sure you want to delete #{@user.full_name}? This action cannot be undone." }, class: "bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-150" %>
+        <%= link_to "Delete User", admin_user_path(@user), method: :delete, data: { confirm: "Are you sure you want to delete #{@user.full_name}? This action cannot be undone." }, class: "inline-flex items-center px-4 py-2 bg-red-600 text-white font-medium rounded-lg shadow-md hover:bg-red-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" %>
       </div>
     </div>
   <% end %>

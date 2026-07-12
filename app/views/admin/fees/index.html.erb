@@ -69,10 +69,10 @@
                 <span class="text-red-600 ml-1">(Overdue)</span>
               <% end %>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-3">
-              <%= link_to "View", admin_fee_path(fee), class: "text-green-600 hover:text-green-900" %>
-              <%= link_to "Record Payment", record_payment_admin_fee_path(fee), class: "text-blue-600 hover:text-blue-900" %>
-              <%= link_to "Edit", edit_admin_fee_path(fee), class: "text-yellow-600 hover:text-yellow-900" %>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+              <%= link_to "View", admin_fee_path(fee), class: "inline-flex items-center px-2 py-1 bg-green-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-green-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
+              <%= link_to "Record Payment", record_payment_admin_fee_path(fee), class: "inline-flex items-center px-2 py-1 bg-blue-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-blue-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
+              <%= link_to "Edit", edit_admin_fee_path(fee), class: "inline-flex items-center px-2 py-1 bg-blue-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-blue-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
             </td>
           </tr>
         <% end %>

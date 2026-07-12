@@ -4,7 +4,7 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-blue-900">Notifications</h1>
     <% if @notifications.unread.any? %>
-      <%= link_to "Mark all as read", mark_all_as_read_notifications_path, method: :post, class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600" %>
+      <%= link_to "Mark all as read", mark_all_as_read_notifications_path, method: :post, class: "inline-flex items-center px-4 py-2 bg-green-600 text-white font-medium rounded-lg shadow-md hover:bg-green-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" %>
     <% end %>
   </div>
 
@@ -25,11 +25,11 @@
             </div>
             <div class="flex space-x-2">
               <% unless notification.read %>
-                <%= link_to mark_as_read_notification_path(notification), method: :post, class: "text-sm text-blue-600 hover:text-blue-800" do %>
+                <%= link_to mark_as_read_notification_path(notification), method: :post, class: "inline-flex items-center px-2 py-1 bg-green-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-green-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" do %>
                   Mark read
                 <% end %>
               <% end %>
-              <%= link_to notification_path(notification), method: :delete, data: { confirm: "Delete this notification?" }, class: "text-sm text-red-600 hover:text-red-800" do %>
+              <%= link_to notification_path(notification), method: :delete, data: { confirm: "Delete this notification?" }, class: "inline-flex items-center px-3 py-1.5 bg-red-600 text-white font-medium text-sm rounded-lg shadow-sm hover:bg-red-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" do %>
                 Delete
               <% end %>
             </div>

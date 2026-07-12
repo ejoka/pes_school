@@ -38,14 +38,14 @@
             
             <!-- Dashboard Link -->
             <% if current_user.admin? %>
-              <%= link_to admin_dashboard_path, class: "menu-item flex items-center px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out #{current_page?(admin_dashboard_path) ? 'bg-yellow-500 text-blue-900 shadow-md' : 'text-white hover:bg-blue-800'}" do %>
+              <%= link_to admin_dashboard_path, class: "menu-item flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out #{current_page?(admin_dashboard_path) ? 'bg-yellow-500 text-blue-900 shadow-md' : 'text-white hover:bg-blue-800'}" do %>
                 <svg class="w-5 h-5 mr-3 <%= current_page?(admin_dashboard_path) ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
                 <span>Dashboard</span>
               <% end %>
             <% else %>
-              <%= link_to dashboard_path, class: "menu-item flex items-center px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out #{current_page?(dashboard_path) ? 'bg-yellow-500 text-blue-900 shadow-md' : 'text-white hover:bg-blue-800'}" do %>
+              <%= link_to dashboard_path, class: "menu-item flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out #{current_page?(dashboard_path) ? 'bg-yellow-500 text-blue-900 shadow-md' : 'text-white hover:bg-blue-800'}" do %>
                 <svg class="w-5 h-5 mr-3 <%= current_page?(dashboard_path) ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                 </svg>
@@ -58,7 +58,7 @@
               <!-- My Categories -->
               <% if current_user.assigned_categories.any? %>
                 <div x-data="{ open: false }">
-                  <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                  <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                     <div class="flex items-center">
                       <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -72,7 +72,7 @@
                   <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                     <% current_user.assigned_categories.each do |category| %>
                       <% is_active = current_page?(admin_category_path(category)) %>
-                      <%= link_to admin_category_path(category), class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                      <%= link_to admin_category_path(category), class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                         <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5 5a2 2 0 01.586 1.414V19a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"></path>
                         </svg>
@@ -86,7 +86,7 @@
               <!-- My Classes -->
               <% if current_user.assigned_classes.any? %>
                 <div x-data="{ open: false }">
-                  <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                  <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                     <div class="flex items-center">
                       <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
@@ -100,7 +100,7 @@
                   <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                     <% current_user.assigned_classes.each do |school_class| %>
                       <% is_active = current_page?(admin_school_class_path(school_class)) %>
-                      <%= link_to admin_school_class_path(school_class), class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                      <%= link_to admin_school_class_path(school_class), class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                         <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
@@ -115,7 +115,7 @@
               <!-- My Subjects -->
               <% if current_user.assigned_subjects.any? %>
                 <div x-data="{ open: false }">
-                  <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                  <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                     <div class="flex items-center">
                       <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
@@ -129,7 +129,7 @@
                   <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                     <% current_user.assigned_subjects.each do |subject| %>
                       <% is_active = current_page?(admin_subject_path(subject)) %>
-                      <%= link_to admin_subject_path(subject), class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                      <%= link_to admin_subject_path(subject), class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                         <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                         </svg>
@@ -143,7 +143,7 @@
               <!-- My Tasks -->
               <% if current_user.my_tasks.any? %>
                 <div x-data="{ open: false }">
-                  <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                  <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                     <div class="flex items-center">
                       <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
@@ -159,7 +159,7 @@
                   </button>
                   <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                     <% is_active = current_page?(my_tasks_path) %>
-                    <%= link_to my_tasks_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                    <%= link_to my_tasks_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                       <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                       </svg>
@@ -178,7 +178,7 @@
               
               <!-- 1. ACADEMICS -->
               <div x-data="{ open: <%= params[:controller].in?(%w[admin/categories admin/school_classes admin/subjects]) %> }">
-                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                   <div class="flex items-center">
                     <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
@@ -191,21 +191,21 @@
                 </button>
                 <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                   <% is_active = current_page?(admin_categories_path) %>
-                  <%= link_to admin_categories_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_categories_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5 5a2 2 0 01.586 1.414V19a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"></path>
                     </svg>
                     <span>Categories</span>
                   <% end %>
                   <% is_active = current_page?(admin_school_classes_path) %>
-                  <%= link_to admin_school_classes_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_school_classes_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
                     <span>Classes</span>
                   <% end %>
                   <% is_active = current_page?(admin_subjects_path) %>
-                  <%= link_to admin_subjects_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_subjects_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
@@ -216,7 +216,7 @@
 
               <!-- 2. STUDENT DATA -->
               <div x-data="{ open: <%= params[:controller].in?(%w[admin/students admin/attendances]) %> }">
-                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                   <div class="flex items-center">
                     <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
@@ -229,14 +229,14 @@
                 </button>
                 <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                   <% is_active = current_page?(admin_students_path) %>
-                  <%= link_to admin_students_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_students_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
                     </svg>
                     <span>Manage Students</span>
                   <% end %>
                   <% is_active = current_page?(admin_attendances_path(class_id: SchoolClass.first&.id)) %>
-                  <%= link_to admin_attendances_path(class_id: SchoolClass.first&.id), class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_attendances_path(class_id: SchoolClass.first&.id), class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
@@ -247,7 +247,7 @@
 
               <!-- 3. FEE MANAGEMENT -->
               <div x-data="{ open: <%= params[:controller].in?(%w[admin/student_fees admin/invoices admin/all_payments]) %> }">
-                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                   <div class="flex items-center">
                     <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -260,21 +260,21 @@
                 </button>
                 <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                   <% is_active = current_page?(admin_all_students_fees_path) %>
-                  <%= link_to admin_all_students_fees_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_all_students_fees_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                     </svg>
                     <span>Student Fees</span>
                   <% end %>
                   <% is_active = current_page?(admin_all_invoices_path) %>
-                  <%= link_to admin_all_invoices_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_all_invoices_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     <span>All Invoices</span>
                   <% end %>
                   <% is_active = current_page?(admin_all_payments_path) %>
-                  <%= link_to admin_all_payments_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_all_payments_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
                     </svg>
@@ -285,7 +285,7 @@
 
               <!-- 4. EXAMINATION -->
               <div x-data="{ open: <%= params[:controller].in?(%w[admin/exam_grades admin/exam_types admin/exam_schedules admin/exam_attendances admin/enter_marks]) %> }">
-                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                   <div class="flex items-center">
                     <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
@@ -299,7 +299,7 @@
                 <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                   <!-- Exam Grades -->
                   <% is_active = current_page?(admin_exam_grades_path) %>
-                  <%= link_to admin_exam_grades_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_exam_grades_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
@@ -307,7 +307,7 @@
                   <% end %>
                   <!-- Exam Types -->
                   <% is_active = current_page?(admin_exam_types_path) %>
-                  <%= link_to admin_exam_types_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_exam_types_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
@@ -315,7 +315,7 @@
                   <% end %>
                   <!-- Exam Schedules -->
                   <% is_active = current_page?(admin_exam_schedules_path) %>
-                  <%= link_to admin_exam_schedules_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_exam_schedules_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
@@ -323,7 +323,7 @@
                   <% end %>
                   <!-- Exam Attendance -->
                   <% is_active = current_page?(admin_exam_attendances_path) %>
-                  <%= link_to admin_exam_attendances_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_exam_attendances_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
@@ -331,7 +331,7 @@
                   <% end %>
                   <!-- Enter Marks -->
                   <% is_active = current_page?(admin_enter_marks_path) %>
-                  <%= link_to admin_enter_marks_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_enter_marks_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                     </svg>
@@ -342,7 +342,7 @@
 
               <!-- 5. TRANSPORT -->
               <div x-data="{ open: <%= params[:controller].in?(%w[admin/routes admin/school_buses admin/driver_assignments admin/bus_route_assignments admin/student_transport_assignments]) %> }">
-                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                   <div class="flex items-center">
                     <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
@@ -355,35 +355,35 @@
                 </button>
                 <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                   <% is_active = current_page?(admin_routes_path) %>
-                  <%= link_to admin_routes_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_routes_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                     </svg>
                     <span>Routes</span>
                   <% end %>
                   <% is_active = current_page?(admin_school_buses_path) %>
-                  <%= link_to admin_school_buses_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_school_buses_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                     </svg>
                     <span>School Buses</span>
                   <% end %>
                   <% is_active = current_page?(admin_driver_assignments_path) %>
-                  <%= link_to admin_driver_assignments_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_driver_assignments_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                     <span>Assign Driver</span>
                   <% end %>
                   <% is_active = current_page?(admin_bus_route_assignments_path) %>
-                  <%= link_to admin_bus_route_assignments_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_bus_route_assignments_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                     </svg>
                     <span>Assign Bus to Route</span>
                   <% end %>
                   <% is_active = current_page?(admin_student_transport_assignments_path) %>
-                  <%= link_to admin_student_transport_assignments_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_student_transport_assignments_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
@@ -394,7 +394,7 @@
 
               <!-- 6. INVENTORY -->
               <div x-data="{ open: <%= params[:controller].in?(%w[admin/inventory_items admin/inventory_categories admin/suppliers admin/stock_receipts]) %> }">
-                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                   <div class="flex items-center">
                     <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
@@ -407,28 +407,28 @@
                 </button>
                 <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                   <% is_active = current_page?(admin_inventory_items_path) %>
-                  <%= link_to admin_inventory_items_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_inventory_items_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                     </svg>
                     <span>Inventory Items</span>
                   <% end %>
                   <% is_active = current_page?(admin_inventory_categories_path) %>
-                  <%= link_to admin_inventory_categories_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_inventory_categories_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5 5a2 2 0 01.586 1.414V19a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"></path>
                     </svg>
                     <span>Categories</span>
                   <% end %>
                   <% is_active = current_page?(admin_suppliers_path) %>
-                  <%= link_to admin_suppliers_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_suppliers_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
                     <span>Suppliers</span>
                   <% end %>
                   <% is_active = current_page?(admin_stock_receipts_path) %>
-                  <%= link_to admin_stock_receipts_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_stock_receipts_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
@@ -439,7 +439,7 @@
 
               <!-- 7. STAFF -->
               <div x-data="{ open: <%= params[:controller].in?(%w[admin/departments admin/staff_assignments admin/payrolls admin/staff_attendances admin/staff_leave_requests]) %> }">
-                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                   <div class="flex items-center">
                     <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -452,35 +452,35 @@
                 </button>
                 <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                   <% is_active = current_page?(admin_departments_path) %>
-                  <%= link_to admin_departments_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_departments_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
                     <span>Departments</span>
                   <% end %>
                   <% is_active = current_page?(admin_staff_assignments_path) %>
-                  <%= link_to admin_staff_assignments_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_staff_assignments_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>
                     <span>Assign Staff</span>
                   <% end %>
                   <% is_active = current_page?(admin_payrolls_path) %>
-                  <%= link_to admin_payrolls_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_payrolls_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     <span>Payroll</span>
                   <% end %>
                   <% is_active = current_page?(admin_staff_attendances_path) %>
-                  <%= link_to admin_staff_attendances_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_staff_attendances_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     <span>Staff Attendance</span>
                   <% end %>
                   <% is_active = current_page?(admin_staff_leave_requests_path) %>
-                  <%= link_to admin_staff_leave_requests_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_staff_leave_requests_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                     </svg>
@@ -491,7 +491,7 @@
 
               <!-- 8. GOALS & TASKS -->
               <div x-data="{ open: <%= params[:controller].in?(%w[admin/goals tasks]) %> }">
-                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                   <div class="flex items-center">
                     <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
@@ -504,14 +504,14 @@
                 </button>
                 <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                   <% is_active = current_page?(admin_goals_path) %>
-                  <%= link_to admin_goals_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_goals_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
                     <span>All Goals</span>
                   <% end %>
                   <% is_active = current_page?(my_tasks_path) %>
-                  <%= link_to my_tasks_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to my_tasks_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
@@ -525,7 +525,7 @@
 
               <!-- 9. USERS -->
               <% is_active = current_page?(admin_users_path) %>
-              <%= link_to admin_users_path, class: "menu-item flex items-center px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900 shadow-md' : 'text-white hover:bg-blue-800'}" do %>
+              <%= link_to admin_users_path, class: "menu-item flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900 shadow-md' : 'text-white hover:bg-blue-800'}" do %>
                 <svg class="w-5 h-5 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
                 </svg>
@@ -534,7 +534,7 @@
 
               <!-- 10. SETTINGS -->
               <div x-data="{ open: <%= params[:controller].in?(%w[admin/settings]) %> }">
-                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
                   <div class="flex items-center">
                     <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
@@ -548,14 +548,14 @@
                 </button>
                 <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
                   <% is_active = current_page?(admin_school_settings_path) %>
-                  <%= link_to admin_school_settings_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_school_settings_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                     </svg>
                     <span>School Settings</span>
                   <% end %>
                   <% is_active = current_page?(admin_color_settings_path) %>
-                  <%= link_to admin_color_settings_path, class: "flex items-center px-3 py-2 text-[14px] font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                  <%= link_to admin_color_settings_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{is_active ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
                     <svg class="w-4 h-4 mr-3 <%= is_active ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
                     </svg>
@@ -564,19 +564,147 @@
                 </div>
               </div>
 
+              <!-- 11. REPORTS - Correct Colors (White Text/Icons) -->
+              <div x-data="{ open: <%= params[:controller] == 'admin/reports' %> }">
+                <button @click="open = !open" class="menu-item w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                  <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    <span>Reports</span>
+                  </div>
+                  <svg :class="{'rotate-180': open}" class="w-4 h-4 text-white transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </button>
+                
+                <!-- Nested submenu - same indentation as other dropdowns -->
+                <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
+                  
+                  <!-- Staff Reports - as a dropdown -->
+                  <div x-data="{ openStaff: false }">
+                    <button @click="openStaff = !openStaff" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                      <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Staff Reports</span>
+                      </div>
+                      <svg :class="{'rotate-180': openStaff}" class="w-4 h-4 text-white transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
+                    </button>
+                    <div x-show="openStaff" x-collapse class="ml-8 mt-1 space-y-1">
+                      <%= link_to admin_staff_attendance_report_path, class: "flex items-center px-3 py-2 text-sm rounded-md transition-all duration-200 ease-in-out #{current_page?(admin_staff_attendance_report_path) ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                        <svg class="w-4 h-4 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Attendance Report</span>
+                      <% end %>
+                      <%= link_to admin_staff_payroll_report_path, class: "flex items-center px-3 py-2 text-sm rounded-md transition-all duration-200 ease-in-out #{current_page?(admin_staff_payroll_report_path) ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                        <svg class="w-4 h-4 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Payroll Report</span>
+                      <% end %>
+                    </div>
+                  </div>
+
+                  <!-- Exam Reports - as a dropdown -->
+                  <div x-data="{ openExam: false }">
+                    <button @click="openExam = !openExam" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                      <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
+                        <span>Exam Reports</span>
+                      </div>
+                      <svg :class="{'rotate-180': openExam}" class="w-4 h-4 text-white transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
+                    </button>
+                    <div x-show="openExam" x-collapse class="ml-8 mt-1 space-y-1">
+                      <%= link_to admin_exam_performance_report_path, class: "flex items-center px-3 py-2 text-sm rounded-md transition-all duration-200 ease-in-out #{current_page?(admin_exam_performance_report_path) ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                        <svg class="w-4 h-4 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                        <span>Performance Report</span>
+                      <% end %>
+                      <%= link_to admin_exam_subject_report_path, class: "flex items-center px-3 py-2 text-sm rounded-md transition-all duration-200 ease-in-out #{current_page?(admin_exam_subject_report_path) ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                        <svg class="w-4 h-4 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        <span>Subject Report</span>
+                      <% end %>
+                    </div>
+                  </div>
+
+                  <!-- Student Reports - as a dropdown -->
+                  <div x-data="{ openStudent: false }">
+                    <button @click="openStudent = !openStudent" class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out text-white hover:bg-blue-800">
+                      <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        <span>Student Reports</span>
+                      </div>
+                      <svg :class="{'rotate-180': openStudent}" class="w-4 h-4 text-white transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                      </svg>
+                    </button>
+                    <div x-show="openStudent" x-collapse class="ml-8 mt-1 space-y-1">
+                      <%= link_to admin_student_attendance_report_path, class: "flex items-center px-3 py-2 text-sm rounded-md transition-all duration-200 ease-in-out #{current_page?(admin_student_attendance_report_path) ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                        <svg class="w-4 h-4 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Attendance Report</span>
+                      <% end %>
+                      <%= link_to admin_student_performance_report_path, class: "flex items-center px-3 py-2 text-sm rounded-md transition-all duration-200 ease-in-out #{current_page?(admin_student_performance_report_path) ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                        <svg class="w-4 h-4 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                        <span>Performance Report</span>
+                      <% end %>
+                    </div>
+                  </div>
+
+                  <!-- Other Reports - Direct links -->
+                  <%= link_to admin_fees_report_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{current_page?(admin_fees_report_path) ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                    <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Fees Report</span>
+                  <% end %>
+                  
+                  <%= link_to admin_transport_report_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{current_page?(admin_transport_report_path) ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                    <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                    </svg>
+                    <span>Transport Report</span>
+                  <% end %>
+                  
+                  <%= link_to admin_inventory_report_path, class: "flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out #{current_page?(admin_inventory_report_path) ? 'bg-yellow-500 text-blue-900' : 'text-white hover:bg-blue-800'}" do %>
+                    <svg class="w-5 h-5 mr-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                    <span>Inventory Report</span>
+                  <% end %>
+                </div>
+              </div>
+
             <% end %>
 
             <!-- Profile Link -->
             <% if current_user.admin? %>
-              <%= link_to admin_admin_profile_path, class: "menu-item flex items-center px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out #{current_page?(admin_admin_profile_path) ? 'bg-yellow-500 text-blue-900 shadow-md' : 'text-white hover:bg-blue-800'}" do %>
+              <%= link_to admin_admin_profile_path, class: "menu-item flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out #{current_page?(admin_admin_profile_path) ? 'bg-yellow-500 text-blue-900 shadow-md' : 'text-white hover:bg-blue-800'}" do %>
                 <svg class="w-5 h-5 mr-3 <%= current_page?(admin_admin_profile_path) ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
                 <span>Profile</span>
               <% end %>
             <% else %>
-              <%= link_to profile_path, class: "menu-item flex items-center px-3 py-2.5 text-[15px] font-medium rounded-xl transition-all duration-200 ease-in-out #{current_page?(profile_path) ? 'bg-yellow-500 text-blue-900 shadow-md' : 'text-white hover:bg-blue-800'}" do %>
-                <svg class="w-5 h-5 mr-3 <%= current_page?(profile_path) ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <%= link_to user_profile_path, class: "menu-item flex items-center px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out #{current_page?(user_profile_path) ? 'bg-yellow-500 text-blue-900 shadow-md' : 'text-white hover:bg-blue-800'}" do %>
+                <svg class="w-5 h-5 mr-3 <%= current_page?(user_profile_path) ? 'text-blue-900' : 'text-white' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
                 <span>Profile</span>

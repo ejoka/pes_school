@@ -1,0 +1,261 @@
+<%# app/views/admin/reports/fees_report.html.erb %>
+
+<div class="min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Header Section with Gradient -->
+    <div class="mb-8">
+      <div class="bg-blue-600 rounded-2xl shadow-lg p-6 text-white">
+        <div class="flex justify-between items-center">
+          <div>
+            <h1 class="text-3xl font-bold mb-2">Fees Report</h1>
+            <p class="text-blue-100">Manage and track all fee collections</p>
+          </div>
+          <div class="bg-white/10 rounded-lg p-3">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-8 overflow-hidden">
+      <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+        <h2 class="text-lg font-semibold text-gray-800">Filter Reports</h2>
+      </div>
+      
+      <%= form_tag admin_fees_report_path, method: :get, class: "p-6" do %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Fee Type Filter -->
+          <div>
+            <%= label_tag :fee_type_id, "Fee Type", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <div class="relative">
+              <%= select_tag :fee_type_id, 
+                  options_from_collection_for_select(@fee_types, :id, :name, params[:fee_type_id]), 
+                  include_blank: "All Types",
+                  class: "w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm" %>
+            </div>
+          </div>
+
+          <!-- Status Filter -->
+          <div>
+            <%= label_tag :status, "Payment Status", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <div class="relative">
+              <%= select_tag :status, 
+                  options_for_select([['All', ''], ['Paid', 'paid'], ['Pending', 'pending'], ['Overdue', 'overdue']], params[:status]),
+                  class: "w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm" %>
+            </div>
+          </div>
+
+          <!-- Start Date -->
+          <div>
+            <%= label_tag :start_date, "From Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= date_field_tag :start_date, params[:start_date], 
+                class: "w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm" %>
+          </div>
+
+          <!-- End Date -->
+          <div>
+            <%= label_tag :end_date, "To Date", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= date_field_tag :end_date, params[:end_date], 
+                class: "w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm" %>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-end space-x-3 mt-6">
+          <%= link_to "Reset", admin_fees_report_path, class: "px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200" %>
+          <%= submit_tag "Generate Report", class: "px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Statistics Cards -->
+    <% if @fees.present? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Amount Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500 mb-1">Total Amount</p>
+              <p class="text-2xl font-bold text-gray-800"><%= number_to_currency(@total_amount) %></p>
+            </div>
+            <div class="bg-blue-100 rounded-full p-3">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paid Amount Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500 mb-1">Total Collected</p>
+              <p class="text-2xl font-bold text-green-600"><%= number_to_currency(@total_paid) %></p>
+            </div>
+            <div class="bg-green-100 rounded-full p-3">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending Amount Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500 mb-1">Pending Amount</p>
+              <p class="text-2xl font-bold text-orange-600"><%= number_to_currency(@total_amount - @total_paid) %></p>
+            </div>
+            <div class="bg-orange-100 rounded-full p-3">
+              <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collection Rate Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500 mb-1">Collection Rate</p>
+              <p class="text-2xl font-bold text-purple-600">
+                <%= number_to_percentage(@total_amount > 0 ? (@total_paid.to_f / @total_amount) * 100 : 0, precision: 1) %>
+              </p>
+            </div>
+            <div class="bg-purple-100 rounded-full p-3">
+              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Options -->
+      <div class="flex justify-between items-center mb-6">
+        <div class="text-sm text-gray-500">
+          Showing <span class="font-medium"><%= @fees.count %></span> records
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to admin_fees_report_path(format: :csv, params: request.query_parameters), 
+              class: "inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Export CSV
+          <% end %>
+          
+          <button onclick="window.print()" 
+              class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+            </svg>
+            Print
+          </button>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll No</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fee Type</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Paid</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Balance</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @fees.each do |fee| %>
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10">
+                        <div class="h-10 w-10 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500 flex items-center justify-center text-white font-medium">
+                          <%= fee.student&.name&.first&.upcase || '?' %>
+                        </div>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900"><%= fee.student&.name %></div>
+                        <div class="text-sm text-gray-500"><%= fee.student&.email %></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= fee.student&.roll_number || '-' %></td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <%= fee.fee_type&.name %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-medium"><%= number_to_currency(fee.amount) %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right"><%= number_to_currency(fee.paid_amount || 0) %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-right <%= (fee.amount - (fee.paid_amount || 0)) > 0 ? 'text-red-600' : 'text-green-600' %> font-medium">
+                    <%= number_to_currency(fee.amount - (fee.paid_amount || 0)) %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= fee.due_date.strftime("%b %d, %Y") rescue '-' %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% status_class = case fee.status
+                      when 'paid' then 'green'
+                      when 'pending' then 'yellow'
+                      when 'overdue' then 'red'
+                      else 'gray'
+                    end %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-<%= status_class %>-100 text-<%= status_class %>-800">
+                      <%= fee.status&.titleize %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <%= link_to "#", class: "text-blue-600 hover:text-blue-900" do %>
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                      </svg>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% elsif params[:commit].present? %>
+      <!-- Empty State -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No records found</h3>
+        <p class="mt-1 text-sm text-gray-500">Try adjusting your filters to see results.</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Print Styles -->
+<style media="print">
+  .filter-form, .export-links, .action-buttons, .statistics-cards {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+  .shadow-sm {
+    box-shadow: none;
+  }
+</style>

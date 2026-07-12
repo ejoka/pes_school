@@ -4,7 +4,7 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-blue-900">My Profile</h1>
     <div class="space-x-3">
-      <%= link_to edit_user_profile_path, class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150 font-semibold" do %>
+      <%= link_to edit_user_profile_path, class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" do %>
         Edit Profile
       <% end %>
       <%= link_to dashboard_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" do %>
@@ -175,7 +175,7 @@
   <!-- Password Change Link -->
   <div class="flex justify-between items-center pt-4">
     <div>
-      <%= link_to "Change Password", edit_user_registration_path, class: "text-yellow-600 hover:text-yellow-700 font-semibold" %>
+      <%= link_to "Change Password", edit_user_registration_path, class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" %>
     </div>
   </div>
 

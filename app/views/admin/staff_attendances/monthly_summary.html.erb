@@ -10,7 +10,7 @@
       <%= link_to "Previous Month", monthly_summary_admin_staff_attendances_path(date: @date - 1.month), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition" %>
       <%= link_to "Current Month", monthly_summary_admin_staff_attendances_path(date: Date.today), class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" %>
       <%= link_to "Next Month", monthly_summary_admin_staff_attendances_path(date: @date + 1.month), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition" %>
-      <%= link_to "Back to Daily", admin_staff_attendances_path, class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition" %>
+      <%= link_to "Back to Daily", admin_staff_attendances_path, class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" %>
     </div>
   </div>
 

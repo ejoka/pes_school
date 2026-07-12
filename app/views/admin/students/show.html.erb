@@ -4,7 +4,7 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-blue-900">Student Details</h1>
     <div class="space-x-3">
-      <%= link_to edit_admin_student_path(@student), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150" do %>
+      <%= link_to edit_admin_student_path(@student), class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" do %>
         Edit Student
       <% end %>
       <%= link_to "Back to Students", admin_students_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-150" %>

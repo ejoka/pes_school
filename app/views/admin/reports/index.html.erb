@@ -1,0 +1,228 @@
+<% content_for :page_title, "Reports Dashboard" %>
+
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <h1 class="text-2xl font-bold text-gray-900">Reports Dashboard</h1>
+    <p class="text-gray-500 mt-1">Comprehensive reports and analytics</p>
+  </div>
+
+  <!-- Staff Reports -->
+  <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="bg-gradient-to-r from-blue-900 to-blue-800 px-6 py-4">
+      <div class="flex items-center space-x-3">
+        <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+        <h2 class="text-xl font-semibold text-white">Staff Reports</h2>
+      </div>
+    </div>
+    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <%= link_to staff_attendance_report_path, class: "block bg-gray-50 rounded-lg p-4 hover:bg-blue-50 transition group" do %>
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center space-x-2">
+              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h3 class="font-semibold text-gray-800 group-hover:text-blue-700">Staff Attendance Report</h3>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">View staff attendance statistics and trends</p>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      <% end %>
+      
+      <%= link_to staff_payroll_report_path, class: "block bg-gray-50 rounded-lg p-4 hover:bg-blue-50 transition group" do %>
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center space-x-2">
+              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h3 class="font-semibold text-gray-800 group-hover:text-green-700">Payroll Report</h3>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Staff salary and payment analysis</p>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Exam Reports -->
+  <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="bg-gradient-to-r from-purple-900 to-purple-800 px-6 py-4">
+      <div class="flex items-center space-x-3">
+        <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+        </svg>
+        <h2 class="text-xl font-semibold text-white">Exam Reports</h2>
+      </div>
+    </div>
+    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <%= link_to exam_performance_report_path, class: "block bg-gray-50 rounded-lg p-4 hover:bg-purple-50 transition group" do %>
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center space-x-2">
+              <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              </svg>
+              <h3 class="font-semibold text-gray-800 group-hover:text-purple-700">Performance Report</h3>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Student exam performance analysis</p>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      <% end %>
+      
+      <%= link_to exam_subject_report_path, class: "block bg-gray-50 rounded-lg p-4 hover:bg-purple-50 transition group" do %>
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center space-x-2">
+              <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+              </svg>
+              <h3 class="font-semibold text-gray-800 group-hover:text-indigo-700">Subject Report</h3>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Subject-wise performance analysis</p>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Student Reports -->
+  <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <div class="bg-gradient-to-r from-green-900 to-green-800 px-6 py-4">
+      <div class="flex items-center space-x-3">
+        <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+        <h2 class="text-xl font-semibold text-white">Student Reports</h2>
+      </div>
+    </div>
+    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <%= link_to student_attendance_report_path, class: "block bg-gray-50 rounded-lg p-4 hover:bg-green-50 transition group" do %>
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center space-x-2">
+              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h3 class="font-semibold text-gray-800 group-hover:text-green-700">Attendance Report</h3>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Student attendance analysis</p>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      <% end %>
+      
+      <%= link_to student_performance_report_path, class: "block bg-gray-50 rounded-lg p-4 hover:bg-green-50 transition group" do %>
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="flex items-center space-x-2">
+              <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              </svg>
+              <h3 class="font-semibold text-gray-800 group-hover:text-teal-700">Performance Report</h3>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Student academic performance</p>
+          </div>
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Other Reports -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Fees Report -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div class="bg-gradient-to-r from-yellow-900 to-yellow-800 px-6 py-4">
+        <div class="flex items-center space-x-3">
+          <svg class="w-6 h-6 text-yellow-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <h2 class="text-xl font-semibold text-white">Fees Report</h2>
+        </div>
+      </div>
+      <div class="p-6">
+        <%= link_to fees_report_path, class: "block bg-gray-50 rounded-lg p-4 hover:bg-yellow-50 transition group" do %>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-semibold text-gray-800 group-hover:text-yellow-700">Fee Collection Report</h3>
+              <p class="text-sm text-gray-500 mt-2">Fee collection and payment analysis</p>
+            </div>
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Transport Report -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div class="bg-gradient-to-r from-red-900 to-red-800 px-6 py-4">
+        <div class="flex items-center space-x-3">
+          <svg class="w-6 h-6 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+          </svg>
+          <h2 class="text-xl font-semibold text-white">Transport Report</h2>
+        </div>
+      </div>
+      <div class="p-6">
+        <%= link_to transport_report_path, class: "block bg-gray-50 rounded-lg p-4 hover:bg-red-50 transition group" do %>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-semibold text-gray-800 group-hover:text-red-700">Transport Analysis</h3>
+              <p class="text-sm text-gray-500 mt-2">Route usage and student transport data</p>
+            </div>
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Inventory Report -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div class="bg-gradient-to-r from-indigo-900 to-indigo-800 px-6 py-4">
+        <div class="flex items-center space-x-3">
+          <svg class="w-6 h-6 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+          </svg>
+          <h2 class="text-xl font-semibold text-white">Inventory Report</h2>
+        </div>
+      </div>
+      <div class="p-6">
+        <%= link_to inventory_report_path, class: "block bg-gray-50 rounded-lg p-4 hover:bg-indigo-50 transition group" do %>
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-semibold text-gray-800 group-hover:text-indigo-700">Stock & Inventory</h3>
+              <p class="text-sm text-gray-500 mt-2">Stock levels and inventory movements</p>
+            </div>
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

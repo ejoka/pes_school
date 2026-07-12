@@ -3,7 +3,7 @@
 <div class="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-blue-900">Edit Admin Profile</h1>
-    <%= link_to "Back to Profile", admin_admin_profile_path, class: "text-blue-600 hover:text-blue-900" %>
+    <%= link_to "Back to Profile", admin_admin_profile_path, class: "inline-flex items-center text-blue-600 hover:text-blue-900 font-medium" %>
   </div>
 
   <%= form_with(model: @user, url: admin_admin_profile_path, method: :put, local: true, class: "space-y-6") do |f| %>

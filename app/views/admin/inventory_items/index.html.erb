@@ -7,7 +7,7 @@
       <p class="text-sm text-gray-500 mt-1">Manage school inventory and stock levels</p>
     </div>
     <div class="flex space-x-3">
-      <%= link_to new_admin_inventory_item_path, class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150 font-semibold inline-flex items-center" do %>
+      <%= link_to new_admin_inventory_item_path, class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" do %>
         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
         </svg>
@@ -78,9 +78,9 @@
               </span>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
-              <%= link_to "View", admin_inventory_item_path(item), class: "text-green-600 hover:text-green-900" %>
-              <%= link_to "Edit", edit_admin_inventory_item_path(item), class: "text-blue-600 hover:text-blue-900" %>
-              <%= link_to "Stock", new_admin_stock_movement_path(item_id: item.id), class: "text-yellow-600 hover:text-yellow-900" %>
+              <%= link_to "View", admin_inventory_item_path(item), class: "inline-flex items-center px-2 py-1 bg-green-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-green-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
+              <%= link_to "Edit", edit_admin_inventory_item_path(item), class: "inline-flex items-center px-2 py-1 bg-blue-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-blue-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
+              <%= link_to "Stock", new_admin_stock_movement_path(item_id: item.id), class: "inline-flex items-center px-2 py-1 bg-amber-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-amber-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
             </td>
           </tr>
         <% end %>

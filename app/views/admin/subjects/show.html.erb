@@ -6,7 +6,7 @@
       <h1 class="text-3xl font-bold text-blue-900"><%= @subject.name %></h1>
       <div class="space-x-3">
         <% if current_user.can_access?(@subject, :edit) %>
-          <%= link_to edit_admin_subject_path(@subject), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600 transition duration-150" do %>
+          <%= link_to edit_admin_subject_path(@subject), class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" do %>
             Edit Subject
           <% end %>
         <% end %>

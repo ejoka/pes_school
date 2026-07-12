@@ -3,7 +3,7 @@
 <div class="bg-white rounded-lg shadow-lg p-6">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-blue-900">Add New Student</h1>
-    <%= link_to "Back to Students", admin_students_path, class: "text-blue-600 hover:text-blue-900" %>
+    <%= link_to "Back to Students", admin_students_path, class: "inline-flex items-center text-blue-600 hover:text-blue-900 font-medium" %>
   </div>
 
   <%= form_with(model: [:admin, @student], local: true, class: "space-y-6") do |f| %>

@@ -43,6 +43,7 @@ Rails.application.routes.draw do
     post 'update_color_settings', to: 'settings#update_color_settings'
     resources :settings, only: [:index, :edit, :update]
 
+
     # Examination
     resources :exam_grades
     resources :exam_types
@@ -172,6 +173,31 @@ Rails.application.routes.draw do
         end
       end
     end
+
+    # Reports
+    # Reports - collection route
+    get 'reports', to: 'reports#index', as: :reports
+    
+    # Staff Reports
+    get 'reports/staff_attendance', to: 'reports#staff_attendance_report', as: :staff_attendance_report
+    get 'reports/staff_payroll', to: 'reports#staff_payroll_report', as: :staff_payroll_report
+    
+    # Exam Reports
+    get 'reports/exam_performance', to: 'reports#exam_performance_report', as: :exam_performance_report
+    get 'reports/exam_subject', to: 'reports#exam_subject_report', as: :exam_subject_report
+    
+    # Student Reports
+    get 'reports/student_attendance', to: 'reports#student_attendance_report', as: :student_attendance_report
+    get 'reports/student_performance', to: 'reports#student_performance_report', as: :student_performance_report
+    
+    # Fees Report
+    get 'reports/fees', to: 'reports#fees_report', as: :fees_report
+    
+    # Transport Report
+    get 'reports/transport', to: 'reports#transport_report', as: :transport_report
+    
+    # Inventory Report
+    get 'reports/inventory', to: 'reports#inventory_report', as: :inventory_report
 
     resources :fee_types
     resources :invoices, only: [] 

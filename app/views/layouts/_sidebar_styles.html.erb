@@ -1,0 +1,94 @@
+<%# Renders raw CSS — must be included inside a <style> block, e.g.:
+    <style><%= render 'layouts/sidebar_styles' %></style>
+    Prefer extracting to app/assets/stylesheets/sidebar.css for caching and minification. %>
+<style>
+/* CSS custom properties (define in :root in application.css):
+   --sidebar-bg: #1e3a8a;
+   --z-sidebar: 1000;
+   --z-overlay: 999;
+   --overlay-bg: rgba(0, 0, 0, 0.5); */
+
+.sidebar {
+  background-color: var(--sidebar-bg, #1e3a8a);
+  width: 260px;
+  position: relative;
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sidebar {
+    transition: transform 0.3s ease-in-out;
+  }
+  .sidebar__item {
+    transition: background-color 0.2s ease;
+  }
+}
+
+.sidebar__item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar__item:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -2px;
+}
+
+.sidebar__menu-btn {
+  background: transparent;
+  border: 0;
+  padding: 0.5rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 769px) {
+  .sidebar__menu-btn {
+    display: none;
+  }
+  .sidebar__overlay {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: var(--z-sidebar, 1000);
+    transform: translateX(-100%);
+  }
+  .sidebar--open {
+    transform: translateX(0);
+  }
+  .sidebar__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--overlay-bg, rgba(0, 0, 0, 0.5));
+    z-index: var(--z-overlay, 999);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .sidebar__overlay--active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .sidebar__menu-btn {
+    display: flex;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sidebar__overlay {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+}
+</style>

@@ -3,7 +3,7 @@
 <div class="bg-white rounded-lg shadow-lg p-6">
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-blue-900">Stock Receipts</h1>
-    <%= link_to "New Stock Receipt", new_admin_stock_receipt_path, class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600" %>
+    <%= link_to "New Stock Receipt", new_admin_stock_receipt_path, class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" %>
   </div>
 
   <div class="overflow-x-auto">
@@ -31,7 +31,7 @@
               </span>
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
-              <%= link_to "View", admin_stock_receipt_path(receipt), class: "text-green-600 hover:text-green-900" %>
+              <%= link_to "View", admin_stock_receipt_path(receipt), class: "inline-flex items-center px-2 py-1 bg-green-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-green-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
               <% if receipt.status == 'pending' %>
                 <%= button_to "Receive", receive_admin_stock_receipt_path(receipt), method: :post, class: "text-blue-600 hover:text-blue-900 bg-transparent border-0 cursor-pointer inline" %>
               <% end %>

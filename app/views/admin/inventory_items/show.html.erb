@@ -4,10 +4,10 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold text-blue-900"><%= @inventory_item.name %></h1>
     <div class="space-x-3">
-      <%= link_to edit_admin_inventory_item_path(@inventory_item), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600" do %>
+      <%= link_to edit_admin_inventory_item_path(@inventory_item), class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" do %>
         Edit Item
       <% end %>
-      <%= link_to new_admin_stock_movement_path(item_id: @inventory_item.id), class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" do %>
+      <%= link_to new_admin_stock_movement_path(item_id: @inventory_item.id), class: "inline-flex items-center px-4 py-2 bg-amber-600 text-white font-medium rounded-lg shadow-md hover:bg-amber-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" do %>
         Record Movement
       <% end %>
       <%= link_to admin_inventory_items_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" do %>

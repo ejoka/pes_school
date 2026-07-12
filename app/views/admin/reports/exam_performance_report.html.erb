@@ -1,0 +1,522 @@
+<div class="min-h-screen">
+  <!-- Modern Gradient Header -->
+  <div class="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex justify-between items-center animate-fadeInUp">
+        <div>
+          <div class="flex items-center space-x-3 mb-2">
+            <div class="bg-white/20 rounded-lg p-2">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-3xl font-bold text-white">Exam Performance Report</h1>
+              <p class="text-blue-100 mt-1">Comprehensive analysis of student academic performance</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex space-x-3">
+          <button onclick="window.print()" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 backdrop-blur-sm">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+            </svg>
+            Print
+          </button>
+          <%= link_to admin_exam_performance_report_path(format: :csv, params: request.query_parameters), 
+              class: "bg-white text-blue-600 hover:bg-blue-50 px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 font-medium shadow-lg" do %>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            Export CSV
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Filter Section -->
+    <div class="bg-white rounded-2xl shadow-xl mb-8 overflow-hidden animate-fadeInUp">
+      <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+          </svg>
+          Filter Performance Data
+        </h2>
+      </div>
+      
+      <%= form_tag admin_exam_performance_report_path, method: :get, class: "p-6" do %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Exam Selection -->
+          <div>
+            <%= label_tag :exam_id, "Select Exam", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <div class="relative">
+              <%= select_tag :exam_id, 
+                  options_from_collection_for_select(@exams, :id, :name, params[:exam_id]), 
+                  include_blank: "All Exams",
+                  class: "w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" %>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Class Selection -->
+          <div>
+            <%= label_tag :class_id, "Class", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= select_tag :class_id, 
+                options_from_collection_for_select(SchoolClass.all, :id, :name, params[:class_id]), 
+                include_blank: "All Classes",
+                class: "w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" %>
+          </div>
+
+          <!-- Subject Selection -->
+          <div>
+            <%= label_tag :subject_id, "Subject", class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= select_tag :subject_id, 
+                options_from_collection_for_select(Subject.all, :id, :name, params[:subject_id]), 
+                include_blank: "All Subjects",
+                class: "w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" %>
+          </div>
+
+          <!-- Apply Button -->
+          <div class="flex items-end">
+            <div class="flex space-x-3 w-full">
+              <%= link_to "Reset", admin_exam_performance_report_path, class: "flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-all duration-200 text-center" %>
+              <%= submit_tag "Generate Report", class: "flex-1 px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @performance_data.present? %>
+      <!-- Statistics Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Average Score Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover-scale animate-slideIn">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500 mb-1">Average Score</p>
+              <p class="text-3xl font-bold gradient-text"><%= @average_percentage %>%</p>
+            </div>
+            <div class="bg-gradient-to-br from-blue-400 to-blue-600 rounded-full p-3 shadow-lg">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+              </svg>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full" style="width: <%= @average_percentage %>%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Passing Rate Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover-scale animate-slideIn" style="animation-delay: 0.1s">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500 mb-1">Passing Rate</p>
+              <p class="text-3xl font-bold text-green-600"><%= @passing_rate %>%</p>
+            </div>
+            <div class="bg-gradient-to-br from-green-400 to-green-600 rounded-full p-3 shadow-lg">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full" style="width: <%= @passing_rate %>%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total Students Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover-scale animate-slideIn" style="animation-delay: 0.2s">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500 mb-1">Total Students</p>
+              <p class="text-3xl font-bold text-purple-600"><%= @total_students %></p>
+            </div>
+            <div class="bg-gradient-to-br from-purple-400 to-purple-600 rounded-full p-3 shadow-lg">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Highest Score Card -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover-scale animate-slideIn" style="animation-delay: 0.3s">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500 mb-1">Highest Score</p>
+              <p class="text-3xl font-bold text-orange-600"><%= @highest_score %>%</p>
+            </div>
+            <div class="bg-gradient-to-br from-orange-400 to-red-600 rounded-full p-3 shadow-lg">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Grade Distribution Chart -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <div class="w-1 h-6 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full"></div>
+            Grade Distribution
+          </h3>
+          <canvas id="gradeChart" width="400" height="300"></canvas>
+        </div>
+
+        <!-- Subject Performance Chart -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <div class="w-1 h-6 bg-gradient-to-b from-green-500 to-emerald-600 rounded-full"></div>
+            Subject-wise Performance
+          </h3>
+          <canvas id="subjectChart" width="400" height="300"></canvas>
+        </div>
+      </div>
+
+      <!-- Top Performers & Struggling Students -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Top Performers -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-4">
+            <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+              </svg>
+              Top Performers 🏆
+            </h3>
+          </div>
+          <div class="divide-y divide-gray-200">
+            <% @top_performers.each_with_index do |result, index| %>
+              <div class="px-6 py-4 hover:bg-gray-50 transition-colors">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center text-white font-bold shadow">
+                      <%= index + 1 %>
+                    </div>
+                    <div>
+                      <p class="font-medium text-gray-900"><%= result.student_name %></p>
+                      <p class="text-sm text-gray-500"><%= result.class_name %> • <%= result.roll_number %></p>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-lg font-bold text-green-600"><%= result.percentage %>%</p>
+                    <p class="text-xs text-gray-500">Grade <%= calculate_grade(result.percentage) %></p>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Struggling Students -->
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div class="bg-gradient-to-r from-orange-500 to-red-600 px-6 py-4">
+            <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+              </svg>
+              Needs Attention ⚠️
+            </h3>
+          </div>
+          <div class="divide-y divide-gray-200">
+            <% if @struggling_students.present? %>
+              <% @struggling_students.each do |result| %>
+                <div class="px-6 py-4 hover:bg-gray-50 transition-colors">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="font-medium text-gray-900"><%= result.student_name %></p>
+                      <p class="text-sm text-gray-500"><%= result.class_name %> • <%= result.roll_number %></p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-lg font-bold text-red-600"><%= result.percentage %>%</p>
+                      <p class="text-xs text-gray-500">Grade <%= calculate_grade(result.percentage) %></p>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="px-6 py-8 text-center text-gray-500">
+                <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p>No struggling students found!</p>
+                <p class="text-sm">All students are performing well 🎉</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Performance Table -->
+      <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Detailed Performance Records
+          </h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Marks</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Percentage</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Grade</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Remarks</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @performance_data.each do |result| %>
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500 flex items-center justify-center text-white font-medium">
+                        <%= result.student_name.first.upcase %>
+                      </div>
+                      <div class="ml-4">
+                        <div class="text-sm font-medium text-gray-900"><%= result.student_name %></div>
+                        <div class="text-xs text-gray-500">Roll: <%= result.roll_number %></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <%= result.class_name %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"><%= result.subject_name %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right">
+                    <%= result.marks_obtained %> / <%= result.total_marks %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right">
+                    <div class="flex items-center justify-end">
+                      <span class="text-sm font-medium <%= result.percentage >= 60 ? 'text-green-600' : 'text-red-600' %>">
+                        <%= result.percentage %>%
+                      </span>
+                      <div class="ml-2 w-16 bg-gray-200 rounded-full h-1.5">
+                        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-1.5 rounded-full" style="width: <%= result.percentage %>%"></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                      <%= case calculate_grade(result.percentage)
+                          when 'A+', 'A' then 'bg-green-100 text-green-800'
+                          when 'B', 'C' then 'bg-blue-100 text-blue-800'
+                          when 'D', 'E' then 'bg-yellow-100 text-yellow-800'
+                          else 'bg-red-100 text-red-800'
+                          end %>">
+                      <%= calculate_grade(result.percentage) %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= result.remarks.presence || '-' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% else %>
+      <!-- Empty State -->
+      <div class="bg-white rounded-2xl shadow-xl p-12 text-center animate-fadeInUp">
+        <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center">
+          <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">No Performance Data Available</h3>
+        <p class="text-gray-500 mb-6">No exam records found for the selected filters. Try adjusting your criteria or add exam results.</p>
+        <%= link_to "Add Exam Results", new_admin_exam_result_path, class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<script>
+  // Grade Distribution Chart
+  const gradeCtx = document.getElementById('gradeChart').getContext('2d');
+  new Chart(gradeCtx, {
+    type: 'bar',
+    data: {
+      labels: <%= raw @grade_distribution.keys.to_json %>,
+      datasets: [{
+        label: 'Number of Students',
+        data: <%= raw @grade_distribution.values.to_json %>,
+        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+        borderColor: 'rgba(59, 130, 246, 1)',
+        borderWidth: 2,
+        borderRadius: 8,
+        barPercentage: 0.7,
+        categoryPercentage: 0.8
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `Students: ${context.parsed.y}`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            display: true,
+            color: 'rgba(0, 0, 0, 0.05)'
+          },
+          title: {
+            display: true,
+            text: 'Number of Students',
+            font: {
+              size: 12,
+              weight: 'bold'
+            }
+          }
+        },
+        x: {
+          ticks: {
+            rotation: 45,
+            autoSkip: true,
+            maxRotation: 45,
+            minRotation: 45
+          },
+          title: {
+            display: true,
+            text: 'Grade',
+            font: {
+              size: 12,
+              weight: 'bold'
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // Subject Performance Chart
+  <% if @subject_performance.present? %>
+    const subjectCtx = document.getElementById('subjectChart').getContext('2d');
+    new Chart(subjectCtx, {
+      type: 'radar',
+      data: {
+        labels: <%= raw @subject_performance.map { |s| s[:subject_name] }.to_json %>,
+        datasets: [{
+          label: 'Average Percentage',
+          data: <%= raw @subject_performance.map { |s| s[:avg_percentage] }.to_json %>,
+          backgroundColor: 'rgba(16, 185, 129, 0.2)',
+          borderColor: 'rgba(16, 185, 129, 1)',
+          borderWidth: 3,
+          pointBackgroundColor: 'rgba(16, 185, 129, 1)',
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: 'rgba(16, 185, 129, 1)',
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              stepSize: 20,
+              callback: function(value) {
+                return value + '%';
+              }
+            },
+            grid: {
+              color: 'rgba(0, 0, 0, 0.1)'
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `Average: ${context.parsed.r}%`;
+              }
+            }
+          }
+        }
+      }
+    });
+  <% end %>
+</script>
+
+<!-- Print Styles -->
+<style media="print">
+  @page {
+    size: landscape;
+    margin: 1cm;
+  }
+  
+  .bg-gradient-to-r, .filter-section, .print-hide, button, .btn, .shadow-lg, .shadow-xl {
+    box-shadow: none !important;
+    background: white !important;
+  }
+  
+  .bg-blue-600, .bg-gradient-to-r, .bg-green-500, .bg-orange-500, .bg-purple-500 {
+    background: #f3f4f6 !important;
+    color: #1f2937 !important;
+  }
+  
+  .text-white {
+    color: #1f2937 !important;
+  }
+  
+  .animate-fadeInUp, .animate-slideIn {
+    animation: none !important;
+  }
+  
+  .hover-scale:hover {
+    transform: none !important;
+  }
+  
+  body {
+    background: white;
+    padding: 0;
+  }
+  
+  table {
+    page-break-inside: avoid;
+  }
+  
+  tr {
+    page-break-inside: avoid;
+  }
+</style>

@@ -10,7 +10,7 @@
       <%= link_to "Previous Month", admin_attendance_student_report_path(student_id: @student.id, month: @month - 1.month), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" %>
       <%= link_to "This Month", admin_attendance_student_report_path(student_id: @student.id), class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
       <%= link_to "Next Month", admin_attendance_student_report_path(student_id: @student.id, month: @month + 1.month), class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" %>
-      <%= link_to "Back to Class", admin_attendances_path(class_id: @student.school_class_id), class: "bg-yellow-500 text-blue-900 px-4 py-2 rounded hover:bg-yellow-600" %>
+      <%= link_to "Back to Class", admin_attendances_path(class_id: @student.school_class_id), class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg active:shadow-sm transition-all duration-200 ease-in-out" %>
     </div>
   </div>
 
