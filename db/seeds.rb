@@ -77,19 +77,19 @@
 # puts "Exam types seeded successfully!"
 
 # Seed Attendance Statuses
-attendance_statuses = [
-  { name: 'Present', code: 'P', color: 'bg-green-100 text-green-800' },
-  { name: 'Absent', code: 'A', color: 'bg-red-100 text-red-800' },
-  { name: 'Late', code: 'L', color: 'bg-yellow-100 text-yellow-800' },
-  { name: 'Excused', code: 'E', color: 'bg-blue-100 text-blue-800' },
-  { name: 'Holiday', code: 'H', color: 'bg-gray-100 text-gray-800' }
-]
+# attendance_statuses = [
+#   { name: 'Present', code: 'P', color: 'bg-green-100 text-green-800' },
+#   { name: 'Absent', code: 'A', color: 'bg-red-100 text-red-800' },
+#   { name: 'Late', code: 'L', color: 'bg-yellow-100 text-yellow-800' },
+#   { name: 'Excused', code: 'E', color: 'bg-blue-100 text-blue-800' },
+#   { name: 'Holiday', code: 'H', color: 'bg-gray-100 text-gray-800' }
+# ]
 
-attendance_statuses.each do |status|
-  AttendanceStatus.find_or_create_by(name: status[:name]) do |s|
-    s.code = status[:code]
-    s.color = status[:color]
-  end
-end
+# attendance_statuses.each do |status|
+#   AttendanceStatus.find_or_create_by(name: status[:name]) do |s|
+#     s.code = status[:code]
+#     s.color = status[:color]
+#   end
+# end
 
-puts "Attendance statuses seeded successfully!"
+# puts "Attendance statuses seeded successfully!"
