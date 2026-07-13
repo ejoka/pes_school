@@ -81,6 +81,7 @@ test:
 production:
   primary: &primary_production
     <<: *default
+    url: <%= ENV["DATABASE_URL"] %>
     database: pes_school_production
     username: pes_school
     password: <%= ENV["PES_SCHOOL_DATABASE_PASSWORD"] %>
