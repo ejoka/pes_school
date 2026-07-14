@@ -22,7 +22,7 @@
           <div class="flex space-x-2">
             <%= link_to "View", admin_department_path(dept), class: "inline-flex items-center px-2 py-1 bg-green-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-green-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
             <%= link_to "Edit", edit_admin_department_path(dept), class: "inline-flex items-center px-2 py-1 bg-blue-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-blue-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
-            <%= link_to "Delete", admin_department_path(dept), method: :delete, data: { confirm: "Are you sure?" }, class: "inline-flex items-center px-2 py-1 bg-red-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-red-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
+            <%= link_to "Delete", admin_department_path(dept), method: :delete, data: { confirm: "Are you sure you want to delete '#{dept.name}'?" }, class: "inline-flex items-center px-2 py-1 bg-red-600 text-white font-medium text-xs rounded-md shadow-sm hover:bg-red-700 hover:shadow-md active:shadow-sm transition-all duration-200 ease-in-out" %>
           </div>
         </div>
       </div>

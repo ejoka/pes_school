@@ -27,7 +27,7 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
               <%= link_to "View", admin_supplier_path(supplier), class: "text-green-600 hover:text-green-900" %>
               <%= link_to "Edit", edit_admin_supplier_path(supplier), class: "text-blue-600 hover:text-blue-900" %>
-              <%= link_to "Delete", admin_supplier_path(supplier), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-900" %>
+              <%= link_to "Delete", admin_supplier_path(supplier), method: :delete, data: { confirm: "Are you sure you want to delete '#{supplier.name}'?" }, class: "text-red-600 hover:text-red-900" %>
             </td>
           </tr>
         <% end %>
