@@ -8,16 +8,16 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 #Create admin user
-admin = User.create!(
-  email: "emmanuel@pes.ac.tz",
-  password: "password123",
-  password_confirmation: "password123",
-  first_name: "Emmanuel",
-  last_name: "Kamala",
-  title: "Mr.",
-  phone_number: "+255678794479",
-  role: 1
-)
+# admin = User.create!(
+#   email: "emmanuel@pes.ac.tz",
+#   password: "password123",
+#   password_confirmation: "password123",
+#   first_name: "Emmanuel",
+#   last_name: "Kamala",
+#   title: "Mr.",
+#   phone_number: "+255678794479",
+#   role: 1
+# )
 
 # Create categories
 # categories = [
