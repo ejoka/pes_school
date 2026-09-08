@@ -9,15 +9,15 @@
 #   end
 #Create admin user
 # admin = User.create!(
-#   email: "emmanuel@pes.ac.tz",
-#   password: "password123",
-#   password_confirmation: "password123",
-#   first_name: "Emmanuel",
-#   last_name: "Kamala",
-#   title: "Mr.",
-#   phone_number: "+255678794479",
-#   role: 1
-# )
+  email: "emmanuel@pes.ac.tz",
+  password: "password123",
+  password_confirmation: "password123",
+  first_name: "Emmanuel",
+  last_name: "Kamala",
+  title: "Mr.",
+  phone_number: "+255678794479",
+  role: 1
+)
 
 # Create categories
 # categories = [
@@ -54,8 +54,8 @@
 # english = Subject.create!(name: "English", subject_code: "ENG101", pass_mark: 50, school_class: SchoolClass.first)
 # science = Subject.create!(name: "Science", subject_code: "SCI101", pass_mark: 50, school_class: SchoolClass.first)
 
-# puts "Seed data created successfully!"
-# puts "Admin login: admin@school.com / password123"
+puts "Seed data created successfully!"
+puts "Admin login: emmanuel@pes.ac.tz / password123"
 
 # Seed Exam Types
 # exam_types = [
